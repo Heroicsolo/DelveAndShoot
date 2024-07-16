@@ -1,0 +1,279 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e5487577a324bec8e1e97cb1208b45, type: 3}
+  m_Name: RoomPreset00
+  m_EditorClassIdentifier: 
+  roofTiles: []
+  floorTiles:
+  - prefab: {fileID: 5799337900855877001, guid: 4c2f73daf633dbb4ba5bd98534c873e7, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 2.5}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 25
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 1
+    randomRotation: 0
+  - prefab: {fileID: 61601240950664729, guid: 0ef09bb7b81155b4a89b9a9c8446e919, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 2.5}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 75
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 1
+    randomRotation: 0
+  wallTiles:
+  - prefab: {fileID: 4913515778477312891, guid: c3dea8d4129ce334197c02e6b54b3118, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 40
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 1
+  - prefab: {fileID: 3632419981793626275, guid: 5e47d430418281d4a8467d1e244d96c2, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 40
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 1
+  - prefab: {fileID: 1548221408906814836, guid: b265f9097b65bdc4ba6807f756be929a, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 90, z: 0}
+    weight: 5
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 0
+  - prefab: {fileID: 5817807649333168373, guid: deb9375e40a08ed4ea2c0521af570d2c, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 5
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 0
+  wallCorners:
+  - prefab: {fileID: 260882164887959989, guid: 82d12cfabfb090244a9be537bfa1f954, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 100
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 1
+  windowTiles:
+  - prefab: {fileID: 7905103607898462478, guid: dcf08bcd77a09294880d51b84e4b6e01, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 50
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 0
+  - prefab: {fileID: 8972584005349252460, guid: 9f04bd7292ef65643a963a3da512e225, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    weight: 50
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 0
+  doorTiles:
+  - prefab: {fileID: 3552029061366966053, guid: b39d9fc90b02cb641b9f9646ad2d6b41, type: 3}
+    positionOffset: {x: -2.5, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 90, z: 0}
+    weight: 50
+    alignToSurface: 0
+    tileLayer:
+      serializedVersion: 2
+      m_Bits: 0
+    isExpanded: 1
+    allowDecor: 0
+  characters:
+  - prefab: {fileID: 288691541403118600, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 100}
+    amountRange: {x: 2, y: 4}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 1
+  roofDecorations: []
+  wallDecorations: []
+  floorDecorations:
+  - prefab: {fileID: 124700, guid: 77fe9eabdc6c08d47825f27ee5d4d5fb, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 3}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 114326, guid: 590fa3786358bd24e819d7e4dc88db2e, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 3}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 5741203978651045717, guid: 85e4a8851d1e9cd4482c18d1c671c406, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 2}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 1430555582976053809, guid: 123cd1b05488d1049ac41c5ca7eacba7, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 1}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 135286, guid: 7b96200fe5e074140851027c6f8147ee, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 1}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 5539814802953016462, guid: 794b2def156e7884789dd2d4d2ecb1be, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 1}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 1388682503330783426, guid: 4010bb57e2029e544907a16887f61151, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 2}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 3349243252272530689, guid: b0e061a322d91c24eaab109d296e2e88, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 2}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 5599356965668747247, guid: d4a20126a286bc54fbf9bedc93003a6c, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 3}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 102044, guid: 4dbe8aaa52f0a734aa73cded1282ea21, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 1, y: 4}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 127426, guid: b150b800c860bb046b1d13b713959f06, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 1, y: 2}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 3818680028870809337, guid: eb75c2463118c024ab58d62e783d60fa, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 1}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 1229753344994741894, guid: 6c234974fc523e54b9fbf1ba7a0b12c3, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 1}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 1781174450470597445, guid: 2ef3eacb67aa2c0498591f25e728a55f, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 4}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 300561638524373206, guid: 0de087d1cb82c35418c6fb999c56d3ed, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 4}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
+  - prefab: {fileID: 2690559615531054573, guid: df2b1d6876701494b85423fb71c8cf02, type: 3}
+    positionOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spacingBuffer: 0
+    verticalRange: {x: 0, y: 1}
+    amountRange: {x: 0, y: 2}
+    randomRotation: 0
+    scaleRange: {x: 1, y: 1}
+    isExpanded: 0
