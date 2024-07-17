@@ -13,6 +13,8 @@ namespace Heroicsolo.Scripts.UI
         [Inject] private GameUIView uiView;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
 
+        private bool uiElementSelected;
+
         public GameObject GetGameObject()
         {
             return gameObject;
@@ -28,9 +30,17 @@ namespace Heroicsolo.Scripts.UI
             uiView.RemoveAmmo();
         }
 
-        public void SetAimState(UIAimState aimState)
+        public void SetUIElementSelected(bool value)
         {
-            uiView.SetAimState(aimState);
+            uiElementSelected = value;
+        }
+
+        public void SetCursorState(CursorState cursorState, bool forced = false)
+        {
+            if (forced || !uiElementSelected)
+            {
+                uiView.SetCursorState(cursorState);
+            }
         }
 
         public void OnHealthChanged(float oldVal, float newVal, float maxVal)
@@ -83,15 +93,6 @@ namespace Heroicsolo.Scripts.UI
             (int currLvl, int currExp, int neededExp) = playerProgressionManager.GetPlayerLevelState();
 
             OnPlayerExperienceChanged(currLvl, currExp, neededExp);
-
-#if !UNITY_EDITOR
-            Cursor.visible = false;
-#endif
-        }
-
-        private void Update()
-        {
-            uiView.SetAimPos(Input.mousePosition);
         }
     }
 }

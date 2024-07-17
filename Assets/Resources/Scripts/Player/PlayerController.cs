@@ -183,17 +183,17 @@ namespace Heroicsolo.Scripts.Player
 
             if (shootHelper.FindClosestTargetOnLine(ray.origin, ray.direction, 100f, TeamType.Player, out var hittable))
             {
-                gameUIController.SetAimState(UIAimState.Targeted);
+                gameUIController.SetCursorState(CursorState.Targeted);
                 shootPos = hittable.GetTransform().position;
             }
             else if (Physics.RaycastNonAlloc(ray, raycastHits, 100f, shootHelper.GetObstaclesMask().value) > 0)
             {
-                gameUIController.SetAimState(UIAimState.Default);
+                gameUIController.SetCursorState(CursorState.Aim);
                 shootPos = raycastHits[0].point;
             }
             else
             {
-                gameUIController.SetAimState(UIAimState.Hidden);
+                gameUIController.SetCursorState(CursorState.Default);
                 shootPos = transform.position + transform.forward * 10f;
             }
 

@@ -8,7 +8,7 @@ namespace Heroicsolo.Scripts.Logics
 {
     public class DestructibleProps : MonoBehaviour, IHittable
     {
-        [SerializeField] private VisualEffect destructionEffect;
+        [SerializeField] private ParticleSystem destructionEffect;
         [SerializeField] [Min(0f)] private float durability = 1f;
         [SerializeField] private List<DamageType> damageResists = new List<DamageType>();
 

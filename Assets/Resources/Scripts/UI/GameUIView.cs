@@ -7,6 +7,8 @@ namespace Heroicsolo.Scripts.UI
 {
     public class GameUIView : MonoBehaviour, ISystem
     {
+        private readonly Vector2 CursorOffset = new Vector2(0, 0);
+
         [Header("Player stats indication")]
         [SerializeField] private Image healthBar;
         [SerializeField] private Image healthBarOldValue;
@@ -21,18 +23,13 @@ namespace Heroicsolo.Scripts.UI
         [Header("Ammo")]
         [SerializeField] private AmmoPanel ammoPanel;
 
-        [Header("Aim")]
-        [SerializeField] private Transform aimTransform;
-        [SerializeField] private Image aimImage;
+        [Header("Cursor Params")]
+        [SerializeField] private Texture2D aimCursorTexture;
+        [SerializeField] private Texture2D aimCursorTextureTargeted;
 
         public GameObject GetGameObject()
         {
             return gameObject;
-        }
-
-        public void SetAimPos(Vector3 pos)
-        {
-            aimTransform.position = pos;
         }
 
         public void SetAmmo(int ammo)
@@ -45,23 +42,18 @@ namespace Heroicsolo.Scripts.UI
             ammoPanel.RemoveAmmo();
         }
 
-        public void SetAimState(UIAimState aimState)
+        public void SetCursorState(CursorState aimState)
         {
             switch (aimState)
             {
-                case UIAimState.Default:
-                    aimTransform.gameObject.SetActive(true);
-                    aimImage.color = Color.white;
-                    Cursor.visible = false;
+                case CursorState.Aim:
+                    Cursor.SetCursor(aimCursorTexture, CursorOffset, CursorMode.ForceSoftware);
                     break;
-                case UIAimState.Targeted:
-                    aimTransform.gameObject.SetActive(true);
-                    aimImage.color = Color.red;
-                    Cursor.visible = false;
+                case CursorState.Targeted:
+                    Cursor.SetCursor(aimCursorTextureTargeted, CursorOffset, CursorMode.ForceSoftware);
                     break;
-                case UIAimState.Hidden:
-                    aimTransform.gameObject.SetActive(false);
-                    Cursor.visible = true;
+                case CursorState.Default:
+                    Cursor.SetCursor(null, CursorOffset, CursorMode.ForceSoftware);
                     break;
             }
         }
@@ -89,6 +81,11 @@ namespace Heroicsolo.Scripts.UI
             expBar.fillAmount = (float)currExp / maxExp;
             expBarLabel.text = $"{currExp}/{maxExp}";
             levelLabel.text = $"{level}";
+        }
+
+        private void Start()
+        {
+            Cursor.SetCursor(null, CursorOffset, CursorMode.ForceSoftware);
         }
     }
 }

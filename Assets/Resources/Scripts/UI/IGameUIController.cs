@@ -9,13 +9,15 @@ namespace Heroicsolo.Scripts.UI
         void OnPlayerLevelUp(int level);
         void SetAmmo(int ammo);
         void RemoveAmmo();
-        void SetAimState(UIAimState aimState);
+        void SetCursorState(CursorState cursorState, bool forced = false);
+        void SetUIElementSelected(bool value);
     }
 
-    public enum UIAimState
+    public enum CursorState
     {
-        Default = 0,
+        Aim = 0,
         Targeted = 1,
-        Hidden = 2
+        PickUp = 2,
+        Default = 3
     }
 }
