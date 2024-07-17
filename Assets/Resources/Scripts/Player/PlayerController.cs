@@ -38,6 +38,7 @@ namespace Heroicsolo.Scripts.Player
         [Inject] private IGameUIController gameUIController;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ICharacterStatsManager characterStatsManager;
+        [Inject] private IShootHelper shootHelper;
 
         private CharacterController characterController;
         private Animator animator;
@@ -180,13 +181,25 @@ namespace Heroicsolo.Scripts.Player
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.RaycastNonAlloc(ray, raycastHits, 100f, floorMask.value) > 0)
+            if (shootHelper.FindClosestTargetOnLine(ray.origin, ray.direction, 100f, TeamType.Player, out var hittable))
             {
-                shootPos = raycastHits[0].point;
-                lookPos = shootPos;
-                lookPos.y = transform.position.y;
-                transform.LookAt(lookPos);
+                gameUIController.SetAimState(UIAimState.Targeted);
+                shootPos = hittable.GetTransform().position;
             }
+            else if (Physics.RaycastNonAlloc(ray, raycastHits, 100f, shootHelper.GetObstaclesMask().value) > 0)
+            {
+                gameUIController.SetAimState(UIAimState.Default);
+                shootPos = raycastHits[0].point;
+            }
+            else
+            {
+                gameUIController.SetAimState(UIAimState.Hidden);
+                shootPos = transform.position + transform.forward * 10f;
+            }
+
+            lookPos = shootPos;
+            lookPos.y = transform.position.y;
+            transform.LookAt(lookPos);
         }
 
         private void ProccessInputs()

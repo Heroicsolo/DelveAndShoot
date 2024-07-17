@@ -1130,8 +1130,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7320782452208361552, guid: c4de0540cc966d8478843ed40f5c0ecd, type: 3}
+      propertyPath: targetsMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320782452208361552, guid: c4de0540cc966d8478843ed40f5c0ecd, type: 3}
       propertyPath: obstaclesMask.m_Bits
-      value: 4294967295
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 8379154148712977075, guid: c4de0540cc966d8478843ed40f5c0ecd, type: 3}
       propertyPath: m_Name

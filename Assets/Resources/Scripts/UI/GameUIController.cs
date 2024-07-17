@@ -28,6 +28,11 @@ namespace Heroicsolo.Scripts.UI
             uiView.RemoveAmmo();
         }
 
+        public void SetAimState(UIAimState aimState)
+        {
+            uiView.SetAimState(aimState);
+        }
+
         public void OnHealthChanged(float oldVal, float newVal, float maxVal)
         {
             StartCoroutine(HealthChanger(oldVal, newVal, maxVal));

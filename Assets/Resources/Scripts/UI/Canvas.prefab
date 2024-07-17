@@ -4659,6 +4659,7 @@ MonoBehaviour:
   levelLabel: {fileID: 6126173230336228808}
   ammoPanel: {fileID: 4569671728624162627}
   aimTransform: {fileID: 3075281312031135558}
+  aimImage: {fileID: 1431114592740940665}
 --- !u!1 &7699788376210963871
 GameObject:
   m_ObjectHideFlags: 0

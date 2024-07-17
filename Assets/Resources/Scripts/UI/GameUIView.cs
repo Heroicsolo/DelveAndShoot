@@ -23,6 +23,7 @@ namespace Heroicsolo.Scripts.UI
 
         [Header("Aim")]
         [SerializeField] private Transform aimTransform;
+        [SerializeField] private Image aimImage;
 
         public GameObject GetGameObject()
         {
@@ -42,6 +43,27 @@ namespace Heroicsolo.Scripts.UI
         public void RemoveAmmo()
         {
             ammoPanel.RemoveAmmo();
+        }
+
+        public void SetAimState(UIAimState aimState)
+        {
+            switch (aimState)
+            {
+                case UIAimState.Default:
+                    aimTransform.gameObject.SetActive(true);
+                    aimImage.color = Color.white;
+                    Cursor.visible = false;
+                    break;
+                case UIAimState.Targeted:
+                    aimTransform.gameObject.SetActive(true);
+                    aimImage.color = Color.red;
+                    Cursor.visible = false;
+                    break;
+                case UIAimState.Hidden:
+                    aimTransform.gameObject.SetActive(false);
+                    Cursor.visible = true;
+                    break;
+            }
         }
 
         public void ShowLevelUpIndicator()
