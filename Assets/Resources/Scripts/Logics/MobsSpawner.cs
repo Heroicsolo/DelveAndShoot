@@ -1,4 +1,5 @@
 using Heroicsolo.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Heroicsolo.Scripts.Logics
         {
             if (!spawnListSorted)
                 Prepare();
-            int target = Random.Range(0, comulateWeight.Last());
+            int target = UnityEngine.Random.Range(0, comulateWeight.Last());
             int guess = 0;
             while (true)
             {
@@ -63,6 +64,7 @@ namespace Heroicsolo.Scripts.Logics
                 StartCoroutine(SpawnCoroutine());
         }
 
+        [Serializable]
         struct MobSpawnInfo
         {
             public Mob Mob;
