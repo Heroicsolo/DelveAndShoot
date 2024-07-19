@@ -1,3 +1,4 @@
+using Heroicsolo.Scripts.Utils;
 using Heroicsolo.Utils;
 using System;
 using System.Collections;
@@ -10,32 +11,17 @@ namespace Heroicsolo.Scripts.Logics
     public class MobsSpawner : MonoBehaviour
     {
         [SerializeField]
-        private List<MobSpawnInfo> spawnList = new();
-        private List<int> comulateWeight;
-        private bool spawnListSorted = false;
+        private List<ValueWeight<Mob>> spawnList = new();
         [Min(0)]
         [SerializeField]
         private float spawnPeriod = 0;
 
-        private MobSpawnInfo ChooseMob()
-        {
-            if (!spawnListSorted)
-                Prepare();
-            int target = UnityEngine.Random.Range(0, comulateWeight.Last());
-            int guess = 0;
-            while (true)
-            {
-                if (comulateWeight[guess] > target)
-                    return spawnList[guess];
-                int hopDist = target - comulateWeight[guess];
-                guess += 1 + hopDist / spawnList[guess].Weight;
-            }
-        }
+        private WeightedChoser<Mob> spawnChoser = new();
+        private Coroutine spawnCoroutine = null;
 
         private void Spawn()
         {
-            MobSpawnInfo chosenInfo = ChooseMob();
-            var chosenMob = chosenInfo.Mob;
+            Mob chosenMob = spawnChoser.Chose();
             PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position);
         }
 
@@ -48,27 +34,19 @@ namespace Heroicsolo.Scripts.Logics
             }
         }
 
-        private void Prepare()
-        {
-            spawnList = spawnList.OrderByDescending(i => i.Weight).ToList();
-            comulateWeight = spawnList.Select(i => i.Weight).ComulativeSum().ToList();
-            spawnListSorted = true;
-        }
-
         void Start()
         {
-            Prepare();
             if (spawnPeriod <= 0)
                 Spawn();
             else
-                StartCoroutine(SpawnCoroutine());
+                spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
 
-        [Serializable]
-        struct MobSpawnInfo
-        {
-            public Mob Mob;
-            public int Weight;
-        }
+        //[Serializable]
+        //struct MobSpawnInfo
+        //{
+        //    public Mob Mob;
+        //    public float Weight;
+        //}
     }
 }

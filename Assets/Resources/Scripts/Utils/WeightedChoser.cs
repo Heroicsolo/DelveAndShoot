@@ -19,6 +19,7 @@ namespace Heroicsolo.Scripts.Utils
         }
     }
 
+    [Serializable]
     public class WeightedChoser<T> : IEnumerable<ValueWeight<T>>
     {
 
