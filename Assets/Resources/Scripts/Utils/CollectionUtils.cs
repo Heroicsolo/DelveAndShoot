@@ -16,6 +16,6 @@ public static class CollectionUtils
         }
     }
 
-    public static IEnumerable<T> ComulativeSum<T>(this IEnumerable<T> collection) where T : IComparable<T> =>
-        collection.Comulative((a, b) => (dynamic)a + (dynamic)b);
+    public static IEnumerable<float> ComulativeSum(this IEnumerable<float> collection) =>
+        collection.Comulative((a, b) => a + b);
 }
