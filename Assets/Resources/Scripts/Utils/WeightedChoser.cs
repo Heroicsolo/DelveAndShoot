@@ -23,20 +23,21 @@ namespace Heroicsolo.Scripts.Utils
     public class WeightedChoser<T> : IEnumerable<ValueWeight<T>>
     {
 
-        private SortedSet<ValueWeight<T>> valuesWeights;
+        private List<ValueWeight<T>> valuesWeights;
         private List<float> comulateWeights;
         private bool isReady = false;
 
         public WeightedChoser()
         {
-            valuesWeights = new SortedSet<ValueWeight<T>>();
+            valuesWeights = new List<ValueWeight<T>>();
         }
         public WeightedChoser(IEnumerable<ValueWeight<T>> valuesWeights)
         {
-            this.valuesWeights = new SortedSet<ValueWeight<T>>(valuesWeights);
+            this.valuesWeights = new List<ValueWeight<T>>(valuesWeights);
         }
         private void Prepare()
         {
+            valuesWeights.Sort();
             comulateWeights = valuesWeights.Select(kv=>kv.Weight).ComulativeSum().ToList();
             isReady = true;
         }

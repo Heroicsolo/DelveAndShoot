@@ -16,7 +16,7 @@ namespace Heroicsolo.Scripts.Logics
         [SerializeField]
         private float spawnPeriod = 0;
 
-        private WeightedChoser<Mob> spawnChoser = new();
+        private WeightedChoser<Mob> spawnChoser;
         private Coroutine spawnCoroutine = null;
 
         private void Spawn()
@@ -36,17 +36,11 @@ namespace Heroicsolo.Scripts.Logics
 
         void Start()
         {
+            spawnChoser = new(spawnList);
             if (spawnPeriod <= 0)
                 Spawn();
             else
                 spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
-
-        //[Serializable]
-        //struct MobSpawnInfo
-        //{
-        //    public Mob Mob;
-        //    public float Weight;
-        //}
     }
 }
