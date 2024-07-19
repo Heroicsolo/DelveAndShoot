@@ -37,7 +37,7 @@ namespace Heroicsolo.Scripts.Utils
         }
         private void Prepare()
         {
-            valuesWeights.Sort();
+            valuesWeights = valuesWeights.OrderByDescending(i=>i.Weight).ToList();
             comulateWeights = valuesWeights.Select(kv=>kv.Weight).ComulativeSum().ToList();
             isReady = true;
         }
