@@ -107,6 +107,11 @@ namespace Heroicsolo.Inventory
             PoolSystem.ReturnToPool(this);
         }
 
+        private void Start()
+        {
+            SystemsManager.InjectSystemsTo(this);
+        }
+
         private void OnEnable()
         {
             isFlying = false;

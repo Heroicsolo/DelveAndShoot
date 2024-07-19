@@ -26,6 +26,7 @@ namespace Heroicsolo.Scripts.UI
         [Header("Cursor Params")]
         [SerializeField] private Texture2D aimCursorTexture;
         [SerializeField] private Texture2D aimCursorTextureTargeted;
+        [SerializeField] private Texture2D pickUpCursorTexture;
 
         public GameObject GetGameObject()
         {
@@ -51,6 +52,9 @@ namespace Heroicsolo.Scripts.UI
                     break;
                 case CursorState.Targeted:
                     Cursor.SetCursor(aimCursorTextureTargeted, CursorOffset, CursorMode.ForceSoftware);
+                    break;
+                case CursorState.PickUp:
+                    Cursor.SetCursor(pickUpCursorTexture, CursorOffset, CursorMode.ForceSoftware);
                     break;
                 case CursorState.Default:
                     Cursor.SetCursor(null, CursorOffset, CursorMode.ForceSoftware);
