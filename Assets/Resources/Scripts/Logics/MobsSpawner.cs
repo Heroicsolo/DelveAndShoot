@@ -36,7 +36,8 @@ namespace Heroicsolo.Scripts.Logics
 
         void Start()
         {
-            spawnChoser = new(spawnList);
+            var spawnDict = new Dictionary<Mob, float>(spawnList.Select(i => new KeyValuePair<Mob, float>(i.Value, i.Weight)));
+            spawnChoser = new WeightedChoser<Mob>(spawnDict);
             if (spawnPeriod <= 0)
                 Spawn();
             else

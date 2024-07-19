@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Heroicsolo.Scripts.Utils
 {
@@ -53,6 +51,11 @@ namespace Heroicsolo.Scripts.Utils
         {
             this.valuesWeights = new Dictionary<T, float>(valuesWeights);
         }
+        public WeightedChoser(Dictionary<T, float> valuesWeights)
+        {
+            this.valuesWeights = valuesWeights;
+        }
+
         private void Prepare()
         {
             valuesWeights = new Dictionary<T, float>(valuesWeights.OrderByDescending(kv=>kv.Value));
