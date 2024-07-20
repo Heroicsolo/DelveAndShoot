@@ -1,5 +1,7 @@
+using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
+using Heroicsolo.Scripts.Inventory;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.Player;
 using Heroicsolo.Scripts.UI;
@@ -7,7 +9,6 @@ using Heroicsolo.Utils;
 using Naxeex.Content_dev.Scripts.Utils;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Heroicsolo.Inventory
@@ -20,12 +21,15 @@ namespace Heroicsolo.Inventory
         [SerializeField] private ItemId itemId;
         [SerializeField] [Min(1)] private int amount;
         [SerializeField] private PickupMode pickupMode;
+        [SerializeField] [Min(0f)] private float pickupRadius = 3f;
 
         [Inject] private IGameUIController gameUIController;
+        [Inject] private IGameController gameController;
 
         private bool readyToPickup;
         private bool isFlying;
         private PlayerController playerController;
+        private Guid guid;
 
         public void FlyToPoint(Vector3 point)
         {
@@ -33,9 +37,9 @@ namespace Heroicsolo.Inventory
             StartCoroutine(FlyToPointAnim(point));
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnPlayerEnteredToPickupArea()
         {
-            if (!isFlying && other.TryGetComponent(out playerController))
+            if (!isFlying)
             {
                 if (pickupMode == PickupMode.Auto)
                 {
@@ -48,12 +52,9 @@ namespace Heroicsolo.Inventory
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnPlayerLeftPickupArea()
         {
-            if (other.TryGetComponent<PlayerController>(out _))
-            {
-                readyToPickup = false;
-            }
+            readyToPickup = false;
         }
 
         private void PickUp()
@@ -110,11 +111,27 @@ namespace Heroicsolo.Inventory
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
+
+            playerController = gameController.GetPlayerController();
+
+            guid = Guid.NewGuid();
         }
 
         private void OnEnable()
         {
             isFlying = false;
+        }
+
+        private void Update()
+        {
+            if (Vector3.Distance(transform.position, playerController.transform.position) < pickupRadius)
+            {
+                OnPlayerEnteredToPickupArea();
+            }
+            else
+            {
+                OnPlayerLeftPickupArea();
+            }
         }
 
         private void OnMouseEnter()
@@ -124,6 +141,8 @@ namespace Heroicsolo.Inventory
                 gameUIController.SetUIElementSelected(true);
                 gameUIController.SetCursorState(CursorState.PickUp, true);
             }
+
+            gameUIController.ShowWorldItemDesc(guid, ItemsCollection.ItemsParams[itemId].Title, transform.position);
         }
 
         private void OnMouseExit()
@@ -133,6 +152,8 @@ namespace Heroicsolo.Inventory
                 gameUIController.SetUIElementSelected(false);
                 gameUIController.SetCursorState(CursorState.Default, true);
             }
+
+            gameUIController.HideWorldItemDesc(guid);
         }
 
         private void OnMouseUpAsButton()

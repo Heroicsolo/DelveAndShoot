@@ -52,7 +52,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skull00 Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1991357009506277703, guid: 86e1559aed5a48247bb90e2e5691415e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -86,6 +87,7 @@ MonoBehaviour:
   itemId: 32
   amount: 1
   pickupMode: 1
+  pickupRadius: 3
 --- !u!135 &1444239533167152541
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -105,7 +107,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 3
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6097666485460465292
 Rigidbody:

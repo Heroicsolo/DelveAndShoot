@@ -1,4 +1,7 @@
 using Heroicsolo.DI;
+using Heroicsolo.Utils;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +30,11 @@ namespace Heroicsolo.Scripts.UI
         [SerializeField] private Texture2D aimCursorTexture;
         [SerializeField] private Texture2D aimCursorTextureTargeted;
         [SerializeField] private Texture2D pickUpCursorTexture;
+
+        [Header("Info Popups")]
+        [SerializeField] private WorldItemInfoPopup worldItemInfoPopupPrefab;
+
+        private Dictionary<Guid, WorldItemInfoPopup> worldItemInfoPopups = new();
 
         public GameObject GetGameObject()
         {
@@ -59,6 +67,32 @@ namespace Heroicsolo.Scripts.UI
                 case CursorState.Default:
                     Cursor.SetCursor(null, CursorOffset, CursorMode.ForceSoftware);
                     break;
+            }
+        }
+
+        public void ShowWorldItemDesc(Guid itemID, string desc, Vector3 worldPos)
+        {
+            if (!worldItemInfoPopups.ContainsKey(itemID))
+            {
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+
+                WorldItemInfoPopup worldItemInfoPopup = PoolSystem.GetInstanceAtPosition(worldItemInfoPopupPrefab, worldItemInfoPopupPrefab.GetName(), screenPos, transform);
+
+                worldItemInfoPopup.SetText(desc);
+
+                worldItemInfoPopups.Add(itemID, worldItemInfoPopup);
+            }
+        }
+
+        public void HideWorldItemDesc(Guid itemID)
+        {
+            if (worldItemInfoPopups.ContainsKey(itemID))
+            {
+                WorldItemInfoPopup worldItemInfoPopup = worldItemInfoPopups[itemID];
+
+                worldItemInfoPopups.Remove(itemID);
+
+                PoolSystem.ReturnToPool(worldItemInfoPopup);
             }
         }
 
