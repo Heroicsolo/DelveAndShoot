@@ -1,9 +1,13 @@
 using Heroicsolo.DI;
+using System;
+using UnityEngine;
 
 namespace Heroicsolo.Scripts.UI
 {
     public interface IGameUIController : ISystem
     {
+        void ShowWorldItemDesc(Guid itemID, string desc, Vector3 worldPos);
+        void HideWorldItemDesc(Guid itemID);
         void OnHealthChanged(float oldVal, float newVal, float maxVal);
         void OnStaminaChanged(float oldVal, float newVal, float maxVal);
         void OnPlayerLevelUp(int level);

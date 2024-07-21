@@ -4612,6 +4612,8 @@ MonoBehaviour:
   ammoPanel: {fileID: 4569671728624162627}
   aimCursorTexture: {fileID: 2800000, guid: a091c418f8c56f34dbd11906cb879af2, type: 3}
   aimCursorTextureTargeted: {fileID: 2800000, guid: d8896b9823d33b447a8e0eb2ab09295b, type: 3}
+  pickUpCursorTexture: {fileID: 2800000, guid: 6f18e31d7e97f0040b999091c98bccde, type: 3}
+  worldItemInfoPopupPrefab: {fileID: 7043705446984092756, guid: 88561b6a15ab6de41bafccadf44444fa, type: 3}
 --- !u!1 &7699788376210963871
 GameObject:
   m_ObjectHideFlags: 0

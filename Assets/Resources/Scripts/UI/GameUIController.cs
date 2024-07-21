@@ -1,5 +1,7 @@
 using Heroicsolo.DI;
 using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +10,7 @@ namespace Heroicsolo.Scripts.UI
 {
     public class GameUIController : MonoBehaviour, IGameUIController
     {
-        [SerializeField] [Min(0f)] private float healthChangeTime = 1f;
+        [SerializeField][Min(0f)] private float healthChangeTime = 1f;
 
         [Inject] private GameUIView uiView;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
@@ -83,6 +85,16 @@ namespace Heroicsolo.Scripts.UI
             }
 
             uiView.SetHealthBarValue(newVal, newVal, maxVal);
+        }
+
+        public void ShowWorldItemDesc(Guid itemID, string desc, Vector3 worldPos)
+        {
+            uiView.ShowWorldItemDesc(itemID, desc, worldPos);
+        }
+
+        public void HideWorldItemDesc(Guid itemID)
+        {
+            uiView.HideWorldItemDesc(itemID);
         }
 
         private void Start()

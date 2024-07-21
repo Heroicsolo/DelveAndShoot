@@ -1,4 +1,6 @@
 using Assets.FantasyInventory.Scripts.Enums;
+using Heroicsolo.Scripts.Inventory;
+using Heroicsolo.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ namespace Heroicsolo.Inventory
     public class LootManager : MonoBehaviour, ILootManager
     {
         private const string LootStatePrefsKey = "LootSystemState";
+
+        [SerializeField] [Min(0f)] private float dropRadius = 3f;
 
         private List<LootInfo> lootInfos = new List<LootInfo>();
 
@@ -29,7 +33,19 @@ namespace Heroicsolo.Inventory
         {
             List<DropResult> randomDrop = lootInfo.GetRandomDrop(itemsDropState);
 
-            //TODO: spawn loot in world
+            foreach (var dropUnit in randomDrop)
+            {
+                PickupItem itemPrefab = ItemsCollection.ItemsParams[dropUnit.ItemId].PickupItem;
+
+                Vector2 spread = UnityEngine.Random.insideUnitCircle * dropRadius;
+                Vector3 spread3D = new(spread.x, 0f, spread.y);
+                Vector3 dropPosition = worldPosition + spread3D;
+
+                if (itemPrefab != null)
+                {
+                    PoolSystem.GetInstanceAtPosition(itemPrefab, itemPrefab.GetName(), worldPosition).FlyToPoint(dropPosition);
+                }
+            }
 
             SaveState();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.FantasyInventory.Scripts.Enums;
+using Heroicsolo.Inventory;
 using Heroicsolo.Scripts.Logics;
 
 namespace Assets.FantasyInventory.Scripts.Data
@@ -20,6 +21,7 @@ namespace Assets.FantasyInventory.Scripts.Data
         public int Price;
         public float Weight;
         public int StackSize;
+        public PickupItem PickupItem;
 
         public bool TryGetProperty(PropertyId propertyId, out Property property)
         {
