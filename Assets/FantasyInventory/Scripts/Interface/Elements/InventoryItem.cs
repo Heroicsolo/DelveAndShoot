@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
+using Heroicsolo.Scripts.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,6 +32,7 @@ namespace Assets.FantasyInventory.Scripts.Interface.Elements
         public void Start()
         {
             Icon.sprite = ImageCollection.Instance.GetIcon(Item.Id);
+            Frame.color = ItemsCollection.GetRarityColor(ItemsCollection.ItemsParams[Item.Id].Rarity);
         }
 
         /// <summary>

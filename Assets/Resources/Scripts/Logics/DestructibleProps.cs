@@ -1,3 +1,5 @@
+using Heroicsolo.DI;
+using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +13,9 @@ namespace Heroicsolo.Scripts.Logics
         [SerializeField] private ParticleSystem destructionEffect;
         [SerializeField] [Min(0f)] private float durability = 1f;
         [SerializeField] private List<DamageType> damageResists = new List<DamageType>();
+        [SerializeField] private string lootId;
+
+        [Inject] private ILootManager lootManager;
 
         private float currDurability;
 
@@ -33,6 +38,11 @@ namespace Heroicsolo.Scripts.Logics
             {
                 destructionEffect.transform.parent = null;
                 destructionEffect.Play();
+            }
+
+            if (!string.IsNullOrEmpty(lootId))
+            {
+                lootManager.GenerateRandomDrop(lootId, transform.position);
             }
 
             Destroy(gameObject);
@@ -90,6 +100,11 @@ namespace Heroicsolo.Scripts.Logics
 
         public void SetTeam(TeamType team)
         {
+        }
+
+        private void Start()
+        {
+            SystemsManager.InjectSystemsTo(this);
         }
     }
 }

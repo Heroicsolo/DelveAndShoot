@@ -15,7 +15,7 @@ namespace Heroicsolo.Inventory
 {
     public class PickupItem : MonoBehaviour, IPooledObject
     {
-        private const float PickupFlightTime = 1f;
+        private const float PickupFlightTime = 0.3f;
         private const float FlyHeight = 2f;
 
         [SerializeField] private ItemId itemId;
@@ -132,6 +132,11 @@ namespace Heroicsolo.Inventory
             {
                 OnPlayerLeftPickupArea();
             }
+
+            if (Input.GetMouseButtonUp(1) && !isFlying && pickupMode == PickupMode.Click && readyToPickup)
+            {
+                PickUp();
+            }
         }
 
         private void OnMouseEnter()
@@ -154,14 +159,6 @@ namespace Heroicsolo.Inventory
             }
 
             gameUIController.HideWorldItemDesc(guid);
-        }
-
-        private void OnMouseUpAsButton()
-        {
-            if (!isFlying && pickupMode == PickupMode.Click && readyToPickup)
-            {
-                PickUp();
-            }
         }
 
         public string GetName()

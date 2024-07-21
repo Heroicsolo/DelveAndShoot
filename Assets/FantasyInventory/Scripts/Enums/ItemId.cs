@@ -45,5 +45,6 @@
         Sign3           = 35,
         Sign4           = 36,
         Sign5           = 37,
+        SilverWineglass = 38
     }
 }

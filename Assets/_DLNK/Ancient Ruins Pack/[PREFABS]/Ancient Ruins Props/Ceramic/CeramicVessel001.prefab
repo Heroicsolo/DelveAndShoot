@@ -51,6 +51,7 @@ MonoBehaviour:
   destructionEffect: {fileID: 3930273535878396638}
   durability: 1
   damageResists: 
+  lootId: 2afa85be-db6c-4d86-ac48-318652027f8c
 --- !u!136 &2254617477307819595
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ namespace Assets.FantasyInventory.Scripts.Data
         public ItemId ID;
         public ItemType Type;
         public string Title;
+        public ItemRarity Rarity;
         public List<ItemTag> Tags = new List<ItemTag>();
         public List<CharacterStatModifier> StatModifiers = new List<CharacterStatModifier>();
         public List<Property> Properties = new List<Property>();
@@ -29,5 +30,13 @@ namespace Assets.FantasyInventory.Scripts.Data
 
             return property != null;
         }
+    }
+
+    public enum ItemRarity
+    {
+        Common = 0,
+        Rare = 1,
+        Epic = 2,
+        Legendary = 3
     }
 }

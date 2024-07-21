@@ -19,6 +19,18 @@ namespace Heroicsolo.Scripts.Inventory
             return instance;
         }
 
+        public static Color GetRarityColor(ItemRarity itemRarity)
+        {
+            return itemRarity switch
+            {
+                ItemRarity.Common => Color.white,
+                ItemRarity.Rare => Color.blue,
+                ItemRarity.Epic => Color.magenta,
+                ItemRarity.Legendary => Color.yellow,
+                _ => Color.white,
+            };
+        }
+
         private void Awake()
         {
             if (instance == null)
