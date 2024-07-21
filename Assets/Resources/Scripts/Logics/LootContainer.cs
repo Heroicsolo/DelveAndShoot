@@ -99,7 +99,7 @@ namespace Heroicsolo.Logics
                 OnPlayerLeftOpenArea();
             }
 
-            if (Input.GetMouseButtonUp(1) && readyToOpen)
+            if (Input.GetMouseButtonUp(1) && readyToOpen && !isEmpty)
             {
                 Open();
             }
