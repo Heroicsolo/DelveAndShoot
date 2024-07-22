@@ -40,13 +40,14 @@ namespace Heroicsolo.Inventory
 
                     //We reset unluckiness protection and do *luckiness* protection instead
                     itemDropState.DropChanceModifier = currDropChance - 1f;
-                    itemsDropState.DropStates[dropStateIdx] = itemDropState;
                 }
                 else
                 {
                     //Unluckiness protection
                     itemDropState.DropChanceModifier += lootUnit.DropChance;
                 }
+
+                itemsDropState.DropStates[dropStateIdx] = itemDropState;
             }
 
             return dropResults;
