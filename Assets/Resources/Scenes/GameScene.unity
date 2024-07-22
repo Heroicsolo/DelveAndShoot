@@ -348,12 +348,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemIcons:
   - {fileID: 21300000, guid: c23a1bc6d43df3744b0e060528650c82, type: 3}
+  - {fileID: 21300000, guid: 35959bbd2e4d8e642ba15b05e01ec309, type: 3}
+  - {fileID: 21300000, guid: c9e2ec3ff0943e541991f62370ecd2b7, type: 3}
+  - {fileID: 21300000, guid: 6670d291f8e409b4e89dc995ac3b1081, type: 3}
   - {fileID: 21300000, guid: 5a8eaad8460131143a7cbfc17652fc74, type: 3}
   - {fileID: 21300000, guid: 02cc19646da4b6a4b8d9fa3d5e654bea, type: 3}
   - {fileID: 21300000, guid: 9ac27c26b5a61984b88fe5755a73e480, type: 3}
   - {fileID: 21300000, guid: d58919b7c9dd3fc4ba512dd935446825, type: 3}
+  - {fileID: 21300000, guid: c629717863a88b149a707afa86474088, type: 3}
   - {fileID: 21300000, guid: c395981edf50a504db8c4828df8245b7, type: 3}
   - {fileID: 21300000, guid: aa5db19f885453f45894a35670526dca, type: 3}
+  - {fileID: 21300000, guid: 58b8378c23a7cc242aacccf02f2806eb, type: 3}
+  - {fileID: 21300000, guid: 7c847e453665ebb4b84bd0f171730969, type: 3}
   ItemPatterns:
   - {fileID: 21300000, guid: 998a2acecc8cb0a488e5628a2d580f47, type: 3}
   - {fileID: 21300000, guid: f6d2574158a237646a57f23e7a8e3322, type: 3}
@@ -1343,7 +1349,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.size
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[1].ID
@@ -1388,6 +1394,10 @@ PrefabInstance:
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[11].ID
       value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].ID
+      value: 39
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[1].Type
@@ -1510,6 +1520,14 @@ PrefabInstance:
       value: Silver wineglass
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].Price
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].Title
+      value: Beautiful opal
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[1].Weight
       value: 1
       objectReference: {fileID: 0}
@@ -1562,6 +1580,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].Rarity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].Weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[1].StackSize
       value: 1
       objectReference: {fileID: 0}
@@ -1606,6 +1632,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].StackSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[7].PickupItem
       value: 
       objectReference: {fileID: 5683655426298566659, guid: dc7ba8fca056f0a4c8138cf4bc8f29ad, type: 3}
@@ -1625,6 +1655,10 @@ PrefabInstance:
       propertyPath: AvailableItems.Array.data[11].PickupItem
       value: 
       objectReference: {fileID: 5683655426298566659, guid: 6d67c6cc3599be24abf2df5d3cea9c8b, type: 3}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].PickupItem
+      value: 
+      objectReference: {fileID: 5683655426298566659, guid: 8b099fe2362b0254fa8c149b3fc3b96f, type: 3}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[0].Tags.Array.size
       value: 1
@@ -1671,6 +1705,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[11].Tags.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
+      propertyPath: AvailableItems.Array.data[12].Tags.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
