@@ -1,0 +1,46 @@
+﻿using Heroicsolo.Scripts.Logics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
+using UnityEngine;
+using Heroicsolo.Utils;
+using System.Xml.Schema;
+
+namespace Heroicsolo.Scripts.Editor.CustomInspectors
+{
+    [CustomPropertyDrawer(typeof(CharacterStat))]
+    internal class CharacterStat_Inspector : PropertyDrawer
+    {
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        {
+            //Gather properties
+            var isRegen_prop = property.FindPropertyRelative("isRegenEnabled");
+            var regenRate_prop = property.FindPropertyRelative("regenRate");
+            var type_prop = property.FindPropertyRelative("statType");
+            var baseValue_prop = property.FindPropertyRelative("baseValue");
+            //Build UI
+            VisualElement root = new();
+            var card = new VisualElement(); 
+            card.Add(new PropertyField(type_prop, "Type"));
+            card.Add(new PropertyField(baseValue_prop, "Base Value"));
+            //Build regen row
+            var regen_checkbox = new PropertyField(isRegen_prop, "Regen");
+            var regenRate_field = new PropertyField(regenRate_prop, "Rate");
+            var regen_box = new VisualElement();
+            regenRate_field.style.alignSelf = Align.FlexEnd;
+            regen_box.style.flexDirection = FlexDirection.Row;
+            regen_box.Add(regen_checkbox);
+            regen_box.Add(regenRate_field);
+            card.Add(regen_box);
+            root.Add(card);
+            //Hide regen rate if unused
+            regenRate_field.visible = isRegen_prop.boolValue;
+            return root;
+        }
+    }
+}

@@ -16,6 +16,7 @@ namespace Heroicsolo.Scripts.Logics
         protected float currValue;
         protected float currMaxValue;
 
+        [SerializeField]
         private bool isRegenEnabled;
 
         public CharacterStatType StatType => statType;
