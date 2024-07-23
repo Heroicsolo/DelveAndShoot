@@ -862,18 +862,22 @@ MonoBehaviour:
     baseValue: 1000
     regenRate: 10
     bonusPerLevel: 100
+    isRegenEnabled: 1
   - statType: 10
     baseValue: 100
     regenRate: 15
     bonusPerLevel: 0
+    isRegenEnabled: 1
   - statType: 20
     baseValue: 6
     regenRate: 0
     bonusPerLevel: 0
+    isRegenEnabled: 0
   - statType: 30
     baseValue: 0
     regenRate: 0
     bonusPerLevel: 0
+    isRegenEnabled: 0
   hidingObjectsManager: {fileID: 4220186838963628649}
 --- !u!1001 &8631368833025665164
 PrefabInstance:
