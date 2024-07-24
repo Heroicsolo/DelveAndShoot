@@ -25,6 +25,7 @@ namespace Heroicsolo.Inventory
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IGameController gameController;
+        [Inject] private IInventoryManager inventoryManager;
 
         private bool readyToPickup;
         private bool isFlying;
@@ -103,7 +104,7 @@ namespace Heroicsolo.Inventory
             }
             while (t < PickupFlightTime);
 
-            //TODO: add item to inventory
+            inventoryManager.AddItem(itemId, 1);
 
             PoolSystem.ReturnToPool(this);
         }

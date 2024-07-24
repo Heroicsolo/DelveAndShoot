@@ -4,6 +4,7 @@ using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Assets.FantasyInventory.Scripts.Interface.Elements;
 using Heroicsolo.DI;
+using Heroicsolo.Inventory;
 using Heroicsolo.Scripts.Inventory;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.Player;
@@ -29,30 +30,21 @@ namespace Assets.FantasyInventory.Scripts.Interface
         public Text StatsValuesLabel;
 
         [Inject] private ICharacterStatsManager characterStatsManager;
+        [Inject] private IInventoryManager inventoryManager;
 
         private PlayerController playerController;
 
-        /// <summary>
-        /// Initialize owned items (just for example).
-        /// </summary>
-        public void Awake()
+        public void OnEnable()
         {
-            var inventory = new List<Item>
-            {
-                new Item(ItemId.Dollars, 500),
-            };
+            SystemsManager.InjectSystemsTo(this);
 
-            var equipped = new List<Item>
-            {
-                new Item(ItemId.Revolver, 1),
-            };
-
-            Bag.Initialize(ref inventory);
-            Equipment.Initialize(ref equipped);
+            FillInventory();
         }
 
         protected void Start()
         {
+            SystemsManager.InjectSystemsTo(this);
+
             playerController ??= FindObjectOfType<PlayerController>();
 
             Reset();
@@ -61,7 +53,7 @@ namespace Assets.FantasyInventory.Scripts.Interface
             // TODO: Assigning static callbacks. Don't forget to set null values when UI will be closed. You can also use events instead.
             InventoryItem.OnItemSelected = SelectItem;
             InventoryItem.OnDragStarted = SelectItem;
-            InventoryItem.OnDragCompleted = InventoryItem.OnDoubleClick = item => { if (Bag.Items.Contains(item)) Equip(); else Remove(); };
+            InventoryItem.OnDragCompleted = InventoryItem.OnDoubleClick = item => { if (Bag.Items.Contains(item)) Equip(); else Unequip(); };
         }
 
         public void SelectItem(Item item)
@@ -87,6 +79,9 @@ namespace Assets.FantasyInventory.Scripts.Interface
             }
 
             MoveItem(SelectedItem, Bag, Equipment);
+
+            inventoryManager.EquipItem(SelectedItem);
+
             AudioSource.PlayOneShot(EquipSound);
 
             if (SelectedItemParams.Type == ItemType.Weapon)
@@ -95,9 +90,12 @@ namespace Assets.FantasyInventory.Scripts.Interface
             }
         }
 
-        public void Remove()
+        public void Unequip()
         {
             MoveItem(SelectedItem, Equipment, Bag);
+
+            inventoryManager.UnequipItem(SelectedItem);
+
             SelectItem(Equipment.Items.FirstOrDefault(i => i.Id == SelectedItem) ?? Bag.Items.Single(i => i.Id == SelectedItem));
             AudioSource.PlayOneShot(RemoveSound);
         }
@@ -117,6 +115,15 @@ namespace Assets.FantasyInventory.Scripts.Interface
             }
 
             FillCharacterStats();
+        }
+
+        private void FillInventory()
+        {
+            List<Item> inventoryItems = inventoryManager.GetInventoryItems();
+            List<Item> equippedItems = inventoryManager.GetEquippedItems();
+
+            Bag.Initialize(ref inventoryItems);
+            Equipment.Initialize(ref equippedItems);
         }
 
         private void FillCharacterStats()
