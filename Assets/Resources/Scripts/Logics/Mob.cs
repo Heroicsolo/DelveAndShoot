@@ -9,11 +9,13 @@ using UnityEngine;
 
 namespace Heroicsolo.Scripts.Logics
 {
-    internal abstract class Mob : MonoBehaviour, IPooledObject, IHittable
+    internal abstract class Mob : MonoBehaviour, IPooledObject, ICharacter
     {
         public abstract void Activate();
         public abstract void Deactivate();
         public abstract void Die();
+        public abstract CharacterStat GetCharacterStat(CharacterStatType characterStatType);
+        public abstract List<CharacterStat> GetCharacterStats();
         public abstract void GetDamage(float damage, DamageType damageType = DamageType.Physical);
         public abstract GameObject GetGameObject();
         public abstract HittableType GetHittableType();
