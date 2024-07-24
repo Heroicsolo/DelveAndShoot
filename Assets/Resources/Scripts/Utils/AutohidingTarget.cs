@@ -57,7 +57,7 @@ namespace Heroicsolo.Utils
             var kvs = castRes
                 .Select(i => new KeyValuePair<IHideable, float>(
                     i.collider.GetComponent<IHideable>(),
-                    CalcDelta(i.point) * fadeCoef
+                    CalcDelta(i.transform.position) * fadeCoef
                     )
                 )
                 .Where(i => i.Key != null);

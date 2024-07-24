@@ -9,6 +9,8 @@ namespace Heroicsolo.Utils
     {
         [SerializeField] Shader m_fadeShader;
         [SerializeField] bool m_proccessChildren = false;
+        [Min(0)]
+        [SerializeField] float m_fadeMultiplier = 1;
 
         private List<MeshRenderer> m_renderers;
         private float m_fadeValue = 0;
@@ -40,11 +42,12 @@ namespace Heroicsolo.Utils
             Unhide();
         }
 
-        public void Hide(float delta)
+        public void Hide(float hideValue)
         {
-            if (Mathf.Approximately(delta, m_fadeValue))
+            hideValue = Mathf.Clamp01(hideValue*m_fadeMultiplier);
+            if (Mathf.Approximately(hideValue, m_fadeValue))
                 return;
-            m_fadeValue = (float)System.Math.Round(delta,2); 
+            m_fadeValue = (float)System.Math.Round(hideValue,2); 
             foreach (var rend in m_renderers)
             {
                 foreach (var mat in rend.materials)
@@ -52,7 +55,7 @@ namespace Heroicsolo.Utils
                     mat.shader = m_fadeShader;
                     mat.ToFadeMode();
                     Color col = mat.color;
-                    col.a = delta;
+                    col.a = hideValue;
                     mat.color = col;
                 }
             }
