@@ -1,4 +1,5 @@
 ﻿using Heroicsolo.DI;
+using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.Player;
@@ -31,8 +32,13 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] private TeamType defaultTeam;
         [SerializeField] private List<CharacterStat> stats = new();
         [SerializeField] private List<Transform> patrolPoints = new();
+        [SerializeField] [Min(0f)] private float attackDistance = 3f;
+        [SerializeField] [Min(0f)] private float aggroRadius = 10f;
+        [SerializeField] [Min(0f)] private float evadeRadius = 20f;
+        [SerializeField] private string lootId;
 
         [Inject] private ICharacterStatsManager characterStatsManager;
+        [Inject] private ILootManager lootManager;
 
         private string _typeName;
         private NavMeshAgent agent;
@@ -42,6 +48,7 @@ namespace Assets.Resources.Scripts.Logics
         private PlayerController playerController;
         private Transform lastPatrolPoint;
         private TeamType currentTeam;
+        private Vector3 spawnPoint;
 
         private void Start()
         {
@@ -57,6 +64,8 @@ namespace Assets.Resources.Scripts.Logics
             _typeName = typeName;
 
             botState = BotState.Sleeping;
+
+            spawnPoint = transform.position;
 
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
@@ -79,7 +88,9 @@ namespace Assets.Resources.Scripts.Logics
 
             currentTeam = defaultTeam;
 
-            SwitchState(BotState.Idle);
+            spawnPoint = transform.position;
+
+            ResetState();
         }
 
         private void SelectNextPatrolPoint()
@@ -101,12 +112,50 @@ namespace Assets.Resources.Scripts.Logics
             return false;
         }
 
+        private void ResetState()
+        {
+            if (patrolPoints.Count > 0)
+            {
+                SwitchState(BotState.Patrolling);
+            }
+            else
+            {
+                SwitchState(BotState.Idle);
+            }
+        }
+
+        private void CheckPlayer()
+        {
+            if (playerController != null && !playerController.IsDead())
+            {
+                float dist = Vector3.Distance(transform.position, playerController.transform.position);
+
+                if (dist < attackDistance)
+                {
+                    SwitchState(BotState.Attacking);
+                }
+                else if (dist < aggroRadius)
+                {
+                    SwitchState(BotState.FollowPlayer);
+                }
+                else if (dist > evadeRadius)
+                {
+                    SwitchState(BotState.Evade);
+                }
+            }
+            else
+            {
+                SwitchState(BotState.Evade);
+            }
+        }
+
         private void UpdateCurrentState()
         {
             switch (botState)
             {
                 case BotState.Idle:
                     agent.isStopped = true;
+                    CheckPlayer();
                     break;
                 case BotState.Patrolling:
                     if (patrolPoints.Count > 0 && IsReachedNextPatrolPoint())
@@ -115,18 +164,30 @@ namespace Assets.Resources.Scripts.Logics
                         agent.isStopped = false;
                         animator.SetBool(WalkAnimHash, true);
                     }
+                    CheckPlayer();
                     break;
                 case BotState.FollowPlayer:
                     agent.isStopped = false;
                     agent.SetDestination(playerController.transform.position);
                     animator.SetBool(WalkAnimHash, true);
+                    CheckPlayer();
                     break;
                 case BotState.Attacking:
                     agent.isStopped = true;
                     animator.SetBool(WalkAnimHash, false);
+                    animator.SetTrigger(AttackAnimHash);
+                    CheckPlayer();
                     break;
                 case BotState.Death:
                     agent.isStopped = true;
+                    break;
+                case BotState.Evade:
+                    agent.isStopped = false;
+                    if (IsReachedNextPatrolPoint())
+                    {
+                        statsDict[CharacterStatType.Health].Reset();
+                        ResetState();
+                    }
                     break;
             }
         }
@@ -134,6 +195,16 @@ namespace Assets.Resources.Scripts.Logics
         private void Update()
         {
             UpdateCurrentState();
+        }
+
+        private void SpawnLoot()
+        {
+            lootManager.GenerateRandomDrop(lootId, transform.position);
+        }
+            
+        public bool IsDamageable()
+        {
+            return botState != BotState.Evade && botState != BotState.Death && statsDict[CharacterStatType.Health].Value > 0f;
         }
 
         public override void Activate()
@@ -163,6 +234,11 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
+            if (!IsDamageable())
+            {
+                return;
+            }
+
             if (statsDict.ContainsKey(CharacterStatType.Armor) && damageType == DamageType.Physical)
             {
                 damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
@@ -253,10 +329,18 @@ namespace Assets.Resources.Scripts.Logics
                 case BotState.Attacking:
                     agent.isStopped = true;
                     animator.SetBool(WalkAnimHash, false);
+                    animator.SetTrigger(AttackAnimHash);
                     break;
                 case BotState.Death:
                     agent.isStopped = true;
+                    animator.SetBool(WalkAnimHash, false);
                     animator.SetTrigger(DieAnimHash);
+                    SpawnLoot();
+                    break;
+                case BotState.Evade:
+                    agent.isStopped = false;
+                    agent.SetDestination(spawnPoint);
+                    animator.SetBool(WalkAnimHash, true);
                     break;
             }
         }
@@ -269,6 +353,7 @@ namespace Assets.Resources.Scripts.Logics
         Patrolling = 2,
         FollowPlayer = 3,
         Attacking = 4,
-        Death = 5
+        Death = 5,
+        Evade = 6
     }
 }

@@ -97,6 +97,10 @@ MonoBehaviour:
     regenRate: 0
     bonusPerLevel: 10
   patrolPoints: []
+  attackDistance: 3
+  aggroRadius: 10
+  evadeRadius: 20
+  lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
 --- !u!195 &3471320406476443588
 NavMeshAgent:
   m_ObjectHideFlags: 0
