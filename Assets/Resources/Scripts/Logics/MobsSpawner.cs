@@ -22,7 +22,8 @@ namespace Heroicsolo.Scripts.Logics
         private void Spawn()
         {
             Mob chosenMob = spawnChoser.Chose();
-            PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position);
+            Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position);
+            mobInstance.Activate();
         }
 
         private IEnumerator SpawnCoroutine()

@@ -39,6 +39,7 @@ namespace Assets.Resources.Scripts.Logics
 
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private ILootManager lootManager;
+        [Inject] private ITeamsManager teamsManager;
 
         private string _typeName;
         private NavMeshAgent agent;
@@ -62,17 +63,12 @@ namespace Assets.Resources.Scripts.Logics
             }
 #endif
             _typeName = typeName;
-
-            botState = BotState.Sleeping;
-
-            spawnPoint = transform.position;
-
-            agent = GetComponent<NavMeshAgent>();
-            animator = GetComponent<Animator>();
         }
 
         private void InitState()
         {
+            SystemsManager.InjectSystemsTo(this);
+
             statsDict.Clear();
 
             foreach (CharacterStat characterStat in stats)
@@ -84,9 +80,14 @@ namespace Assets.Resources.Scripts.Logics
 
             playerController = FindObjectOfType<PlayerController>();
 
+            agent = GetComponent<NavMeshAgent>();
+            animator = GetComponent<Animator>();
+
             lastPatrolPoint = null;
 
             currentTeam = defaultTeam;
+
+            teamsManager.RegisterTeamMember(this, currentTeam);
 
             spawnPoint = transform.position;
 
@@ -175,7 +176,7 @@ namespace Assets.Resources.Scripts.Logics
                 case BotState.Attacking:
                     agent.isStopped = true;
                     animator.SetBool(WalkAnimHash, false);
-                    animator.SetTrigger(AttackAnimHash);
+                    animator.SetBool(AttackAnimHash, true);
                     CheckPlayer();
                     break;
                 case BotState.Death:
@@ -329,7 +330,7 @@ namespace Assets.Resources.Scripts.Logics
                 case BotState.Attacking:
                     agent.isStopped = true;
                     animator.SetBool(WalkAnimHash, false);
-                    animator.SetTrigger(AttackAnimHash);
+                    animator.SetBool(AttackAnimHash, true);
                     break;
                 case BotState.Death:
                     agent.isStopped = true;
