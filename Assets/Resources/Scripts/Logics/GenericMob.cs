@@ -14,6 +14,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 namespace Assets.Resources.Scripts.Logics
 {
@@ -36,6 +37,7 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] [Min(0f)] private float aggroRadius = 10f;
         [SerializeField] [Min(0f)] private float evadeRadius = 20f;
         [SerializeField] private string lootId;
+        [SerializeField] private MobCanvas mobCanvas;
 
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private ILootManager lootManager;
@@ -77,6 +79,7 @@ namespace Assets.Resources.Scripts.Logics
             }
 
             statsDict[CharacterStatType.Health].SetRegenState(true);
+            statsDict[CharacterStatType.Health].Reset();
 
             playerController = FindObjectOfType<PlayerController>();
 
@@ -90,6 +93,8 @@ namespace Assets.Resources.Scripts.Logics
             teamsManager.RegisterTeamMember(this, currentTeam);
 
             spawnPoint = transform.position;
+
+            mobCanvas.SetOwner(this, typeName);
 
             ResetState();
         }

@@ -5,18 +5,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Heroicsolo.Scripts.Logics
 {
     public class MobsSpawner : MonoBehaviour
     {
-        [SerializeField]
-        private List<ValueWeight<Mob>> spawnList = new();
-        [Min(0)]
-        [SerializeField]
-        private float spawnPeriod = 0;
+        [SerializeField] private List<ValueWeight<Mob>> spawnList = new();
+        [SerializeField] [Min(0)] private float spawnPeriod = 0;
 
         [Inject] private RuntimeDungeonGenerator runtimeDungeonGenerator;
 
