@@ -723,7 +723,7 @@ MonoBehaviour:
     spawnByWall: 0
     spawmInTheMiddle: 0
     spawnRotated: 0
-    heightFix: 0
+    heightFix: 0.2
     offsetFix: 0
     gameObject: {fileID: 3590027052458200376, guid: b603d53be26f0f648af89373e623022a, type: 3}
     spawnRoom: 0
