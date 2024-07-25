@@ -139,7 +139,8 @@ namespace Assets.Resources.Scripts.Logics
                 {
                     SwitchState(BotState.FollowPlayer);
                 }
-                else if (dist > evadeRadius)
+                else if (botState == BotState.FollowPlayer 
+                    && (dist > evadeRadius || Vector3.Distance(transform.position, spawnPoint) > evadeRadius))
                 {
                     SwitchState(BotState.Evade);
                 }

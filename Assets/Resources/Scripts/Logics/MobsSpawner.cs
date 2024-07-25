@@ -1,9 +1,11 @@
+using Heroicsolo.DI;
 using Heroicsolo.Scripts.Utils;
 using Heroicsolo.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Heroicsolo.Scripts.Logics
@@ -15,6 +17,8 @@ namespace Heroicsolo.Scripts.Logics
         [Min(0)]
         [SerializeField]
         private float spawnPeriod = 0;
+
+        [Inject] private RuntimeDungeonGenerator runtimeDungeonGenerator;
 
         private WeightedChoser<Mob> spawnChoser;
         private Coroutine spawnCoroutine = null;
@@ -35,14 +39,23 @@ namespace Heroicsolo.Scripts.Logics
             }
         }
 
-        void Start()
+        private IEnumerator BeginSpawningProccess()
         {
+            yield return new WaitUntil(() => runtimeDungeonGenerator.IsDungeonReady());
+
             var spawnDict = new Dictionary<Mob, float>(spawnList.Select(i => new KeyValuePair<Mob, float>(i.Value, i.Weight)));
             spawnChoser = new WeightedChoser<Mob>(spawnDict);
             if (spawnPeriod <= 0)
                 Spawn();
             else
                 spawnCoroutine = StartCoroutine(SpawnCoroutine());
+        }
+
+        void Start()
+        {
+            SystemsManager.InjectSystemsTo(this);
+
+            StartCoroutine(BeginSpawningProccess());
         }
     }
 }
