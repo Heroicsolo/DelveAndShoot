@@ -4,6 +4,7 @@ using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.Player;
 using Heroicsolo.Scripts.UI;
+using Heroicsolo.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,8 +37,10 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] [Min(0f)] private float attackDistance = 3f;
         [SerializeField] [Min(0f)] private float aggroRadius = 10f;
         [SerializeField] [Min(0f)] private float evadeRadius = 20f;
+        [SerializeField] [Min(0f)] private float dissapearTime = 5f;
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
+        [SerializeField] private Transform mobCircle;
 
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private ILootManager lootManager;
@@ -95,6 +98,8 @@ namespace Assets.Resources.Scripts.Logics
             spawnPoint = transform.position;
 
             mobCanvas.SetOwner(this, typeName);
+
+            mobCircle.gameObject.SetActive(true);
 
             ResetState();
         }
@@ -207,6 +212,11 @@ namespace Assets.Resources.Scripts.Logics
         private void SpawnLoot()
         {
             lootManager.GenerateRandomDrop(lootId, transform.position);
+        }
+
+        private void ReturnToPool()
+        {
+            PoolSystem.ReturnToPool(this);
         }
             
         public bool IsDamageable()
@@ -342,7 +352,9 @@ namespace Assets.Resources.Scripts.Logics
                     agent.isStopped = true;
                     animator.SetBool(WalkAnimHash, false);
                     animator.SetTrigger(DieAnimHash);
+                    mobCircle.gameObject.SetActive(false);
                     SpawnLoot();
+                    Invoke(nameof(ReturnToPool), dissapearTime);
                     break;
                 case BotState.Evade:
                     agent.isStopped = false;
