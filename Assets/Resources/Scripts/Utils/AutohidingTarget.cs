@@ -71,14 +71,16 @@ namespace Heroicsolo.Utils
                     CalcDelta(i.transform.position) * fadeCoef
                     )
                 )
-                .Where(i => i.Key != null);
-            hideblesOnWay.AddRange(kvs);
+                .Where(i => i.Key != null)
+                .DistinctBy(kv => kv.Key);
+            if(kvs != null)
+                hideblesOnWay.AddRange(kvs);
             return hideblesOnWay;
         }
 
         void UpdateOldHided(Dictionary<IHideable, float> newHided)
         {
-            var toUnhide = hidedObjects.Except(newHided.Keys);
+            var toUnhide = hidedObjects.Except(newHided.Keys).ToList();
             foreach (var hideable in toUnhide)
             {
                 hideable.Unhide();
