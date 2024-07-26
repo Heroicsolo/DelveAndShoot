@@ -66,6 +66,7 @@ namespace Heroicsolo.Utils
 
             float fadeCoef = CalcFadeCoef();
             var kvs = castResult
+                .Where(i => i.collider!=null)
                 .Select(i => new KeyValuePair<IHideable, float>(
                     i.collider.GetComponent<IHideable>(),
                     CalcDelta(i.transform.position) * fadeCoef
