@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5816584554044213}
   - component: {fileID: 6057568302334433945}
   - component: {fileID: 7687526664791823702}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 2605362472005089376}
   - component: {fileID: 7523408892431146880}
   - component: {fileID: 5765580841558529072}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AncientBlockVertical00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,6 +267,10 @@ PrefabInstance:
     - target: {fileID: 1744458513370202769, guid: e98e0336819242b449ea85752c4c2382, type: 3}
       propertyPath: m_Name
       value: AncientBlockVertical00
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744458513370202769, guid: e98e0336819242b449ea85752c4c2382, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

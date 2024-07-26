@@ -18,12 +18,20 @@ namespace Heroicsolo.Utils
         private float hidingRadius = 1;
         [SerializeField]
         float ignoreOffset = 1;
+        [SerializeField]
+        private LayerMask layersToCheck = 512;
+        [SerializeField]
+        int maxHidedObjects = 20;
+        //cache
         private List<IHideable> hidedObjects = new List<IHideable>();
+        private Dictionary<IHideable, float> hideblesOnWay= new ();
+        RaycastHit[] castResult;
 
         void Start()
         {
             if (visibleFromCamera == null)
                 visibleFromCamera = Camera.main;
+            castResult = new RaycastHit[maxHidedObjects];
         }
 
         float CalcFadeCoef()
@@ -44,25 +52,28 @@ namespace Heroicsolo.Utils
 
         Dictionary<IHideable, float> GetHideblesOnWay()
         {
+            hideblesOnWay.Clear();
             var cameraPos = visibleFromCamera.transform.position;
             var targetDirection = (transform.position - cameraPos);
-            RaycastHit[] castRes = Physics.CapsuleCastAll(
+            Physics.CapsuleCastNonAlloc(
                 cameraPos,
                 transform.position,
                 hidingRadius,
                 targetDirection.normalized,
-                targetDirection.magnitude-ignoreOffset);
+                castResult,
+                targetDirection.magnitude - ignoreOffset,
+                layersToCheck);
 
             float fadeCoef = CalcFadeCoef();
-            var kvs = castRes
+            var kvs = castResult
                 .Select(i => new KeyValuePair<IHideable, float>(
                     i.collider.GetComponent<IHideable>(),
                     CalcDelta(i.transform.position) * fadeCoef
                     )
                 )
                 .Where(i => i.Key != null);
-
-            return new Dictionary<IHideable, float>(kvs);
+            hideblesOnWay.AddRange(kvs);
+            return hideblesOnWay;
         }
 
         void UpdateOldHided(Dictionary<IHideable, float> newHided)
