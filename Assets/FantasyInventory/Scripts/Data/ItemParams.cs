@@ -21,7 +21,6 @@ namespace Assets.FantasyInventory.Scripts.Data
         public List<Property> Properties = new List<Property>();
         public int Price;
         public float Weight;
-        public int StackSize;
         public PickupItem PickupItem;
 
         public bool TryGetProperty(PropertyId propertyId, out Property property)

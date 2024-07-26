@@ -102,4 +102,11 @@ public static class MathHelper
     {
         return list[rng.Next(list.Count)];
     }
+
+    public static T GetRandomElementExceptOne<T>(this List<T> list, T exceptedOne)
+    {
+        List<T> newList = new List<T>(list);
+        newList.Remove(exceptedOne);
+        return newList[rng.Next(newList.Count)];
+    }
 }

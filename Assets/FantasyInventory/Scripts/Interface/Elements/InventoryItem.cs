@@ -13,6 +13,8 @@ namespace Assets.FantasyInventory.Scripts.Interface.Elements
     /// </summary>
     public class InventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        private const float FrameOpacity = 0.3f;
+
         public Image Icon;
         public Image Frame;
         public Text Count;
@@ -32,7 +34,9 @@ namespace Assets.FantasyInventory.Scripts.Interface.Elements
         public void Start()
         {
             Icon.sprite = ImageCollection.Instance.GetIcon(Item.Id);
-            Frame.color = ItemsCollection.GetRarityColor(ItemsCollection.ItemsParams[Item.Id].Rarity);
+            Color color = ItemsCollection.GetRarityColor(ItemsCollection.ItemsParams[Item.Id].Rarity);
+            color.a = FrameOpacity;
+            Frame.color = color;
         }
 
         /// <summary>

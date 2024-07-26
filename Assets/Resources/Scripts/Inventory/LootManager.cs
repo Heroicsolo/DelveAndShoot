@@ -19,6 +19,7 @@ namespace Heroicsolo.Inventory
         [SerializeField] private PooledParticleSystem rareLootEffect;
         [SerializeField] private PooledParticleSystem epicLootEffect;
         [SerializeField] private PooledParticleSystem legendaryLootEffect;
+        [SerializeField] private float lootEffectVerticalOffset = 2f;
 
         private List<LootInfo> lootInfos = new();
         private Dictionary<string, LootInfo> lootInfosByIds = new();
@@ -88,7 +89,7 @@ namespace Heroicsolo.Inventory
                             rarityEffect = legendaryLootEffect; break;
                     }
 
-                    PoolSystem.GetInstanceAtPosition(rarityEffect, rarityEffect.GetName(), itemInstance.transform.position, itemInstance.transform);
+                    PoolSystem.GetInstanceAtPosition(rarityEffect, rarityEffect.GetName(), itemInstance.transform.position + Vector3.up * lootEffectVerticalOffset, rarityEffect.transform.rotation, itemInstance.transform);
 
                     itemInstance.FlyToPoint(dropPosition);
                 }

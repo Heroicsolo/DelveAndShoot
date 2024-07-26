@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
+using Heroicsolo.Scripts.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,15 +15,21 @@ namespace Assets.FantasyInventory.Scripts.Interface.Elements
     /// </summary>
     public class ItemInfo : MonoBehaviour
     {
+        private const float FrameOpacity = 0.3f;
+
         public Text Name;
         public Text Description;
         public Text Price;
         public Image Icon;
+        public Image Frame;
 
         public void Reset()
         {
             Name.text = Description.text = Price.text = null;
             Icon.sprite = ImageCollection.Instance.DefaultItemIcon;
+            Color color = Color.white;
+            color.a = FrameOpacity;
+            Frame.color = color;
         }
 
         public void Initialize(ItemId itemId, ItemParams itemParams, bool shop = false)
@@ -30,6 +37,10 @@ namespace Assets.FantasyInventory.Scripts.Interface.Elements
             Icon.sprite = ImageCollection.Instance.GetIcon(itemId);
             Name.text = string.IsNullOrEmpty(itemParams.Title) ? SplitName(itemId.ToString()) : itemParams.Title;
             Description.text = $"Here will be {itemId} description soon...";
+
+            Color color = ItemsCollection.GetRarityColor(ItemsCollection.ItemsParams[itemId].Rarity);
+            color.a = FrameOpacity;
+            Frame.color = color;
 
             if (itemParams.Tags.Contains(ItemTag.NotForSale))
             {

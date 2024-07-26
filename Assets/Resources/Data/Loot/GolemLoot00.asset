@@ -10,23 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1027fcf2c23fa4a419e36d9fd9486e6f, type: 3}
-  m_Name: VaseLoot00
+  m_Name: GolemLoot00
   m_EditorClassIdentifier: 
-  lootId: 2afa85be-db6c-4d86-ac48-318652027f8c
+  lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   lootUnits:
-  - ItemId: 17
-    MinAmount: 1
-    MaxAmount: 1
-    DropChance: 0.25
-  - ItemId: 18
-    MinAmount: 1
-    MaxAmount: 1
-    DropChance: 0.1
-  - ItemId: 19
-    MinAmount: 1
-    MaxAmount: 1
-    DropChance: 0.05
   - ItemId: 39
     MinAmount: 1
     MaxAmount: 1
-    DropChance: 0.03
+    DropChance: 0.2
+  - ItemId: 40
+    MinAmount: 1
+    MaxAmount: 1
+    DropChance: 0.1
+  - ItemId: 17
+    MinAmount: 1
+    MaxAmount: 1
+    DropChance: 0.5
+  - ItemId: 18
+    MinAmount: 1
+    MaxAmount: 1
+    DropChance: 0.3
+  - ItemId: 19
+    MinAmount: 1
+    MaxAmount: 1
+    DropChance: 0.2
+  - ItemId: 38
+    MinAmount: 1
+    MaxAmount: 1
+    DropChance: 0.2

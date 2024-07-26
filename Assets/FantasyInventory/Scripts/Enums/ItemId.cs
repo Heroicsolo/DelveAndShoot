@@ -45,6 +45,8 @@
         Sign3           = 35,
         Sign4           = 36,
         Sign5           = 37,
-        SilverWineglass = 38
+        SilverWineglass = 38,
+        Opal1           = 39,
+        Opal2           = 40
     }
 }
