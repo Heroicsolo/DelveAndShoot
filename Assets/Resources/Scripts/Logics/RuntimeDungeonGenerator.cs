@@ -1,5 +1,6 @@
 using Dungeonizer;
 using Heroicsolo.DI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
@@ -12,6 +13,13 @@ namespace Heroicsolo.Scripts.Logics
         [SerializeField] private Dungeonizer.Dungeonizer dungeonizer;
         [SerializeField] private NavMeshSurface navMeshSurface;
         [SerializeField] private float dungeonAngle = 45f;
+
+        private bool dungeonReady;
+
+        public bool IsDungeonReady()
+        {
+            return dungeonReady;
+        }
 
         public GameObject GetGameObject()
         {
@@ -30,6 +38,8 @@ namespace Heroicsolo.Scripts.Logics
             dungeonizer.transform.rotation = Quaternion.Euler(0f, dungeonAngle, 0f);
 
             navMeshSurface.BuildNavMesh();
+
+            dungeonReady = true;
         }
 
         public void DeleteCurrentDungeon()

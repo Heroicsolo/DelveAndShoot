@@ -718,6 +718,15 @@ MonoBehaviour:
     offsetFix: -4.1
     gameObject: {fileID: 6559877208417805447, guid: 41847cde5e380654ead0d42fc7dfb291, type: 3}
     spawnRoom: 0
+  - minSpawnCount: 1
+    maxSpawnCount: 2
+    spawnByWall: 0
+    spawmInTheMiddle: 0
+    spawnRotated: 0
+    heightFix: 0.2
+    offsetFix: 0
+    gameObject: {fileID: 3590027052458200376, guid: b603d53be26f0f648af89373e623022a, type: 3}
+    spawnRoom: 0
   customRooms: []
   makeIt3d: 1
 --- !u!4 &1984618011
