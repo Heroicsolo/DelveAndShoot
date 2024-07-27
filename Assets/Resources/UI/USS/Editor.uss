@@ -1,0 +1,20 @@
+.row{
+    flex-direction: row;
+}
+.row > * > * > *{
+    flex-grow: 0;
+    min-width: 50px;
+}
+.row > * > * > Label{
+    flex-grow: 1;
+}
+.row > *{
+    min-width: 150px; 
+    flex-grow: 1;
+    margin-left:10px;
+}
+
+.row > .first-child{
+        margin-left:0px;
+}
+
