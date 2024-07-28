@@ -2,14 +2,16 @@
     flex-direction: row;
 }
 .row > * > * > *{
-    flex-grow: 0;
+    flex-grow: 2; 
     min-width: 50px;
 }
 .row > * > * > Label{
-    flex-grow: 1;
+    flex-grow: 1;/*Internal bug dirt fix*/
+    width:auto; /*Internal bug. Do not work*/
 }
+
 .row > *{
-    min-width: 100px; 
+    min-width: 50%; /*Internal bug dirt fix*/
     flex-grow: 1;
     margin-left:10px;
     padding-right: 5px;
