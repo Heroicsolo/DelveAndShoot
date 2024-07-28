@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using Heroicsolo.Scripts.UI.Utils;
 
 namespace Heroicsolo.Scripts.Editor.CustomInspectors
 {
@@ -24,10 +25,10 @@ namespace Heroicsolo.Scripts.Editor.CustomInspectors
             VisualElement root = new();
 
             root.Add(new PropertyField(itemId_prop, "Item ID"));
-            ChildAnnotator amountRow = new();
-            amountRow.Add(new PropertyField(min_prop, "Min"));
-            amountRow.Add(new PropertyField(max_prop, "Max"));
-            amountRow.AddToClassList("row");
+            Row amountRow = new(
+                new PropertyField(min_prop, "Min"),
+                new PropertyField(max_prop, "Max")
+                );
             root.Add(amountRow);
             root.Add(new PropertyField(chance_prop));
 
