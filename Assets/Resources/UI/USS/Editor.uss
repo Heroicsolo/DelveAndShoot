@@ -9,12 +9,24 @@
     flex-grow: 1;
 }
 .row > *{
-    min-width: 150px; 
+    min-width: 100px; 
     flex-grow: 1;
     margin-left:10px;
+    padding-right: 5px;
+    border-right-width:2px;
+    border-right-color: #333333;
 }
 
 .row > .first-child{
-        margin-left:0px;
+    margin-left:0px;
+}
+.row > .last-child{
+    border-width:0px;
 }
 
+.compact Label
+{
+    min-width:70px;
+    flex-grow:.75;
+    white-space: normal;
+}
