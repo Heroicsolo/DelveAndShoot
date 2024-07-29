@@ -9,6 +9,7 @@ namespace Heroicsolo.Scripts.Logics
         [SerializeField] protected CharacterStatType statType;
         [SerializeField] protected float baseValue;
         [SerializeField] protected float regenRate;
+        [SerializeField] protected float regenDelay;
         [SerializeField][Min(0f)] protected float bonusPerLevel = 0f;
 
         public Action<float, float, float> OnChange;
@@ -17,6 +18,7 @@ namespace Heroicsolo.Scripts.Logics
         protected float currMaxValue;
 
         private bool isRegenEnabled;
+        private float timeToRegen;
 
         public CharacterStatType StatType => statType;
         public float Value => currValue;
@@ -31,6 +33,11 @@ namespace Heroicsolo.Scripts.Logics
 
             currValue += change;
             currValue = Mathf.Clamp(currValue, 0f, currMaxValue);
+
+            if (change < 0f)
+            {
+                timeToRegen = regenDelay;
+            }
 
             OnChange?.Invoke(oldValue, currValue, currMaxValue);
         }
@@ -84,7 +91,12 @@ namespace Heroicsolo.Scripts.Logics
         {
             if (isRegenEnabled)
             {
-                Change(regenRate * deltaTime);
+                timeToRegen -= deltaTime;
+
+                if (timeToRegen <= 0f)
+                {
+                    Change(regenRate * deltaTime);
+                }
             }
         }
     }

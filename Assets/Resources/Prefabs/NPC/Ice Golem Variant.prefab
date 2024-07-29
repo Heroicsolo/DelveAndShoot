@@ -4953,6 +4953,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1146280915094585339, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
       insertIndex: -1
       addedObject: {fileID: -4502277778250458584}
+    - targetCorrespondingSourceObject: {fileID: 424630666983752901, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4361315505378699235}
+    - targetCorrespondingSourceObject: {fileID: 424630666983752901, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2513434436193737476}
+    - targetCorrespondingSourceObject: {fileID: 424630666983752901, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5703483609982282015}
   m_SourcePrefab: {fileID: 100100000, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
 --- !u!1 &4939867048250219172 stripped
 GameObject:
@@ -4988,6 +4997,8 @@ MonoBehaviour:
   aggroRadius: 10
   evadeRadius: 20
   dissapearTime: 5
+  attackPowerMin: 50
+  attackPowerMax: 70
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 1414838523926981639}
   mobCircle: {fileID: 5666413336414592480}
@@ -5013,6 +5024,72 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!1 &5656822212134756762 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 424630666983752901, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
+  m_PrefabInstance: {fileID: 5432896423456220511}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4361315505378699235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5656822212134756762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b1e54b69532b35459f7285cff3e9b39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageType: 0
+--- !u!135 &2513434436193737476
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5656822212134756762}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.35
+  m_Center: {x: 0.80624115, y: 0.8694173, z: -0.12930351}
+--- !u!54 &5703483609982282015
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5656822212134756762}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &5748350440226734110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}

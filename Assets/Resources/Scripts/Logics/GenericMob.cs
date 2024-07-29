@@ -38,6 +38,8 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] [Min(0f)] private float aggroRadius = 10f;
         [SerializeField] [Min(0f)] private float evadeRadius = 20f;
         [SerializeField] [Min(0f)] private float dissapearTime = 5f;
+        [SerializeField] [Min(0f)] private float attackPowerMin = 1f;
+        [SerializeField] [Min(0f)] private float attackPowerMax = 1f;
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
@@ -55,6 +57,8 @@ namespace Assets.Resources.Scripts.Logics
         private Transform lastPatrolPoint;
         private TeamType currentTeam;
         private Vector3 spawnPoint;
+
+        public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
         private void Start()
         {
@@ -217,6 +221,11 @@ namespace Assets.Resources.Scripts.Logics
         private void ReturnToPool()
         {
             PoolSystem.ReturnToPool(this);
+        }
+
+        public bool IsAttacking()
+        {
+            return botState == BotState.Attacking;
         }
             
         public bool IsDamageable()
