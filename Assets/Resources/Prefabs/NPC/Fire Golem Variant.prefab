@@ -5000,7 +5000,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.35
+  m_Radius: 0.5
   m_Center: {x: 0.80623734, y: 0.8694173, z: -0.12930351}
 --- !u!54 &3685948672722473015
 Rigidbody:
@@ -5058,13 +5058,15 @@ MonoBehaviour:
   - statType: 0
     baseValue: 50
     regenRate: 0
+    regenDelay: 0
     bonusPerLevel: 10
   - statType: 30
     baseValue: 100
     regenRate: 0
+    regenDelay: 0
     bonusPerLevel: 10
   patrolPoints: []
-  attackDistance: 3
+  attackDistance: 2
   aggroRadius: 10
   evadeRadius: 20
   dissapearTime: 5
