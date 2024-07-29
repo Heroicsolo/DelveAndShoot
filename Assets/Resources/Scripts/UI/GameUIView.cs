@@ -105,7 +105,7 @@ namespace Heroicsolo.Scripts.UI
         {
             healthBarOldValue.fillAmount = oldVal / maxVal;
             healthBar.fillAmount = currentVal / maxVal;
-            healthBarLabel.text = $"{currentVal}/{maxVal}";
+            healthBarLabel.text = $"{Mathf.CeilToInt(currentVal)}/{Mathf.CeilToInt(maxVal)}";
         }
 
         public void SetStaminaBarValue(float currentVal, float maxVal)
