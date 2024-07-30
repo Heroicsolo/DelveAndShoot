@@ -57,6 +57,7 @@ namespace Assets.Resources.Scripts.Logics
         private Transform lastPatrolPoint;
         private TeamType currentTeam;
         private Vector3 spawnPoint;
+        private bool weaponActive;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
@@ -72,6 +73,8 @@ namespace Assets.Resources.Scripts.Logics
             }
 #endif
             _typeName = typeName;
+
+            weaponActive = false;
         }
 
         private void InitState()
@@ -100,6 +103,8 @@ namespace Assets.Resources.Scripts.Logics
             teamsManager.RegisterTeamMember(this, currentTeam);
 
             spawnPoint = transform.position;
+
+            weaponActive = false;
 
             mobCanvas.SetOwner(this, typeName);
 
@@ -223,9 +228,19 @@ namespace Assets.Resources.Scripts.Logics
             PoolSystem.ReturnToPool(this);
         }
 
+        public void ActivateWeaponTrigger()
+        {
+            weaponActive = true;
+        }
+
+        public void DeactivateWeaponTrigger()
+        {
+            weaponActive = false;
+        }
+
         public bool IsAttacking()
         {
-            return botState == BotState.Attacking;
+            return botState == BotState.Attacking && weaponActive;
         }
             
         public bool IsDamageable()
