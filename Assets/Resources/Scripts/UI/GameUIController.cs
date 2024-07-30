@@ -16,6 +16,7 @@ namespace Heroicsolo.Scripts.UI
         [Inject] private IPlayerProgressionManager playerProgressionManager;
 
         private bool uiElementSelected;
+        private Coroutine healthChanger; 
 
         public GameObject GetGameObject()
         {
@@ -47,7 +48,11 @@ namespace Heroicsolo.Scripts.UI
 
         public void OnHealthChanged(float oldVal, float newVal, float maxVal)
         {
-            StartCoroutine(HealthChanger(oldVal, newVal, maxVal));
+            if (healthChanger != null)
+            {
+                StopCoroutine(healthChanger);
+            }
+            healthChanger = StartCoroutine(HealthChanger(oldVal, newVal, maxVal));
         }
 
         public void OnStaminaChanged(float oldVal, float newVal, float maxVal)
