@@ -3,7 +3,7 @@ using UnityEngine;
 using Dungeonizer;
 
 namespace DungeonizerEditor {
-[CustomEditor(typeof(Dungeonizer.Dungeonizer))] 	
+//[CustomEditor(typeof(Dungeonizer.Dungeonizer))] 	
 	public class DungeonizerEditor : Editor {
 		
 		public override void OnInspectorGUI () {

@@ -17,6 +17,7 @@ namespace Heroicsolo.Scripts.Logics
         protected float currValue;
         protected float currMaxValue;
 
+        [SerializeField]
         private bool isRegenEnabled;
         private float timeToRegen;
 

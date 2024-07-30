@@ -1077,21 +1077,25 @@ MonoBehaviour:
     regenRate: 10
     regenDelay: 1
     bonusPerLevel: 100
+    isRegenEnabled: 1
   - statType: 10
     baseValue: 100
     regenRate: 15
     regenDelay: 0
     bonusPerLevel: 0
+    isRegenEnabled: 1
   - statType: 20
     baseValue: 6
     regenRate: 0
     regenDelay: 0
     bonusPerLevel: 0
+    isRegenEnabled: 0
   - statType: 30
     baseValue: 0
     regenRate: 0
     regenDelay: 0
     bonusPerLevel: 0
+    isRegenEnabled: 0
   hidingObjectsManager: {fileID: 4220186838963628649}
 --- !u!114 &1577313303300086267
 MonoBehaviour:
