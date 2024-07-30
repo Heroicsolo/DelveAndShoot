@@ -1,8 +1,5 @@
 ﻿using Assets.FantasyInventory.Scripts.Data;
-using Heroicsolo.Scripts.UI.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Heroicsolo.UI.UElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;

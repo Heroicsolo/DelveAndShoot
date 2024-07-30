@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.UIElements;
 
-namespace Heroicsolo.Scripts.UI.Utils
+namespace Heroicsolo.UI.UElements
 {
     public class Row : ChildAnnotator
     {

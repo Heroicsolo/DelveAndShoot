@@ -1,14 +1,8 @@
 ﻿using Heroicsolo.Inventory;
-using Heroicsolo.Scripts.Logics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-using Heroicsolo.Scripts.UI.Utils;
+using Heroicsolo.UI.UElements;
 
 namespace Heroicsolo.Scripts.Editor.CustomInspectors
 {
