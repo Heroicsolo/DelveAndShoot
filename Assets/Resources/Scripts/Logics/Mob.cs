@@ -26,5 +26,6 @@ namespace Heroicsolo.Scripts.Logics
         public abstract bool IsDead();
         public abstract void SetName(string name);
         public abstract void SetTeam(TeamType team);
+        public abstract void SubscribeToDamageGot(Action<float> onDamageGot);
     }
 }

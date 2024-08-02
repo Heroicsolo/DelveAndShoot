@@ -133,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBar: {fileID: 8499200400693414547}
   title: {fileID: 6311716893942474743}
+  combatTextPrefab: {fileID: 8061844098464555267, guid: 715bafc3567f87c418a7deccf970aeb5, type: 3}
 --- !u!1 &1416345130607331720
 GameObject:
   m_ObjectHideFlags: 0

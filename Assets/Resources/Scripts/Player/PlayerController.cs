@@ -3,6 +3,7 @@ using Heroicsolo.DI;
 using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,10 @@ namespace Heroicsolo.Scripts.Player
         public List<CharacterStat> GetCharacterStats()
         {
             return stats;
+        }
+
+        public void SubscribeToDamageGot(Action<float> onDamageGot)
+        {
         }
 
         public CharacterStat GetCharacterStat(CharacterStatType characterStatType)

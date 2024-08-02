@@ -1,5 +1,6 @@
 using Assets.Resources.Scripts.Logics;
 using Heroicsolo.Logics;
+using Heroicsolo.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,7 @@ namespace Heroicsolo.Scripts.UI
     {
         [SerializeField] private Image hpBar;
         [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private FloatingText combatTextPrefab;
 
         private ICharacter owner;
 
@@ -19,6 +21,17 @@ namespace Heroicsolo.Scripts.UI
         {
             this.owner = owner;
             title.text = name;
+            owner.SubscribeToDamageGot(OnDamageGot);
+        }
+
+        private void OnDamageGot(float amount)
+        {
+            if (amount > 0f)
+            {
+                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+                ft.SetText($"-{Mathf.CeilToInt(amount)}");
+                ft.SetCurved(true);
+            }
         }
 
         private void Update()

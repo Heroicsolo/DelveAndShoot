@@ -58,6 +58,7 @@ namespace Assets.Resources.Scripts.Logics
         private TeamType currentTeam;
         private Vector3 spawnPoint;
         private bool weaponActive;
+        private Action<float> OnDamageGot;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
@@ -228,6 +229,11 @@ namespace Assets.Resources.Scripts.Logics
             PoolSystem.ReturnToPool(this);
         }
 
+        public override void SubscribeToDamageGot(Action<float> onDamageGot)
+        {
+            OnDamageGot += onDamageGot;
+        }
+
         public void ActivateWeaponTrigger()
         {
             weaponActive = true;
@@ -275,7 +281,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
-            if (!IsDamageable())
+            if (!IsDamageable() || damage <= 0f)
             {
                 return;
             }
@@ -284,6 +290,8 @@ namespace Assets.Resources.Scripts.Logics
             {
                 damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
             }
+
+            OnDamageGot?.Invoke(damage);
 
             statsDict[CharacterStatType.Health].Change(-damage);
         }

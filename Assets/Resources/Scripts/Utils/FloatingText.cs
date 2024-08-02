@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Heroicsolo.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FloatingText : MonoBehaviour
+public class FloatingText : MonoBehaviour, IPooledObject
 {
     public float m_lifetime = 1f;
     public float m_floatingSpeed = 1f;
