@@ -3,6 +3,7 @@ using Heroicsolo.DI;
 using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.UI;
+using Heroicsolo.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace Heroicsolo.Scripts.Player
 
         [Header("Other")]
         [SerializeField] private HidingObjectsManager hidingObjectsManager;
+        [SerializeField] private FloatingText combatTextPrefab;
+        [SerializeField] private Transform playerCanvasTransform;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
@@ -79,6 +82,13 @@ namespace Heroicsolo.Scripts.Player
             if (statsDict.ContainsKey(CharacterStatType.Armor) && damageType == DamageType.Physical)
             {
                 damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
+            }
+
+            if (damage > 0f)
+            {
+                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), playerCanvasTransform.position, playerCanvasTransform);
+                ft.SetText($"-{Mathf.CeilToInt(damage)}");
+                ft.SetCurved(true);
             }
 
             statsDict[CharacterStatType.Health].Change(-damage);
