@@ -331,6 +331,11 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
+            if (botState != BotState.Evade)
+            {
+                DodgeDamage();
+            }
+
             if (!IsDamageable() || damage <= 0f)
             {
                 return;
