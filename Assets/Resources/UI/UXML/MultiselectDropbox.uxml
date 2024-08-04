@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+    <ui:VisualElement class="unity-base-popup-field__input" style="flex-grow: 0;">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SelectedLabel" style="flex-grow: 1; text-overflow: ellipsis;" />
+        <ui:VisualElement class="unity-base-popup-field__arrow" style="flex-grow: initial;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Dropdown" class="unity-base-text-field__input" style="flex-grow: 1; margin-top: -3px; margin-right: 5px; margin-bottom: 3px; margin-left: 5px; padding-right: 5px; padding-left: 5px; visibility: visible; display: flex;">
+        <ui:TextField picking-mode="Ignore" tooltip="Search" />
+        <ui:ListView selection-type="Multiple" show-foldout-header="false" style="flex-grow: 1; display: flex;" />
+    </ui:VisualElement>
+</ui:UXML>
