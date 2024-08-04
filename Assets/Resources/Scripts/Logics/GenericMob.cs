@@ -98,6 +98,15 @@ namespace Assets.Resources.Scripts.Logics
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
 
+            animator.ResetTrigger(DieAnimHash);
+
+            if (!agent.isOnNavMesh || !agent.isActiveAndEnabled)
+            {
+                //Mob is spawned on bad position, return it to pool
+                ReturnToPool();
+                return;
+            }
+
             lastPatrolPoint = null;
 
             currentTeam = defaultTeam;
@@ -111,6 +120,7 @@ namespace Assets.Resources.Scripts.Logics
             mobCanvas.SetOwner(this, typeName);
 
             mobCircle.gameObject.SetActive(true);
+            mobCanvas.gameObject.SetActive(true);
 
             ResetState();
         }
@@ -205,9 +215,6 @@ namespace Assets.Resources.Scripts.Logics
                     animator.SetBool(AttackAnimHash, true);
                     CheckPlayer();
                     break;
-                case BotState.Death:
-                    StopMovement();
-                    break;
                 case BotState.Evade:
                     StartMovement(spawnPoint);
                     if (IsReachedNextPatrolPoint())
@@ -221,7 +228,10 @@ namespace Assets.Resources.Scripts.Logics
 
         private void Update()
         {
-            UpdateCurrentState();
+            if (botState != BotState.Death)
+            {
+                UpdateCurrentState();
+            }
         }
 
         private void SpawnLoot()
@@ -252,11 +262,6 @@ namespace Assets.Resources.Scripts.Logics
                 agent.SetDestination(destination);
                 animator.SetBool(WalkAnimHash, true);
                 animator.SetBool(AttackAnimHash, false);
-            }
-            else
-            {
-                //Mob is spawned on bad position, return it to pool
-                ReturnToPool();
             }
         }
 
@@ -325,6 +330,11 @@ namespace Assets.Resources.Scripts.Logics
             OnDamageGot?.Invoke(damage);
 
             statsDict[CharacterStatType.Health].Change(-damage);
+
+            if (statsDict[CharacterStatType.Health].Value <= 0f)
+            {
+                Die();
+            }
         }
 
         public override GameObject GetGameObject()
@@ -406,8 +416,10 @@ namespace Assets.Resources.Scripts.Logics
                     break;
                 case BotState.Death:
                     StopMovement();
+                    animator.SetBool(AttackAnimHash, false);
                     animator.SetTrigger(DieAnimHash);
                     mobCircle.gameObject.SetActive(false);
+                    mobCanvas.gameObject.SetActive(false);
                     SpawnLoot();
                     Invoke(nameof(ReturnToPool), dissapearTime);
                     break;
