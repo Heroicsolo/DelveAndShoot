@@ -62,6 +62,7 @@ namespace Assets.Resources.Scripts.Logics
         private Vector3 spawnPoint;
         private bool weaponActive;
         private Action<float> OnDamageGot;
+        private Action OnDamageDodged;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
@@ -272,6 +273,11 @@ namespace Assets.Resources.Scripts.Logics
             OnDamageGot += onDamageGot;
         }
 
+        public override void SubscribeToDamageDodged(Action onDamageDodged)
+        {
+            OnDamageDodged += onDamageDodged;
+        }
+
         public void ActivateWeaponTrigger()
         {
             weaponActive = true;
@@ -316,6 +322,11 @@ namespace Assets.Resources.Scripts.Logics
         public override CharacterStat GetCharacterStat(CharacterStatType characterStatType)
         {
             return stats.Find(s => s.StatType == characterStatType);
+        }
+
+        public override void DodgeDamage()
+        {
+            OnDamageDodged?.Invoke();
         }
 
         public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)

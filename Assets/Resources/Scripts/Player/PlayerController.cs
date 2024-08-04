@@ -67,6 +67,10 @@ namespace Heroicsolo.Scripts.Player
         {
         }
 
+        public void SubscribeToDamageDodged(Action onDamageDodged)
+        {
+        }
+
         public CharacterStat GetCharacterStat(CharacterStatType characterStatType)
         {
             return stats.Find(s => s.StatType == characterStatType);
@@ -75,6 +79,11 @@ namespace Heroicsolo.Scripts.Player
         public void Heal(float amount)
         {
             statsDict[CharacterStatType.Health].Change(amount);
+        }
+
+        public void DodgeDamage()
+        {
+
         }
 
         public void GetDamage(float damage, DamageType damageType = DamageType.Physical)

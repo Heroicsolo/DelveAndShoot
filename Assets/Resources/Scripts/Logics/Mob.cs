@@ -17,6 +17,7 @@ namespace Heroicsolo.Scripts.Logics
         public abstract CharacterStat GetCharacterStat(CharacterStatType characterStatType);
         public abstract List<CharacterStat> GetCharacterStats();
         public abstract void GetDamage(float damage, DamageType damageType = DamageType.Physical);
+        public abstract void DodgeDamage();
         public abstract GameObject GetGameObject();
         public abstract HittableType GetHittableType();
         public abstract string GetName();
@@ -27,5 +28,6 @@ namespace Heroicsolo.Scripts.Logics
         public abstract void SetName(string name);
         public abstract void SetTeam(TeamType team);
         public abstract void SubscribeToDamageGot(Action<float> onDamageGot);
+        public abstract void SubscribeToDamageDodged(Action onDamageDodged);
     }
 }

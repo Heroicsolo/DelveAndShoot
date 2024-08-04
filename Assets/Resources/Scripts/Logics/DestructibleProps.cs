@@ -48,6 +48,11 @@ namespace Heroicsolo.Scripts.Logics
             Destroy(gameObject);
         }
 
+        public void DodgeDamage()
+        {
+
+        }
+
         public void GetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
             if (durability <= 0f)

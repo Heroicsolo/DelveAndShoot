@@ -9,6 +9,7 @@ namespace Heroicsolo.Logics
     {
         void Heal(float amount);
         void GetDamage(float damage, DamageType damageType = DamageType.Physical);
+        void DodgeDamage();
         void Die();
         bool IsDead();
         GameObject GetGameObject();

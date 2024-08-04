@@ -22,6 +22,7 @@ namespace Heroicsolo.Scripts.Player
         [SerializeField][Min(0f)] private float shootDistance = 20f;
         [SerializeField][Min(0f)] private float reloadTime = 3f;
         [SerializeField][Min(0)] private int ammo = 6;
+        [SerializeField][Min(0f)] private float hitChance = 0.9f;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IShootHelper shootHelper;
@@ -53,6 +54,11 @@ namespace Heroicsolo.Scripts.Player
             }
 
             this.targetPoint = targetPoint;
+        }
+
+        private float GetHitChanceByDist(float dist)
+        {
+            return Mathf.Lerp(1f, hitChance, dist / shootDistance);
         }
 
         private void Start()
@@ -92,7 +98,8 @@ namespace Heroicsolo.Scripts.Player
 
             shootHelper.TryShoot(muzzleFlash.transform.position, 
                 targetPoint - muzzleFlash.transform.position, 
-                shootDistance, hitExplosion, itemParams, TeamType.Player);
+                shootDistance, hitExplosion, itemParams, TeamType.Player, 
+                GetHitChanceByDist((targetPoint - muzzleFlash.transform.position).magnitude));
         }
 
         private void Update()

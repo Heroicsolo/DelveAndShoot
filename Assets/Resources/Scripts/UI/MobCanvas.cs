@@ -22,6 +22,7 @@ namespace Heroicsolo.Scripts.UI
             this.owner = owner;
             title.text = name;
             owner.SubscribeToDamageGot(OnDamageGot);
+            owner.SubscribeToDamageDodged(OnDamageDodged);
         }
 
         private void OnDamageGot(float amount)
@@ -32,6 +33,13 @@ namespace Heroicsolo.Scripts.UI
                 ft.SetText($"-{Mathf.CeilToInt(amount)}");
                 ft.SetCurved(true);
             }
+        }
+
+        private void OnDamageDodged()
+        {
+            FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+            ft.SetText($"MISS");
+            ft.SetCurved(true);
         }
 
         private void Update()

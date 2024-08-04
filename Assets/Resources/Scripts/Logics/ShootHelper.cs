@@ -64,7 +64,7 @@ namespace Heroicsolo.Logics
             return hitCount == 0;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam, float hitChance = 1f)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -74,7 +74,14 @@ namespace Heroicsolo.Logics
                 {
                     if (IsTargetReachable(from, hits[0].point))
                     {
-                        hittable.GetDamage(damage, damageType);
+                        if (Random.value <= hitChance)
+                        {
+                            hittable.GetDamage(damage, damageType);
+                        }
+                        else
+                        {
+                            hittable.DodgeDamage();
+                        }
 
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
@@ -102,7 +109,7 @@ namespace Heroicsolo.Logics
             return false;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam, float hitChance = 1f)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -112,6 +119,12 @@ namespace Heroicsolo.Logics
                 {
                     if (IsTargetReachable(from, hits[0].point))
                     {
+                        if (Random.value > hitChance)
+                        {
+                            hittable.DodgeDamage();
+                            return false;
+                        }
+
                         if (weaponParams.TryGetProperty(PropertyId.PhysicDamage, out var physDmg))
                         {
                             hittable.GetDamage(physDmg.Value, DamageType.Physical);
