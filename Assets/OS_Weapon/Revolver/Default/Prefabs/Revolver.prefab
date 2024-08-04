@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4583227138253114}
   - component: {fileID: 33153573437146146}
   - component: {fileID: 23141869536410866}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4825051426711642}
   - component: {fileID: 33669406055304946}
   - component: {fileID: 23239908555811528}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 4454749597287928}
   - component: {fileID: 33982471356454364}
   - component: {fileID: 23302522391077008}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Peen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 4977564265705686}
   - component: {fileID: 33525540299468318}
   - component: {fileID: 23119825627996454}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Revolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +347,7 @@ GameObject:
   - component: {fileID: 4107726727391446}
   - component: {fileID: 33908523395672612}
   - component: {fileID: 23347701098415388}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Dram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
