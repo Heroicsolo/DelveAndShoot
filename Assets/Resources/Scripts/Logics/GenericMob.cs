@@ -1,4 +1,5 @@
-﻿using Heroicsolo.DI;
+﻿using DG.Tweening;
+using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
@@ -118,13 +119,18 @@ namespace Assets.Resources.Scripts.Logics
         {
             Transform nextPoint = lastPatrolPoint != null ? patrolPoints.GetRandomElementExceptOne(lastPatrolPoint) : patrolPoints.GetRandomElement();
 
-            agent.SetDestination(nextPoint.position);
+            StartMovement(nextPoint.position);
 
             lastPatrolPoint = nextPoint;
         }
 
         private bool IsReachedNextPatrolPoint()
         {
+            if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
+            {
+                return false;
+            }
+
             if (agent.remainingDistance < TargetReachThreshold)
             {
                 return true;
@@ -164,6 +170,10 @@ namespace Assets.Resources.Scripts.Logics
                 {
                     SwitchState(BotState.Evade);
                 }
+                else
+                {
+                    ResetState();
+                }
             }
             else
             {
@@ -176,35 +186,30 @@ namespace Assets.Resources.Scripts.Logics
             switch (botState)
             {
                 case BotState.Idle:
-                    agent.isStopped = true;
+                    StopMovement();
                     CheckPlayer();
                     break;
                 case BotState.Patrolling:
                     if (patrolPoints.Count > 0 && IsReachedNextPatrolPoint())
                     {
                         SelectNextPatrolPoint();
-                        agent.isStopped = false;
-                        animator.SetBool(WalkAnimHash, true);
                     }
                     CheckPlayer();
                     break;
                 case BotState.FollowPlayer:
-                    agent.isStopped = false;
-                    agent.SetDestination(playerController.transform.position);
-                    animator.SetBool(WalkAnimHash, true);
+                    StartMovement(playerController.transform.position);
                     CheckPlayer();
                     break;
                 case BotState.Attacking:
-                    agent.isStopped = true;
-                    animator.SetBool(WalkAnimHash, false);
+                    StopMovement();
                     animator.SetBool(AttackAnimHash, true);
                     CheckPlayer();
                     break;
                 case BotState.Death:
-                    agent.isStopped = true;
+                    StopMovement();
                     break;
                 case BotState.Evade:
-                    agent.isStopped = false;
+                    StartMovement(spawnPoint);
                     if (IsReachedNextPatrolPoint())
                     {
                         statsDict[CharacterStatType.Health].Reset();
@@ -227,6 +232,32 @@ namespace Assets.Resources.Scripts.Logics
         private void ReturnToPool()
         {
             PoolSystem.ReturnToPool(this);
+        }
+
+        private void StopMovement()
+        {
+            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
+            {
+                agent.isStopped = true;
+            }
+
+            animator.SetBool(WalkAnimHash, false);
+        }
+
+        private void StartMovement(Vector3 destination)
+        {
+            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(destination);
+                animator.SetBool(WalkAnimHash, true);
+                animator.SetBool(AttackAnimHash, false);
+            }
+            else
+            {
+                //Mob is spawned on bad position, return it to pool
+                ReturnToPool();
+            }
         }
 
         public override void SubscribeToDamageGot(Action<float> onDamageGot)
@@ -353,45 +384,35 @@ namespace Assets.Resources.Scripts.Logics
             switch (state)
             {
                 case BotState.Idle:
-                    agent.isStopped = true;
-                    animator.SetBool(WalkAnimHash, false);
+                    StopMovement();
                     break;
                 case BotState.Patrolling:
                     if (patrolPoints.Count > 0)
                     {
                         SelectNextPatrolPoint();
-                        agent.isStopped = false;
-                        animator.SetBool(WalkAnimHash, true);
                     }
                     else
                     {
-                        agent.isStopped = true;
-                        animator.SetBool(WalkAnimHash, false);
+                        StopMovement();
                         botState = BotState.Idle;
                     }
                     break;
                 case BotState.FollowPlayer:
-                    agent.isStopped = false;
-                    agent.SetDestination(playerController.transform.position);
-                    animator.SetBool(WalkAnimHash, true);
+                    StartMovement(playerController.transform.position);
                     break;
                 case BotState.Attacking:
-                    agent.isStopped = true;
-                    animator.SetBool(WalkAnimHash, false);
+                    StopMovement();
                     animator.SetBool(AttackAnimHash, true);
                     break;
                 case BotState.Death:
-                    agent.isStopped = true;
-                    animator.SetBool(WalkAnimHash, false);
+                    StopMovement();
                     animator.SetTrigger(DieAnimHash);
                     mobCircle.gameObject.SetActive(false);
                     SpawnLoot();
                     Invoke(nameof(ReturnToPool), dissapearTime);
                     break;
                 case BotState.Evade:
-                    agent.isStopped = false;
-                    agent.SetDestination(spawnPoint);
-                    animator.SetBool(WalkAnimHash, true);
+                    StartMovement(spawnPoint);
                     break;
             }
         }
