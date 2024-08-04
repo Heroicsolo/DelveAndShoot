@@ -41,11 +41,13 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] [Min(0f)] private float dissapearTime = 5f;
         [SerializeField] [Min(0f)] private float attackPowerMin = 1f;
         [SerializeField] [Min(0f)] private float attackPowerMax = 1f;
+        [SerializeField] [Min(0)] private int expReward = 100;
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
 
         [Inject] private ICharacterStatsManager characterStatsManager;
+        [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ILootManager lootManager;
         [Inject] private ITeamsManager teamsManager;
 
@@ -302,6 +304,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void Die()
         {
+            playerProgressionManager.AddExperience(expReward);
             SwitchState(BotState.Death);
         }
 

@@ -10,6 +10,7 @@ namespace Heroicsolo.Scripts.UI
 {
     public class GameUIView : MonoBehaviour, ISystem
     {
+        private const float ExpLabelValueChangeThreshold = 0.01f;
         private readonly Vector2 CursorOffset = new Vector2(0, 0);
 
         [Header("Player stats indication")]
@@ -22,6 +23,7 @@ namespace Heroicsolo.Scripts.UI
         [SerializeField] private Image expBar;
         [SerializeField] private TextMeshProUGUI expBarLabel;
         [SerializeField] private TextMeshProUGUI levelLabel;
+        [SerializeField] private float expLabelChangeSpeed = 6f;
 
         [Header("Ammo")]
         [SerializeField] private AmmoPanel ammoPanel;
@@ -35,6 +37,9 @@ namespace Heroicsolo.Scripts.UI
         [SerializeField] private WorldItemInfoPopup worldItemInfoPopupPrefab;
 
         private Dictionary<Guid, WorldItemInfoPopup> worldItemInfoPopups = new();
+        private float targetExpValue;
+        private float maxExpValue;
+        private bool expBarNeedsRefresh;
 
         public GameObject GetGameObject()
         {
@@ -116,14 +121,39 @@ namespace Heroicsolo.Scripts.UI
 
         public void SetPlayerLevelInfo(int level, int currExp, int maxExp)
         {
-            expBar.fillAmount = (float)currExp / maxExp;
-            expBarLabel.text = $"{currExp}/{maxExp}";
+            if (maxExp != maxExpValue || currExp != targetExpValue)
+            {
+                expBarNeedsRefresh = true;
+            }
+
+            maxExpValue = maxExp;
+            targetExpValue = currExp;
             levelLabel.text = $"{level}";
         }
 
         private void Start()
         {
             Cursor.SetCursor(null, CursorOffset, CursorMode.ForceSoftware);
+        }
+
+        private void Update()
+        {
+            if (expBarNeedsRefresh)
+            {
+                float targetPercent = targetExpValue / maxExpValue;
+
+                if (Mathf.Abs(targetPercent - expBar.fillAmount) > ExpLabelValueChangeThreshold)
+                {
+                    expBar.fillAmount = Mathf.Lerp(expBar.fillAmount, targetExpValue / maxExpValue, expLabelChangeSpeed * Time.deltaTime);
+                    expBarLabel.text = $"{Mathf.CeilToInt(expBar.fillAmount * maxExpValue)}/{Mathf.CeilToInt(maxExpValue)}";
+                }
+                else
+                {
+                    expBar.fillAmount = targetPercent;
+                    expBarLabel.text = $"{Mathf.CeilToInt(targetExpValue)}/{Mathf.CeilToInt(maxExpValue)}";
+                    expBarNeedsRefresh = false;
+                }
+            }
         }
     }
 }

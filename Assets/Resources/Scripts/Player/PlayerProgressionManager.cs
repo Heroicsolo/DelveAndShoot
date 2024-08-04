@@ -56,7 +56,7 @@ namespace Heroicsolo.Scripts.Logics
         {
             playerSaves.currentExp += amount;
 
-            int neededExp = GetNeededExpForLevelUp();
+            int neededExp = GetCurrentLevelMaxExp();
 
             int expTotal = playerSaves.currentExp;
             bool lvlChanged = false;
@@ -66,7 +66,7 @@ namespace Heroicsolo.Scripts.Logics
                 playerSaves.currentLevel++;
                 lvlChanged = true;
                 expTotal -= neededExp;
-                neededExp = GetNeededExpForLevelUp();
+                neededExp = GetCurrentLevelMaxExp();
             }
 
             playerSaves.currentExp = expTotal;
@@ -74,7 +74,7 @@ namespace Heroicsolo.Scripts.Logics
             if (lvlChanged)
                 OnLevelUp?.Invoke(playerSaves.currentLevel);
 
-            OnExperienceChanged?.Invoke(playerSaves.currentLevel, playerSaves.currentExp, neededExp);
+            OnExperienceChanged?.Invoke(playerSaves.currentLevel, playerSaves.currentExp, GetNeededExpForLevelUp());
 
             SaveState();
         }
