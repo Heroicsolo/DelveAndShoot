@@ -1,8 +1,5 @@
 using Heroicsolo.DI;
 using Heroicsolo.Scripts.Player;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Heroicsolo.Scripts.Logics
@@ -11,7 +8,7 @@ namespace Heroicsolo.Scripts.Logics
     {
         [Inject] private RuntimeDungeonGenerator dungeonGenerator;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
-
+        
         private PlayerController playerController;
 
         public GameObject GetGameObject()

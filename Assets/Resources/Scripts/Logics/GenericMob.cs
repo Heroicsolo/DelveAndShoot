@@ -45,11 +45,15 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
+        [SerializeField] private Sprite dialogAvatar;
+        [SerializeField] private List<string> aggroReplics = new();
+        [SerializeField] private List<string> deathReplics = new();
 
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ILootManager lootManager;
         [Inject] private ITeamsManager teamsManager;
+        [Inject] private IDialogPopup dialogPopup;
 
         private string _typeName;
         private NavMeshAgent agent;
@@ -63,6 +67,7 @@ namespace Assets.Resources.Scripts.Logics
         private bool weaponActive;
         private Action<float> OnDamageGot;
         private Action OnDamageDodged;
+        private bool aggroDialogPlayed;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
@@ -430,10 +435,19 @@ namespace Assets.Resources.Scripts.Logics
                     StartMovement(playerController.transform.position);
                     break;
                 case BotState.Attacking:
+                    if (!aggroDialogPlayed && aggroReplics.Count > 0)
+                    {
+                        dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
+                        aggroDialogPlayed = true;
+                    }
                     StopMovement();
                     animator.SetBool(AttackAnimHash, true);
                     break;
                 case BotState.Death:
+                    if (deathReplics.Count > 0)
+                    {
+                        dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
+                    }
                     StopMovement();
                     animator.SetBool(AttackAnimHash, false);
                     animator.SetTrigger(DieAnimHash);

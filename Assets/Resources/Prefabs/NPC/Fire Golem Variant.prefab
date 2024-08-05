@@ -5086,9 +5086,15 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70
+  expReward: 100
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 7884784904725195610}
   mobCircle: {fileID: 5222640722071376952}
+  dialogAvatar: {fileID: 21300000, guid: 0a411e9898d06594888017e55da7e53f, type: 3}
+  aggroReplics:
+  - BURN!
+  - ??!
+  deathReplics: []
 --- !u!195 &3471320406476443588
 NavMeshAgent:
   m_ObjectHideFlags: 0
