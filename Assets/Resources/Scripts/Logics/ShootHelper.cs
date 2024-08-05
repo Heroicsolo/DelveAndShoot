@@ -64,7 +64,7 @@ namespace Heroicsolo.Logics
             return hitCount == 0;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam, float hitChance = 1f)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam, float hitChance = 1f, LineRenderer rayRenderer = null)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -77,19 +77,39 @@ namespace Heroicsolo.Logics
                         if (Random.value <= hitChance)
                         {
                             hittable.GetDamage(damage, damageType);
+
+                            PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
+
+                            if (rayRenderer != null)
+                            {
+                                rayRenderer.enabled = true;
+                                rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
+                            }
+
+                            return true;
                         }
                         else
                         {
                             hittable.DodgeDamage();
+
+                            if (rayRenderer != null)
+                            {
+                                rayRenderer.enabled = true;
+                                rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
+                            }
+
+                            return false;
                         }
-
-                        PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
-
-                        return true;
                     }
                     else
                     {
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
+
+                        if (rayRenderer != null)
+                        {
+                            rayRenderer.enabled = true;
+                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
+                        }
 
                         return false;
                     }
@@ -97,11 +117,23 @@ namespace Heroicsolo.Logics
 
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
+                if (rayRenderer != null)
+                {
+                    rayRenderer.enabled = true;
+                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
+                }
+
                 return false;
             }
             else if (Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, obstaclesMask.value, QueryTriggerInteraction.Ignore) > 0)
             {
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
+
+                if (rayRenderer != null)
+                {
+                    rayRenderer.enabled = true;
+                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
+                }
 
                 return false;
             }
@@ -109,7 +141,7 @@ namespace Heroicsolo.Logics
             return false;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam, float hitChance = 1f)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam, float hitChance = 1f, LineRenderer rayRenderer = null)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -148,21 +180,45 @@ namespace Heroicsolo.Logics
 
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
+                        if (rayRenderer != null)
+                        {
+                            rayRenderer.enabled = true;
+                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
+                        }
+
                         return true;
                     }
                     else
                     {
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
+                        if (rayRenderer != null)
+                        {
+                            rayRenderer.enabled = true;
+                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
+                        }
+
                         return false;
                     }
                 }
 
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
+
+                if (rayRenderer != null)
+                {
+                    rayRenderer.enabled = true;
+                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
+                }
             }
             else if (Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, obstaclesMask.value, QueryTriggerInteraction.Ignore) > 0)
             {
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
+
+                if (rayRenderer != null)
+                {
+                    rayRenderer.enabled = true;
+                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
+                }
 
                 return false;
             }

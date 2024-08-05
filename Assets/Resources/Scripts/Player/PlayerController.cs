@@ -1,5 +1,6 @@
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
+using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
 using Heroicsolo.Scripts.Logics;
 using Heroicsolo.Scripts.UI;
@@ -43,6 +44,7 @@ namespace Heroicsolo.Scripts.Player
         [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private IShootHelper shootHelper;
+        [Inject] private IInventoryManager inventoryManager;
 
         private CharacterController characterController;
         private Animator animator;
@@ -171,7 +173,7 @@ namespace Heroicsolo.Scripts.Player
             cameraTransform.rotation = Quaternion.Euler(45f, 0f, 0f);
             hidingObjectsManager.SetPlayerTransform(transform);
 
-            EquipWeapon(ItemId.Revolver);
+            EquipWeapon(inventoryManager.GetEquippedItems().Single(x => x.Params.Type == ItemType.Weapon).Id);
 
             raycastHits = new RaycastHit[2];
 

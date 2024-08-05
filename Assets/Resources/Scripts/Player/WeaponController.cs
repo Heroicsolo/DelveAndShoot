@@ -23,6 +23,7 @@ namespace Heroicsolo.Scripts.Player
         [SerializeField][Min(0f)] private float reloadTime = 3f;
         [SerializeField][Min(0)] private int ammo = 6;
         [SerializeField][Min(0f)] private float hitChance = 0.9f;
+        [SerializeField] private LineRenderer rayRenderer;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IShootHelper shootHelper;
@@ -65,6 +66,11 @@ namespace Heroicsolo.Scripts.Player
         {
             SystemsManager.InjectSystemsTo(this);
 
+            if (rayRenderer != null)
+            {
+                rayRenderer.SetPosition(0, muzzleFlash.transform.localPosition);
+            }
+
             itemParams = ItemsCollection.ItemsParams[weaponId];
             currentAmmo = ammo;
         }
@@ -99,7 +105,18 @@ namespace Heroicsolo.Scripts.Player
             shootHelper.TryShoot(muzzleFlash.transform.position, 
                 targetPoint - muzzleFlash.transform.position, 
                 shootDistance, hitExplosion, itemParams, TeamType.Player, 
-                GetHitChanceByDist((targetPoint - muzzleFlash.transform.position).magnitude));
+                GetHitChanceByDist((targetPoint - muzzleFlash.transform.position).magnitude),
+                rayRenderer);
+
+            Invoke(nameof(HideRay), 0.1f);
+        }
+
+        private void HideRay()
+        {
+            if (rayRenderer != null)
+            {
+                rayRenderer.enabled = false;
+            }
         }
 
         private void Update()

@@ -12,7 +12,6 @@ namespace Heroicsolo.Inventory
     public class InventoryManager : MonoBehaviour, IInventoryManager
     {
         private const string InventoryStatePrefsKey = "InventoryState";
-        private const string EquipmentStatePrefsKey = "EquipmentState";
 
         [SerializeField] private List<Item> defaultInventoryItems = new();
         [SerializeField] private List<Item> defaultEquippedItems = new();
