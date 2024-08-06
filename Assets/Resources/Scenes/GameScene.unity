@@ -1903,7 +1903,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[5].Properties.Array.data[0].Value
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[6].Properties.Array.data[0].Value

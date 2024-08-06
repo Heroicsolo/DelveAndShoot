@@ -3,6 +3,7 @@ using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Utils;
 using UnityEngine;
+using VolumetricLines;
 
 namespace Heroicsolo.Logics
 {
@@ -64,7 +65,7 @@ namespace Heroicsolo.Logics
             return hitCount == 0;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam, float hitChance = 1f, LineRenderer rayRenderer = null)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, float damage, DamageType damageType, TeamType shooterTeam, float hitChance = 1f, VolumetricLineBehavior rayRenderer = null)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -80,11 +81,7 @@ namespace Heroicsolo.Logics
 
                             PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                            if (rayRenderer != null)
-                            {
-                                rayRenderer.enabled = true;
-                                rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
-                            }
+                            ShowVolumetricRay(rayRenderer, from, hits[0].point);
 
                             return true;
                         }
@@ -92,11 +89,7 @@ namespace Heroicsolo.Logics
                         {
                             hittable.DodgeDamage();
 
-                            if (rayRenderer != null)
-                            {
-                                rayRenderer.enabled = true;
-                                rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
-                            }
+                            ShowVolumetricRay(rayRenderer, from, from + direction.normalized * maxDistance);
 
                             return false;
                         }
@@ -105,11 +98,7 @@ namespace Heroicsolo.Logics
                     {
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                        if (rayRenderer != null)
-                        {
-                            rayRenderer.enabled = true;
-                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
-                        }
+                        ShowVolumetricRay(rayRenderer, from, from + direction.normalized * maxDistance);
 
                         return false;
                     }
@@ -117,11 +106,7 @@ namespace Heroicsolo.Logics
 
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                if (rayRenderer != null)
-                {
-                    rayRenderer.enabled = true;
-                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
-                }
+                ShowVolumetricRay(rayRenderer, from, hits[0].point);
 
                 return false;
             }
@@ -129,11 +114,7 @@ namespace Heroicsolo.Logics
             {
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                if (rayRenderer != null)
-                {
-                    rayRenderer.enabled = true;
-                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
-                }
+                ShowVolumetricRay(rayRenderer, from, hits[0].point);
 
                 return false;
             }
@@ -141,7 +122,7 @@ namespace Heroicsolo.Logics
             return false;
         }
 
-        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam, float hitChance = 1f, LineRenderer rayRenderer = null)
+        public bool TryShoot(Vector3 from, Vector3 direction, float maxDistance, PooledParticleSystem hitEffectPrefab, ItemParams weaponParams, TeamType shooterTeam, float hitChance = 1f, VolumetricLineBehavior rayRenderer = null)
         {
             int hitCount = Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, targetsMask.value, QueryTriggerInteraction.Ignore);
 
@@ -180,11 +161,7 @@ namespace Heroicsolo.Logics
 
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                        if (rayRenderer != null)
-                        {
-                            rayRenderer.enabled = true;
-                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(hits[0].point));
-                        }
+                        ShowVolumetricRay(rayRenderer, from, hits[0].point);
 
                         return true;
                     }
@@ -192,11 +169,7 @@ namespace Heroicsolo.Logics
                     {
                         PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                        if (rayRenderer != null)
-                        {
-                            rayRenderer.enabled = true;
-                            rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
-                        }
+                        ShowVolumetricRay(rayRenderer, from, from + direction.normalized * maxDistance);
 
                         return false;
                     }
@@ -204,26 +177,28 @@ namespace Heroicsolo.Logics
 
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                if (rayRenderer != null)
-                {
-                    rayRenderer.enabled = true;
-                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
-                }
+                ShowVolumetricRay(rayRenderer, from, from + direction.normalized * maxDistance);
             }
             else if (Physics.RaycastNonAlloc(from, direction.normalized, hits, maxDistance, obstaclesMask.value, QueryTriggerInteraction.Ignore) > 0)
             {
                 PoolSystem.GetInstanceAtPosition(hitEffectPrefab, hitEffectPrefab.GetName(), hits[0].point);
 
-                if (rayRenderer != null)
-                {
-                    rayRenderer.enabled = true;
-                    rayRenderer.SetPosition(1, rayRenderer.transform.InverseTransformPoint(from + direction.normalized * maxDistance));
-                }
+                ShowVolumetricRay(rayRenderer, from, from + direction.normalized * maxDistance);
 
                 return false;
             }
 
             return false;
+        }
+
+        private void ShowVolumetricRay(VolumetricLineBehavior volumetricLine, Vector3 startPos, Vector3 targetPos)
+        {
+            if (volumetricLine != null)
+            {
+                volumetricLine.gameObject.SetActive(true);
+                volumetricLine.SetStartAndEndPoints(volumetricLine.transform.InverseTransformPoint(startPos), 
+                    volumetricLine.transform.InverseTransformPoint(targetPos));
+            }
         }
 
         private void Start()
