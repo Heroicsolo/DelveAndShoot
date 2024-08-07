@@ -2,6 +2,7 @@ using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Utils;
+using System.Collections.Generic;
 using UnityEngine;
 using VolumetricLines;
 
@@ -29,6 +30,40 @@ namespace Heroicsolo.Logics
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public bool FindClosestTargetInCone(Transform shooterTransform, Vector3 from, Vector3 direction, float maxDistance, float coneAngle, TeamType shooterTeam, out IHittable targetHittable)
+        {
+            targetHittable = null;
+
+            List<IHittable> enemiesInRadius = teamsManager.GetEnemiesInRadius(from, shooterTeam, maxDistance);
+
+            List<IHittable> selectedEnemies = new();
+
+            foreach (IHittable enemy in enemiesInRadius)
+            {
+                Vector3 enemyPos = enemy.GetTransform().position;
+
+                Vector3 dir = (enemyPos - from).normalized;
+
+                Vector3 localDir = shooterTransform.InverseTransformDirection(dir);
+
+                if (localDir.z > 0f && Mathf.Atan2(localDir.z, localDir.x) < coneAngle)
+                {
+                    selectedEnemies.Add(enemy);
+                }
+            }
+
+            if (selectedEnemies.Count > 0)
+            {
+                selectedEnemies.Sort((a, b) => from.DistanceXZ(a.GetTransform().position).CompareTo(from.DistanceXZ(b.GetTransform().position)));
+
+                targetHittable = selectedEnemies[0];
+
+                return true;
+            }
+
+            return false;
         }
 
         public bool FindClosestTargetOnLine(Vector3 from, Vector3 direction, float maxDistance, TeamType shooterTeam, out IHittable targetHittable)

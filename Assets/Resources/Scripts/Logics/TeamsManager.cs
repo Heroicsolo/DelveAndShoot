@@ -152,6 +152,33 @@ namespace Heroicsolo.Logics
             return oppositeTeams[teamToCheck].Contains(hittable.GetTeamType());
         }
 
+        public List<IHittable> GetEnemiesInRadius(IHittable fromHittable, float searchRadius = 20f)
+        {
+            TeamType myTeam = fromHittable.GetTeamType();
+            Vector3 from = fromHittable.GetTransform().position;
+
+            return GetEnemiesInRadius(from, myTeam, searchRadius);
+        }
+
+        public List<IHittable> GetEnemiesInRadius(Vector3 from, TeamType shooterTeam, float searchRadius = 20f)
+        {
+            List<IHittable> selectedMembers = new List<IHittable>();
+
+            foreach (TeamType team in oppositeTeams[shooterTeam])
+            {
+                List<IHittable> members = GetTeamMembers(team);
+
+                if (members.Count > 0)
+                {
+                    members.Where(m => !m.IsDead()
+                        && from.DistanceXZ(m.GetTransform().position) < searchRadius).ToList().ForEach(m => selectedMembers.Add(m));
+                }
+            }
+
+            return selectedMembers;
+        }
+
+
         public IHittable GetNearestMemberOfOppositeTeams(IHittable fromHittable, float searchDistance = 0f)
         {
             TeamType myTeam = fromHittable.GetTeamType();
