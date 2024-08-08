@@ -38,6 +38,7 @@ namespace Heroicsolo.Scripts.Player
 
         public ItemId WeaponID => weaponId;
         public bool IsReloading => isReloading;
+        public Transform MuzzleTransform => muzzleFlash.transform;
 
         public void SetShooting(bool shooting, Vector3 targetPoint)
         {

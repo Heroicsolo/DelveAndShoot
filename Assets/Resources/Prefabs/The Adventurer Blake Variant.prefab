@@ -1741,6 +1741,13 @@ MonoBehaviour:
   hidingObjectsManager: {fileID: 4220186838963628649}
   combatTextPrefab: {fileID: 8061844098464555267, guid: 715bafc3567f87c418a7deccf970aeb5, type: 3}
   playerCanvasTransform: {fileID: 4435556770604714589}
+  aimingBones:
+  - BoneType: 7
+    Weight: 0.1
+  - BoneType: 8
+    Weight: 0.3
+  - BoneType: 54
+    Weight: 1
 --- !u!114 &1577313303300086267
 MonoBehaviour:
   m_ObjectHideFlags: 0
