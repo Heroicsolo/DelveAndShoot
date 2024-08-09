@@ -93,6 +93,35 @@ namespace Heroicsolo.Logics
             }
         }
 
+        public IHittable GetNearestTeamMember(TeamType team, IHittable fromHittable)
+        {
+            List<IHittable> members = GetTeamMembers(team);
+
+            Vector3 from = fromHittable.GetTransform().position;
+
+            if (members.Count > 0)
+            {
+                List<IHittable> selectedMembers = new List<IHittable>();
+
+                members.Where(m => !m.IsDead() && m != fromHittable).ToList().ForEach(m => selectedMembers.Add(m));
+
+                if (selectedMembers.Count > 0)
+                {
+                    selectedMembers.Sort((a, b) => from.DistanceXZ(a.GetTransform().position).CompareTo(from.DistanceXZ(b.GetTransform().position)));
+
+                    return selectedMembers[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public IHittable GetNearestTeamMember(TeamType team, Vector3 from)
         {
             List<IHittable> members = GetTeamMembers(team);

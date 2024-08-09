@@ -263,7 +263,7 @@ namespace Heroicsolo.Scripts.Player
 
         private void RotateBones()
         {
-            Vector3 targetPos = GetCorrectedTargetPosition(lookPos);
+            Vector3 targetPos = GetCorrectedTargetPosition(shootPos);
 
             for (int i = 0; i < AimRotateIterations; i++)
             {

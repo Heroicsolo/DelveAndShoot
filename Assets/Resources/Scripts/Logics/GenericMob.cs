@@ -41,6 +41,7 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] [Min(0f)] private float dissapearTime = 5f;
         [SerializeField] [Min(0f)] private float attackPowerMin = 1f;
         [SerializeField] [Min(0f)] private float attackPowerMax = 1f;
+        [SerializeField] private float runAwayHpPercent = 0f;
         [SerializeField] [Min(0)] private int expReward = 100;
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
@@ -68,6 +69,8 @@ namespace Assets.Resources.Scripts.Logics
         private Action<float> OnDamageGot;
         private Action OnDamageDodged;
         private bool aggroDialogPlayed;
+        private GenericMob nearestAlly;
+        private bool helpFound;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
 
@@ -167,6 +170,8 @@ namespace Assets.Resources.Scripts.Logics
             {
                 SwitchState(BotState.Idle);
             }
+
+            helpFound = false;
         }
 
         private void CheckPlayer()
@@ -231,6 +236,32 @@ namespace Assets.Resources.Scripts.Logics
                         ResetState();
                     }
                     break;
+                case BotState.FindHelp:
+                    if (nearestAlly != null && !nearestAlly.IsDead())
+                    {
+                        StartMovement(nearestAlly.GetTransform().position);
+
+                        if (agent.remainingDistance < attackDistance)
+                        {
+                            helpFound = true;
+                            nearestAlly.FollowPlayer();
+                            FollowPlayer();
+                        }
+                    }
+                    else
+                    {
+                        nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this);
+
+                        if (nearestAlly == null)
+                        {
+                            SwitchState(BotState.Idle);
+                        }
+                        else
+                        {
+                            StartMovement(nearestAlly.GetTransform().position);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -291,6 +322,11 @@ namespace Assets.Resources.Scripts.Logics
         public void DeactivateWeaponTrigger()
         {
             weaponActive = false;
+        }
+
+        public void FollowPlayer()
+        {
+            SwitchState(BotState.FollowPlayer);
         }
 
         public bool IsAttacking()
@@ -359,6 +395,10 @@ namespace Assets.Resources.Scripts.Logics
             {
                 Die();
             }
+            else if (!helpFound && statsDict[CharacterStatType.Health].Value < runAwayHpPercent)
+            {
+                SwitchState(BotState.FindHelp);
+            }
         }
 
         public override GameObject GetGameObject()
@@ -404,6 +444,11 @@ namespace Assets.Resources.Scripts.Logics
         public override void SetTeam(TeamType team)
         {
             currentTeam = team;
+        }
+
+        public void OnMeleeAttackPerformed()
+        {
+            playerController.GetDamage(AttackDamage, DamageType.Physical);
         }
 
         public void SwitchState(BotState state)
@@ -459,6 +504,17 @@ namespace Assets.Resources.Scripts.Logics
                 case BotState.Evade:
                     StartMovement(spawnPoint);
                     break;
+                case BotState.FindHelp:
+                    nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this);
+                    if (nearestAlly != null)
+                    {
+                        StartMovement(nearestAlly.GetTransform().position);
+                    }
+                    else
+                    {
+                        SwitchState(BotState.Idle);
+                    }
+                    break;
             }
         }
     }
@@ -471,6 +527,7 @@ namespace Assets.Resources.Scripts.Logics
         FollowPlayer = 3,
         Attacking = 4,
         Death = 5,
-        Evade = 6
+        Evade = 6,
+        FindHelp = 7
     }
 }
