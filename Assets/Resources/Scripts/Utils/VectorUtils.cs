@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VectorUtils
@@ -31,5 +29,19 @@ public class VectorUtils
 
         // Finally, we transform the local point back into world space.
         return meshFilter.transform.TransformPoint(localClosest);
+    }
+
+    public static bool IsObjectInCone(Transform targetObj, Transform lookFromTransform, float coneAngle)
+    {
+        Vector3 dir = (targetObj.position - lookFromTransform.position).normalized;
+
+        Vector3 localDir = lookFromTransform.InverseTransformDirection(dir);
+
+        if (localDir.z > 0f && Mathf.Atan2(localDir.z, localDir.x) < coneAngle)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

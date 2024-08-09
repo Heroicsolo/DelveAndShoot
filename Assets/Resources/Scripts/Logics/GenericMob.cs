@@ -8,15 +8,8 @@ using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
 namespace Assets.Resources.Scripts.Logics
 {
@@ -33,6 +26,7 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] private List<CharacterStat> stats = new();
         [SerializeField] private List<Transform> patrolPoints = new();
         [SerializeField] [Min(0f)] private float attackDistance = 3f;
+        [SerializeField] [Min(0f)] private float aggroConeAngle = 180f;
         [SerializeField] [Min(0f)] private float aggroRadius = 10f;
         [SerializeField] [Min(0f)] private float evadeRadius = 20f;
         [SerializeField] [Min(0f)] private float dissapearTime = 5f;
@@ -177,6 +171,8 @@ namespace Assets.Resources.Scripts.Logics
             {
                 float dist = Vector3.Distance(transform.position, playerController.transform.position);
 
+                bool inCone = VectorUtils.IsObjectInCone(playerController.transform, transform, aggroConeAngle);
+
                 if (dist < attackDistance)
                 {
                     SwitchState(BotState.Attacking);
@@ -184,7 +180,7 @@ namespace Assets.Resources.Scripts.Logics
                     lookPos.y = transform.position.y;
                     transform.LookAt(lookPos);
                 }
-                else if (dist < aggroRadius)
+                else if (dist < aggroRadius && inCone)
                 {
                     SwitchState(BotState.FollowPlayer);
                 }

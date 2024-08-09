@@ -1,6 +1,7 @@
 using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
+using Heroicsolo.Scripts.Player;
 using Heroicsolo.Utils;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,13 +43,7 @@ namespace Heroicsolo.Logics
 
             foreach (IHittable enemy in enemiesInRadius)
             {
-                Vector3 enemyPos = enemy.GetTransform().position;
-
-                Vector3 dir = (enemyPos - from).normalized;
-
-                Vector3 localDir = shooterTransform.InverseTransformDirection(dir);
-
-                if (localDir.z > 0f && Mathf.Atan2(localDir.z, localDir.x) < coneAngle)
+                if (VectorUtils.IsObjectInCone(enemy.GetTransform(), shooterTransform, coneAngle))
                 {
                     selectedEnemies.Add(enemy);
                 }
