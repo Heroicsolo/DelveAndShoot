@@ -68,5 +68,10 @@ namespace Heroicsolo.Logics
                     )
                 );
         }
+
+        public IEnumerable<IActor.Action> GetActions(Type actorType)
+        {
+            return _actionsCollection[actorType].Values;
+        }
     }
 }

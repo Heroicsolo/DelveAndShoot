@@ -15,26 +15,25 @@ namespace Heroicsolo.Logics
 
 
         [Inject] ActionManager actionManager;
-        public IActionManager ActionManager => actionManager;
 
-        public void Do(string action)
+        public void Do(string action, Dictionary<string, object> bag = null)
         {
-            GetAction(action).Invoke(this);
+            GetAction(action).Invoke(this, bag);
         }
 
         public GameObject GetGameObject()
         {
-            throw new NotImplementedException();
+            return gameObject;
         }
 
-        List<IActor.Action> IActor.GetActions()
+        IEnumerable<IActor.Action> IActor.GetActions()
         {
-            throw new NotImplementedException();
+            return actionManager.GetActions(GetType());
         }
 
         public IActor.Action GetAction(string name)
         {
-            throw new NotImplementedException();
+            return actionManager.GetAction(GetType(), name);
         }
     }
 }
