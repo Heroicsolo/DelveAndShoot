@@ -180,6 +180,9 @@ namespace Assets.Resources.Scripts.Logics
                 if (dist < attackDistance)
                 {
                     SwitchState(BotState.Attacking);
+                    Vector3 lookPos = playerController.transform.position;
+                    lookPos.y = transform.position.y;
+                    transform.LookAt(lookPos);
                 }
                 else if (dist < aggroRadius)
                 {
