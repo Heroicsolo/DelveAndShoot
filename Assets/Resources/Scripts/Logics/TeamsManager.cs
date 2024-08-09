@@ -93,7 +93,7 @@ namespace Heroicsolo.Logics
             }
         }
 
-        public IHittable GetNearestTeamMember(TeamType team, IHittable fromHittable)
+        public IHittable GetNearestTeamMember(TeamType team, IHittable fromHittable, bool withTheSameType = false)
         {
             List<IHittable> members = GetTeamMembers(team);
 
@@ -103,7 +103,14 @@ namespace Heroicsolo.Logics
             {
                 List<IHittable> selectedMembers = new List<IHittable>();
 
-                members.Where(m => !m.IsDead() && m != fromHittable).ToList().ForEach(m => selectedMembers.Add(m));
+                if (!withTheSameType)
+                {
+                    members.Where(m => !m.IsDead() && m != fromHittable).ToList().ForEach(m => selectedMembers.Add(m));
+                }
+                else
+                {
+                    members.Where(m => !m.IsDead() && m != fromHittable && m.GetHittableType() == fromHittable.GetHittableType()).ToList().ForEach(m => selectedMembers.Add(m));
+                }
 
                 if (selectedMembers.Count > 0)
                 {

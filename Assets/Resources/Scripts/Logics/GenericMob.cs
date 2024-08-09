@@ -20,9 +20,6 @@ using UnityEngine.UI;
 
 namespace Assets.Resources.Scripts.Logics
 {
-    /// <summary>
-    /// NOT FULLY IMPLEMENTED
-    /// </summary>
     internal class GenericMob : Mob
     {
         private readonly int WalkAnimHash = Animator.StringToHash("Walk");
@@ -250,7 +247,7 @@ namespace Assets.Resources.Scripts.Logics
                     }
                     else
                     {
-                        nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this);
+                        nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
 
                         if (nearestAlly == null)
                         {
@@ -505,7 +502,7 @@ namespace Assets.Resources.Scripts.Logics
                     StartMovement(spawnPoint);
                     break;
                 case BotState.FindHelp:
-                    nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this);
+                    nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
                     if (nearestAlly != null)
                     {
                         StartMovement(nearestAlly.GetTransform().position);
