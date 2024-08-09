@@ -10,10 +10,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Heroicsolo.Logics.ActionManager;
 
 namespace Heroicsolo.Scripts.Player
 {
-    public class PlayerController : MonoBehaviour, ICharacter
+    public class PlayerController : ManagedActor, ICharacter
     {
         private readonly int JumpAnimHash = Animator.StringToHash("Jump");
         private readonly int ShootingAnimHash = Animator.StringToHash("Shooting");
@@ -45,6 +46,8 @@ namespace Heroicsolo.Scripts.Player
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private IShootHelper shootHelper;
         [Inject] private IInventoryManager inventoryManager;
+        [Inject] private IActionManager actionManager;
+        internal override IActionManager ActionManager => actionManager;
 
         private CharacterController characterController;
         private Animator animator;
@@ -164,7 +167,7 @@ namespace Heroicsolo.Scripts.Player
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
-
+            actionManager.RegisterManagedActor(typeof(PlayerController));
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
             cameraTransform = Camera.main.transform;
@@ -197,10 +200,13 @@ namespace Heroicsolo.Scripts.Player
             playerProgressionManager.SubscribeToLevelUpEvent(OnLevelUp);
         }
 
-        private void Jump()
+        [ActorAction]
+        static bool Jump(IActor actor, Dictionary<string, object> bag = null)
         {
-            animator.SetTrigger(JumpAnimHash);
-            jumpSpeed = jumpPower;
+            var pc = actor.GetGameObject().GetComponent<PlayerController>();
+            pc.animator.SetTrigger(pc.JumpAnimHash);
+            pc.jumpSpeed = pc.jumpPower;
+            return true;
         }
 
         private void ProccessAim()
@@ -251,7 +257,8 @@ namespace Heroicsolo.Scripts.Player
 
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
-                Jump();
+                //Jump();
+                Do("Jump");
             }
 
             if (Input.GetMouseButton(0))

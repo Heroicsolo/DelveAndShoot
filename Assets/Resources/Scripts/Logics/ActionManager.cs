@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Heroicsolo.Logics.ManagedActor;
@@ -31,7 +29,7 @@ namespace Heroicsolo.Logics
             }
         }
 
-        private Dictionary<Type, Dictionary<string, IActor.Action>> _actionsCollection;
+        private Dictionary<Type, Dictionary<string, IActor.Action>> _actionsCollection = new();
 
         public IActor.Action GetAction<T>(string name) where T : ManagedActor
         {
@@ -50,14 +48,16 @@ namespace Heroicsolo.Logics
 
         public void RegisterManagedActor(Type actorType)
         {
+            if (!_actionsCollection.ContainsKey(actorType) || _actionsCollection[actorType] == null)
+                _actionsCollection[actorType] = new();
             if (_actionsCollection[actorType].Count > 0)
                 _actionsCollection[actorType].Clear();
-            var actionMethods = GetType()
-                                    .GetMethods()
+            var actionMethods = actorType
+                                    .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                                     .Where(m => m.GetCustomAttribute<ActorActionAttribute>() != null);
             var actions = actionMethods.Select(am =>
             {
-                var actDelegate = Delegate.CreateDelegate(typeof(IActor.Act), am, true) as IActor.Act;
+                var actDelegate = am.CreateDelegate(typeof(IActor.Act)) as IActor.Act;
                 var actionAttr = am.GetCustomAttribute<ActorActionAttribute>();
                 string name = actionAttr.name ?? am.Name;
                 return new IActor.Action(name, actDelegate);

@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Heroicsolo.Logics
 {
-    internal interface IActor
+    public interface IActor
     {
         public delegate bool Act(IActor actor, Dictionary<string, object> bag = null);
-        class Action
+        public class Action
         {
 
-            List<Act> preActions;
+            List<Act> preActions = new();
             Act action;
-            List<Act> postActions;
+            List<Act> postActions = new();
             public event Act OnAction;
-            public string Name { get; private set;}
+            public string Name { get; private set; }
 
             public Action(string name, Act action = null)
             {
@@ -29,7 +27,8 @@ namespace Heroicsolo.Logics
                 bool success = preActions.All(pa => pa.Invoke(actor, bag));
                 if (success) success = action.Invoke(actor, bag);
                 if (success) postActions.ForEach(pa => pa.Invoke(actor, bag));
-                OnAction.BeginInvoke(actor, bag, null, null); //Maybe exception
+                if (OnAction != null)
+                    OnAction.BeginInvoke(actor, bag, null, null);
             }
 
             internal void AddPreAction(Act action) { preActions.Add(action); }
