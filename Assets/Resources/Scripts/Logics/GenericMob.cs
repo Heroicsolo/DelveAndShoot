@@ -63,7 +63,18 @@ namespace Assets.Resources.Scripts.Logics
         private GenericMob nearestAlly;
         private bool helpFound;
 
+        private IMobStrategy mobStrategy;
+
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
+        public float AttackDistance => attackDistance;
+        public float AggroConeAngle => aggroConeAngle;
+        public float AggroRadius => aggroRadius;
+        public float EvadeRadius => evadeRadius;
+        public float RunAwayHPPercent => runAwayHpPercent;
+        public BotState BotState => botState;
+        public List<Transform> PatrolPoints => patrolPoints;
+        public Vector3 SpawnPoint => spawnPoint;
+        public Dictionary<CharacterStatType, CharacterStat> StatsDict => statsDict;
 
         private void Start()
         {
@@ -125,9 +136,17 @@ namespace Assets.Resources.Scripts.Logics
             mobCanvas.gameObject.SetActive(true);
 
             ResetState();
+
+            mobStrategy = new BasicMobStrategy();
+            mobStrategy.Init(this, agent, playerController);
         }
 
-        private void SelectNextPatrolPoint()
+        public void ResetHealth()
+        {
+            statsDict[CharacterStatType.Health].Reset();
+        }
+
+        public void SelectNextPatrolPoint()
         {
             Transform nextPoint = lastPatrolPoint != null ? patrolPoints.GetRandomElementExceptOne(lastPatrolPoint) : patrolPoints.GetRandomElement();
 
@@ -136,7 +155,7 @@ namespace Assets.Resources.Scripts.Logics
             lastPatrolPoint = nextPoint;
         }
 
-        private bool IsReachedNextPatrolPoint()
+        public bool IsReachedNextPoint()
         {
             if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
             {
@@ -151,7 +170,7 @@ namespace Assets.Resources.Scripts.Logics
             return false;
         }
 
-        private void ResetState()
+        public void ResetState()
         {
             if (patrolPoints.Count > 0)
             {
@@ -165,107 +184,11 @@ namespace Assets.Resources.Scripts.Logics
             helpFound = false;
         }
 
-        private void CheckPlayer()
-        {
-            if (playerController != null && !playerController.IsDead())
-            {
-                float dist = Vector3.Distance(transform.position, playerController.transform.position);
-
-                bool inCone = VectorUtils.IsObjectInCone(playerController.transform, transform, aggroConeAngle);
-
-                if (dist < attackDistance)
-                {
-                    SwitchState(BotState.Attacking);
-                    Vector3 lookPos = playerController.transform.position;
-                    lookPos.y = transform.position.y;
-                    transform.LookAt(lookPos);
-                }
-                else if (dist < aggroRadius && inCone)
-                {
-                    SwitchState(BotState.FollowPlayer);
-                }
-                else if (botState == BotState.FollowPlayer 
-                    && (dist > evadeRadius || Vector3.Distance(transform.position, spawnPoint) > evadeRadius))
-                {
-                    SwitchState(BotState.Evade);
-                }
-                else
-                {
-                    ResetState();
-                }
-            }
-            else
-            {
-                SwitchState(BotState.Evade);
-            }
-        }
-
-        private void UpdateCurrentState()
-        {
-            switch (botState)
-            {
-                case BotState.Idle:
-                    StopMovement();
-                    CheckPlayer();
-                    break;
-                case BotState.Patrolling:
-                    if (patrolPoints.Count > 0 && IsReachedNextPatrolPoint())
-                    {
-                        SelectNextPatrolPoint();
-                    }
-                    CheckPlayer();
-                    break;
-                case BotState.FollowPlayer:
-                    StartMovement(playerController.transform.position);
-                    CheckPlayer();
-                    break;
-                case BotState.Attacking:
-                    StopMovement();
-                    animator.SetBool(AttackAnimHash, true);
-                    CheckPlayer();
-                    break;
-                case BotState.Evade:
-                    StartMovement(spawnPoint);
-                    if (IsReachedNextPatrolPoint())
-                    {
-                        statsDict[CharacterStatType.Health].Reset();
-                        ResetState();
-                    }
-                    break;
-                case BotState.FindHelp:
-                    if (nearestAlly != null && !nearestAlly.IsDead())
-                    {
-                        StartMovement(nearestAlly.GetTransform().position);
-
-                        if (agent.remainingDistance < attackDistance)
-                        {
-                            helpFound = true;
-                            nearestAlly.FollowPlayer();
-                            FollowPlayer();
-                        }
-                    }
-                    else
-                    {
-                        nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
-
-                        if (nearestAlly == null)
-                        {
-                            SwitchState(BotState.Idle);
-                        }
-                        else
-                        {
-                            StartMovement(nearestAlly.GetTransform().position);
-                        }
-                    }
-                    break;
-            }
-        }
-
         private void Update()
         {
             if (botState != BotState.Death)
             {
-                UpdateCurrentState();
+                mobStrategy.UpdateCurrentState(Time.deltaTime);
             }
         }
 
@@ -279,7 +202,7 @@ namespace Assets.Resources.Scripts.Logics
             PoolSystem.ReturnToPool(this);
         }
 
-        private void StopMovement()
+        public void StopMovement()
         {
             if (agent.isOnNavMesh && agent.isActiveAndEnabled)
             {
@@ -289,7 +212,7 @@ namespace Assets.Resources.Scripts.Logics
             animator.SetBool(WalkAnimHash, false);
         }
 
-        private void StartMovement(Vector3 destination)
+        public void StartMovement(Vector3 destination)
         {
             if (agent.isOnNavMesh && agent.isActiveAndEnabled)
             {
@@ -297,6 +220,35 @@ namespace Assets.Resources.Scripts.Logics
                 agent.SetDestination(destination);
                 animator.SetBool(WalkAnimHash, true);
                 animator.SetBool(AttackAnimHash, false);
+            }
+        }
+
+        public GenericMob GetNearestTeamMember()
+        {
+            return (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
+        }
+
+        public void SetAnimatorState(BotAnimatorState animatorState)
+        {
+            switch (animatorState)
+            {
+                case BotAnimatorState.Idle:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, false);
+                    break;
+                case BotAnimatorState.Walk:
+                    animator.SetBool(WalkAnimHash, true);
+                    animator.SetBool(AttackAnimHash, false);
+                    break;
+                case BotAnimatorState.Death:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, false);
+                    animator.SetTrigger(DieAnimHash);
+                    break;
+                case BotAnimatorState.Attack:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, true);
+                    break;
             }
         }
 
@@ -387,14 +339,7 @@ namespace Assets.Resources.Scripts.Logics
 
             statsDict[CharacterStatType.Health].Change(-damage);
 
-            if (statsDict[CharacterStatType.Health].Value <= 0f)
-            {
-                Die();
-            }
-            else if (!helpFound && statsDict[CharacterStatType.Health].Percent < runAwayHpPercent)
-            {
-                SwitchState(BotState.FindHelp);
-            }
+            mobStrategy.OnGetDamage(damage, damageType);
         }
 
         public override GameObject GetGameObject()
@@ -525,5 +470,13 @@ namespace Assets.Resources.Scripts.Logics
         Death = 5,
         Evade = 6,
         FindHelp = 7
+    }
+
+    public enum BotAnimatorState
+    {
+        Idle = 0,
+        Walk = 1,
+        Death = 2,
+        Attack = 3
     }
 }
