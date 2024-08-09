@@ -395,7 +395,7 @@ namespace Assets.Resources.Scripts.Logics
             {
                 Die();
             }
-            else if (!helpFound && statsDict[CharacterStatType.Health].Value < runAwayHpPercent)
+            else if (!helpFound && statsDict[CharacterStatType.Health].Percent < runAwayHpPercent)
             {
                 SwitchState(BotState.FindHelp);
             }
