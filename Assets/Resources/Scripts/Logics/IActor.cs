@@ -37,10 +37,11 @@ namespace Heroicsolo.Logics
             internal void RemovePostAction(Act action) { postActions.Remove(action); }
         }
 
-        void Do(string action, Dictionary<string, object> bag);
+        void Do(string action, Dictionary<string, object> bag = null);
         //IActionManager ActionManager { get; }
         GameObject GetGameObject();
         IEnumerable<Action> GetActions(); //Get actions dict from manager to modify actoins of actor
         Action GetAction(string name);
+        T GetComponent<T>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Heroicsolo.DI;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace Heroicsolo.Logics
@@ -14,6 +15,14 @@ namespace Heroicsolo.Logics
         {
             GetAction(action).Invoke(this, bag);
         }
+
+        public void Do(IActor.Act method, Dictionary<string, object> bag = null)
+        {
+            string name = method.GetMethodInfo().GetCustomAttribute<ActionManager.ActorActionAttribute>()?.name;
+            if(name != null)
+                GetAction(name).Invoke(this, bag);
+        }
+
         public GameObject GetGameObject()
         {
             return gameObject;

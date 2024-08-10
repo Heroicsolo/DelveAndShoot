@@ -203,7 +203,7 @@ namespace Heroicsolo.Scripts.Player
         [ActorAction]
         static bool Jump(IActor actor, Dictionary<string, object> bag = null)
         {
-            var pc = actor.GetGameObject().GetComponent<PlayerController>();
+            var pc = actor.GetComponent<PlayerController>();
             pc.animator.SetTrigger(pc.JumpAnimHash);
             pc.jumpSpeed = pc.jumpPower;
             return true;
@@ -258,7 +258,7 @@ namespace Heroicsolo.Scripts.Player
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
                 //Jump();
-                Do("Jump");
+                Do(Jump);
             }
 
             if (Input.GetMouseButton(0))
