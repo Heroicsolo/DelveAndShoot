@@ -393,7 +393,7 @@ namespace Heroicsolo.Logics.Mobs
 
             animator.ResetTrigger(DieAnimHash);
 
-            if (!agent.isOnNavMesh || !agent.isActiveAndEnabled)
+            if ((!agent.isOnNavMesh || !agent.isActiveAndEnabled) && !(defaultMobStrategy is StationaryMobStrategy))
             {
                 //Mob is spawned on bad position, return it to pool
                 ReturnToPool();

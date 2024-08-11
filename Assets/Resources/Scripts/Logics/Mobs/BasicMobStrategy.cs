@@ -155,8 +155,14 @@ namespace Heroicsolo.Logics.Mobs
         {
             owner = mob;
             agent = mobAgent;
-            helpFound = false;
             this.playerController = playerController;
+
+            SetupAfterInit();
+        }
+
+        public virtual void SetupAfterInit()
+        {
+            helpFound = false;
         }
 
         protected virtual void CheckPlayer()

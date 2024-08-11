@@ -11,6 +11,7 @@ namespace Heroicsolo.Logics.Mobs
     {
         [SerializeField] private List<ValueWeight<Mob>> spawnList = new();
         [SerializeField] [Min(0)] private float spawnPeriod = 0;
+        [SerializeField] private float spawnYOffset = 0f;
 
         [Inject] private RuntimeDungeonGenerator runtimeDungeonGenerator;
 
@@ -20,7 +21,7 @@ namespace Heroicsolo.Logics.Mobs
         private void Spawn()
         {
             Mob chosenMob = spawnChoser.Chose();
-            Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position);
+            Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position + Vector3.up * spawnYOffset);
             mobInstance.Activate();
         }
 

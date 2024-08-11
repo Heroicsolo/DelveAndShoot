@@ -11,6 +11,7 @@ namespace Heroicsolo.Logics.Mobs
             {
                 return;
             }
+
             owner.BotState = state;
 
             switch (state)
@@ -89,6 +90,12 @@ namespace Heroicsolo.Logics.Mobs
                     }
                     break;
             }
+        }
+
+        public override void SetupAfterInit()
+        {
+            base.SetupAfterInit();
+            agent.enabled = false;
         }
     }
 }
