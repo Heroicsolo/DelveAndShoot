@@ -1,13 +1,11 @@
 using Heroicsolo.DI;
-using Heroicsolo.Scripts.Utils;
 using Heroicsolo.Utils;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     public class MobsSpawner : MonoBehaviour
     {

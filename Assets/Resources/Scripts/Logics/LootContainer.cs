@@ -1,7 +1,7 @@
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Logics;
+using Heroicsolo.Heroicsolo.Player;
 using Heroicsolo.Scripts.UI;
 using System;
 using System.Collections.Generic;

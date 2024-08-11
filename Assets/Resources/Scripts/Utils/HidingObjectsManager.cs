@@ -1,4 +1,4 @@
-﻿using Heroicsolo.Scripts.Player;
+﻿using Heroicsolo.Heroicsolo.Player;
 using System.Collections.Generic;
 using UnityEngine;
 

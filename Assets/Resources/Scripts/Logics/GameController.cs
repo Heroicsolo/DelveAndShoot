@@ -1,8 +1,8 @@
 using Heroicsolo.DI;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public class GameController : MonoBehaviour, IGameController
     {

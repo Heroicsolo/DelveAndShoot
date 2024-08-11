@@ -1,13 +1,9 @@
-﻿using Heroicsolo.Logics;
-using Heroicsolo.Utils;
+﻿using Heroicsolo.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     internal abstract class Mob : MonoBehaviour, IPooledObject, ICharacter
     {

@@ -2,7 +2,7 @@ using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
@@ -12,7 +12,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Player
+namespace Heroicsolo.Heroicsolo.Player
 {
     public class PlayerController : MonoBehaviour, ICharacter
     {

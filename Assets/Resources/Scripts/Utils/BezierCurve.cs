@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Naxeex.Content_dev.Scripts.Utils
+namespace Heroicsolo.Utils
 {
     public class BezierCurve
     {

@@ -1,4 +1,4 @@
-using Assets.Resources.Scripts.Logics;
+using Heroicsolo.Logics;
 using Heroicsolo.Logics;
 using Heroicsolo.Utils;
 using System.Collections;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Heroicsolo.Scripts.Utils
+namespace Heroicsolo.Utils
 {
     [Serializable]
     public struct ValueWeight<T> : IComparable<ValueWeight<T>>

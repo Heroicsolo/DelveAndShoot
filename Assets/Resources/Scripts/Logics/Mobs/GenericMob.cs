@@ -1,9 +1,6 @@
-﻿using DG.Tweening;
-using Heroicsolo.DI;
+﻿using Heroicsolo.DI;
 using Heroicsolo.Inventory;
-using Heroicsolo.Logics;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
@@ -11,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Assets.Resources.Scripts.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     internal class GenericMob : Mob
     {
@@ -54,6 +51,7 @@ namespace Assets.Resources.Scripts.Logics
         [Inject] private ITeamsManager teamsManager;
         [Inject] private IDialogPopup dialogPopup;
 
+        #region Private Fields
         private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
 
         private NavMeshAgent agent;
@@ -67,10 +65,10 @@ namespace Assets.Resources.Scripts.Logics
         private Action<float> OnDamageGot;
         private Action OnDamageDodged;
         private bool aggroDialogPlayed;
-        private GenericMob nearestAlly;
-        private bool helpFound;
         private IMobStrategy mobStrategyInstance;
+        #endregion
 
+        #region Public Fields
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
         public float AttackDistance => attackDistance;
         
@@ -82,19 +80,296 @@ namespace Assets.Resources.Scripts.Logics
         public List<Transform> PatrolPoints => patrolPoints;
         public Vector3 SpawnPoint => spawnPoint;
         public Dictionary<CharacterStatType, CharacterStat> StatsDict => statsDict;
+        #endregion
 
+        public void SetStrategy(IMobStrategy strategy)
+        {
+            mobStrategyInstance = null;
+            mobStrategyInstance = ScriptableObject.CreateInstance(strategy.GetType()) as IMobStrategy;
+            mobStrategyInstance.Init(this, agent, playerController);
+            mobStrategyInstance.SwitchState(botState);
+        }
+
+        #region Poolable Methods
+        public override GameObject GetGameObject()
+        {
+            return gameObject;
+        }
+
+        public override string GetName()
+        {
+            return gameObject.name;
+        }
+
+        public override Transform GetTransform()
+        {
+            return transform;
+        }
+
+        public override void SetName(string name)
+        {
+            gameObject.name = name;
+        }
+        #endregion
+
+        #region Mob Movement
+        public void SelectNextPatrolPoint()
+        {
+            Transform nextPoint = lastPatrolPoint != null ? patrolPoints.GetRandomElementExceptOne(lastPatrolPoint) : patrolPoints.GetRandomElement();
+
+            StartMovement(nextPoint.position);
+
+            lastPatrolPoint = nextPoint;
+        }
+        public bool IsReachedNextPoint()
+        {
+            if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
+            {
+                return false;
+            }
+
+            if (agent.remainingDistance < TargetReachThreshold)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        public void StopMovement()
+        {
+            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
+            {
+                agent.isStopped = true;
+            }
+
+            animator.SetBool(WalkAnimHash, false);
+        }
+        public void StartMovement(Vector3 destination)
+        {
+            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(destination);
+                animator.SetBool(WalkAnimHash, true);
+                animator.SetBool(AttackAnimHash, false);
+            }
+        }
+        public void FollowPlayer()
+        {
+            mobStrategyInstance.SwitchState(BotState.FollowPlayer);
+        }
+        #endregion
+
+        #region Mob State
+        public void ResetHealth()
+        {
+            statsDict[CharacterStatType.Health].Reset();
+        }
+        public void ResetState()
+        {
+            if (patrolPoints.Count > 0)
+            {
+                mobStrategyInstance.SwitchState(BotState.Patrolling);
+            }
+            else
+            {
+                mobStrategyInstance.SwitchState(BotState.Idle);
+            }
+        }
+        public override void Activate()
+        {
+            InitState();
+        }
+        public override void Deactivate()
+        {
+            mobStrategyInstance.SwitchState(BotState.Sleeping);
+        }
+        public override void Die()
+        {
+            mobStrategyInstance.SwitchState(BotState.Death);
+
+            if (deathReplics.Count > 0)
+            {
+                dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
+            }
+
+            StopMovement();
+            HideMobCanvasAndCircle();
+            SpawnLoot();
+            Invoke(nameof(ReturnToPool), dissapearTime);
+            playerProgressionManager.AddExperience(expReward);
+        }
+        public override bool IsDead()
+        {
+            return statsDict[CharacterStatType.Health].Value <= 0f;
+        }
+        #endregion
+
+        #region Mob Events
+        public override void SubscribeToDamageGot(Action<float> onDamageGot)
+        {
+            OnDamageGot += onDamageGot;
+        }
+
+        public override void SubscribeToDamageDodged(Action onDamageDodged)
+        {
+            OnDamageDodged += onDamageDodged;
+        }
+        #endregion
+
+        #region Combat
+        public void ActivateWeaponTrigger()
+        {
+            weaponActive = true;
+        }
+        public void DeactivateWeaponTrigger()
+        {
+            weaponActive = false;
+        }
+        public bool IsAttacking()
+        {
+            return botState == BotState.Attacking && weaponActive;
+        }
+        public bool IsDamageable()
+        {
+            return botState != BotState.Evade && botState != BotState.Death && statsDict[CharacterStatType.Health].Value > 0f;
+        }
+        public void OnAggro()
+        {
+            if (!aggroDialogPlayed && aggroReplics.Count > 0)
+            {
+                dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
+                aggroDialogPlayed = true;
+            }
+        }
+        public override void DodgeDamage()
+        {
+            OnDamageDodged?.Invoke();
+        }
+        public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
+        {
+            if (botState != BotState.Evade)
+            {
+                DodgeDamage();
+            }
+
+            if (!IsDamageable() || damage <= 0f)
+            {
+                return;
+            }
+
+            if (statsDict.ContainsKey(CharacterStatType.Armor) && damageType == DamageType.Physical)
+            {
+                damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
+            }
+
+            OnDamageGot?.Invoke(damage);
+
+            statsDict[CharacterStatType.Health].Change(-damage);
+
+            mobStrategyInstance.OnGetDamage(damage, damageType);
+        }
+        public override void Heal(float amount)
+        {
+            statsDict[CharacterStatType.Health].Change(amount);
+        }
+        public void OnMeleeAttackPerformed()
+        {
+            playerController.GetDamage(AttackDamage, DamageType.Physical);
+        }
+        public override HittableType GetHittableType()
+        {
+            return creatureType;
+        }
+        public void SpawnLoot()
+        {
+            lootManager.GenerateRandomDrop(lootId, transform.position);
+        }
+        #endregion
+
+        #region Mob Stats
+        public override List<CharacterStat> GetCharacterStats()
+        {
+            return stats;
+        }
+        public override CharacterStat GetCharacterStat(CharacterStatType characterStatType)
+        {
+            return stats.Find(s => s.StatType == characterStatType);
+        }
+
+        #endregion
+
+        #region Mob Team
+        public override TeamType GetTeamType()
+        {
+            return currentTeam;
+        }
+        public override void SetTeam(TeamType team)
+        {
+            currentTeam = team;
+        }
+        public GenericMob GetNearestTeamMember()
+        {
+            return (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
+        }
+        #endregion
+
+        #region Mob Visuals
+        public void SetAnimatorState(BotAnimatorState animatorState)
+        {
+            switch (animatorState)
+            {
+                case BotAnimatorState.Idle:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, false);
+                    break;
+                case BotAnimatorState.Walk:
+                    animator.SetBool(WalkAnimHash, true);
+                    animator.SetBool(AttackAnimHash, false);
+                    break;
+                case BotAnimatorState.Death:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, false);
+                    animator.SetTrigger(DieAnimHash);
+                    break;
+                case BotAnimatorState.Attack:
+                    animator.SetBool(WalkAnimHash, false);
+                    animator.SetBool(AttackAnimHash, true);
+                    break;
+            }
+        }
+        public void HideMobCanvasAndCircle()
+        {
+            if (mobCanvas != null)
+            {
+                mobCanvas.gameObject.SetActive(false);
+            }
+
+            mobCircle.gameObject.SetActive(false);
+        }
+        #endregion
+
+        #region Private Methods
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
 
 #if UNITY_EDITOR
-            if(string.IsNullOrEmpty(typeName))
+            if (string.IsNullOrEmpty(typeName))
             {
                 Debug.LogError($"Mob prefab {gameObject.name} spawned without proper pool name assigned");
                 UnityEditor.EditorApplication.isPlaying = false;
             }
 #endif
             weaponActive = false;
+        }
+
+        private void Update()
+        {
+            if (botState != BotState.Death)
+            {
+                mobStrategyInstance.UpdateCurrentState(Time.deltaTime);
+            }
         }
 
         private void InitState()
@@ -146,285 +421,11 @@ namespace Assets.Resources.Scripts.Logics
             ResetState();
         }
 
-        public void ResetHealth()
-        {
-            statsDict[CharacterStatType.Health].Reset();
-        }
-
-        public void SelectNextPatrolPoint()
-        {
-            Transform nextPoint = lastPatrolPoint != null ? patrolPoints.GetRandomElementExceptOne(lastPatrolPoint) : patrolPoints.GetRandomElement();
-
-            StartMovement(nextPoint.position);
-
-            lastPatrolPoint = nextPoint;
-        }
-
-        public bool IsReachedNextPoint()
-        {
-            if (!agent.isActiveAndEnabled || !agent.isOnNavMesh)
-            {
-                return false;
-            }
-
-            if (agent.remainingDistance < TargetReachThreshold)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public void ResetState()
-        {
-            if (patrolPoints.Count > 0)
-            {
-                mobStrategyInstance.SwitchState(BotState.Patrolling);
-            }
-            else
-            {
-                mobStrategyInstance.SwitchState(BotState.Idle);
-            }
-
-            helpFound = false;
-        }
-
-        public void HideMobCanvasAndCircle()
-        {
-            if (mobCanvas != null)
-            {
-                mobCanvas.gameObject.SetActive(false);
-            }
-
-            mobCircle.gameObject.SetActive(false);
-        }
-
-        private void Update()
-        {
-            if (botState != BotState.Death)
-            {
-                mobStrategyInstance.UpdateCurrentState(Time.deltaTime);
-            }
-        }
-
-        public void SpawnLoot()
-        {
-            lootManager.GenerateRandomDrop(lootId, transform.position);
-        }
-
         private void ReturnToPool()
         {
             PoolSystem.ReturnToPool(this);
         }
-
-        public void StopMovement()
-        {
-            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
-            {
-                agent.isStopped = true;
-            }
-
-            animator.SetBool(WalkAnimHash, false);
-        }
-
-        public void StartMovement(Vector3 destination)
-        {
-            if (agent.isOnNavMesh && agent.isActiveAndEnabled)
-            {
-                agent.isStopped = false;
-                agent.SetDestination(destination);
-                animator.SetBool(WalkAnimHash, true);
-                animator.SetBool(AttackAnimHash, false);
-            }
-        }
-
-        public GenericMob GetNearestTeamMember()
-        {
-            return (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
-        }
-
-        public void SetAnimatorState(BotAnimatorState animatorState)
-        {
-            switch (animatorState)
-            {
-                case BotAnimatorState.Idle:
-                    animator.SetBool(WalkAnimHash, false);
-                    animator.SetBool(AttackAnimHash, false);
-                    break;
-                case BotAnimatorState.Walk:
-                    animator.SetBool(WalkAnimHash, true);
-                    animator.SetBool(AttackAnimHash, false);
-                    break;
-                case BotAnimatorState.Death:
-                    animator.SetBool(WalkAnimHash, false);
-                    animator.SetBool(AttackAnimHash, false);
-                    animator.SetTrigger(DieAnimHash);
-                    break;
-                case BotAnimatorState.Attack:
-                    animator.SetBool(WalkAnimHash, false);
-                    animator.SetBool(AttackAnimHash, true);
-                    break;
-            }
-        }
-
-        public override void SubscribeToDamageGot(Action<float> onDamageGot)
-        {
-            OnDamageGot += onDamageGot;
-        }
-
-        public override void SubscribeToDamageDodged(Action onDamageDodged)
-        {
-            OnDamageDodged += onDamageDodged;
-        }
-
-        public void ActivateWeaponTrigger()
-        {
-            weaponActive = true;
-        }
-
-        public void DeactivateWeaponTrigger()
-        {
-            weaponActive = false;
-        }
-
-        public void FollowPlayer()
-        {
-            mobStrategyInstance.SwitchState(BotState.FollowPlayer);
-        }
-
-        public bool IsAttacking()
-        {
-            return botState == BotState.Attacking && weaponActive;
-        }
-            
-        public bool IsDamageable()
-        {
-            return botState != BotState.Evade && botState != BotState.Death && statsDict[CharacterStatType.Health].Value > 0f;
-        }
-
-        public override void Activate()
-        {
-            InitState();
-        }
-
-        public override void Deactivate()
-        {
-            mobStrategyInstance.SwitchState(BotState.Sleeping);
-        }
-
-        public override void Die()
-        {
-            mobStrategyInstance.SwitchState(BotState.Death);
-
-            if (deathReplics.Count > 0)
-            {
-                dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
-            }
-
-            StopMovement();
-            HideMobCanvasAndCircle();
-            SpawnLoot();
-            Invoke(nameof(ReturnToPool), dissapearTime);
-            playerProgressionManager.AddExperience(expReward);
-        }
-
-        public void OnAggro()
-        {
-            if (!aggroDialogPlayed && aggroReplics.Count > 0)
-            {
-                dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
-                aggroDialogPlayed = true;
-            }
-        }
-
-        public override List<CharacterStat> GetCharacterStats()
-        {
-            return stats;
-        }
-
-        public override CharacterStat GetCharacterStat(CharacterStatType characterStatType)
-        {
-            return stats.Find(s => s.StatType == characterStatType);
-        }
-
-        public override void DodgeDamage()
-        {
-            OnDamageDodged?.Invoke();
-        }
-
-        public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
-        {
-            if (botState != BotState.Evade)
-            {
-                DodgeDamage();
-            }
-
-            if (!IsDamageable() || damage <= 0f)
-            {
-                return;
-            }
-
-            if (statsDict.ContainsKey(CharacterStatType.Armor) && damageType == DamageType.Physical)
-            {
-                damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
-            }
-
-            OnDamageGot?.Invoke(damage);
-
-            statsDict[CharacterStatType.Health].Change(-damage);
-
-            mobStrategyInstance.OnGetDamage(damage, damageType);
-        }
-
-        public override GameObject GetGameObject()
-        {
-            return gameObject;
-        }
-
-        public override HittableType GetHittableType()
-        {
-            return creatureType;
-        }
-
-        public override string GetName()
-        {
-            return gameObject.name;
-        }
-
-        public override TeamType GetTeamType()
-        {
-            return currentTeam;
-        }
-
-        public override Transform GetTransform()
-        {
-            return transform;
-        }
-
-        public override void Heal(float amount)
-        {
-            statsDict[CharacterStatType.Health].Change(amount);
-        }
-
-        public override bool IsDead()
-        {
-            return statsDict[CharacterStatType.Health].Value <= 0f;
-        }
-
-        public override void SetName(string name)
-        {
-            gameObject.name = name;
-        }
-
-        public override void SetTeam(TeamType team)
-        {
-            currentTeam = team;
-        }
-
-        public void OnMeleeAttackPerformed()
-        {
-            playerController.GetDamage(AttackDamage, DamageType.Physical);
-        }
+        #endregion
     }
 
     public enum BotState

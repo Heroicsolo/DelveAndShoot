@@ -1,7 +1,7 @@
 using Heroicsolo.DI;
 using System;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public interface IPlayerProgressionManager : ISystem
     {

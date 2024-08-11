@@ -1,7 +1,7 @@
 using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 using Heroicsolo.Utils;
 using System.Collections.Generic;
 using UnityEngine;

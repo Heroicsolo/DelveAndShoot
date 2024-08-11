@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VolumetricLines;
 
-namespace Heroicsolo.Scripts.Player
+namespace Heroicsolo.Heroicsolo.Player
 {
     public class WeaponController : MonoBehaviour
     {

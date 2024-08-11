@@ -1,4 +1,4 @@
-﻿using Heroicsolo.Scripts.Logics;
+﻿using Heroicsolo.Logics;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;

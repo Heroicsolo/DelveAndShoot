@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public class DestructibleProps : MonoBehaviour, IHittable
     {

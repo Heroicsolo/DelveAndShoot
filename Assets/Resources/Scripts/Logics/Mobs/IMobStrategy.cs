@@ -1,9 +1,7 @@
-using Assets.Resources.Scripts.Logics;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 using UnityEngine.AI;
 
-namespace Heroicsolo.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     public interface IMobStrategy
     {

@@ -1,24 +1,24 @@
-using Assets.Resources.Scripts.Logics;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Heroicsolo.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     [CreateAssetMenu(fileName = "New BasicMobStrategy", menuName = "Basic Mob Strategy", order = 51)]
     public class BasicMobStrategy : ScriptableObject, IMobStrategy
     {
-        [SerializeField] [Min(0f)] private float aggroConeAngle = 180f;
-        [SerializeField] [Min(0f)] private float aggroRadius = 10f;
-        [SerializeField] [Min(0f)] private float evadeRadius = 20f;
-        [SerializeField] [Min(0f)] private float runAwayHpPercent = 0f;
+        [SerializeField] [Min(0f)] protected float aggroConeAngle = 180f;
+        [SerializeField] [Min(0f)] protected float aggroRadius = 10f;
+        [SerializeField] protected bool canEvade = true;
+        [ConditionalHide("canEvade", true, true)]
+        [SerializeField] [Min(0f)] protected float evadeRadius = 20f;
+        [SerializeField] [Min(0f)] protected float runAwayHpPercent = 0f;
 
-        private GenericMob owner;
-        private NavMeshAgent agent;
-        private PlayerController playerController;
-        private GenericMob nearestAlly;
-        private bool helpFound;
+        internal GenericMob owner;
+        internal GenericMob nearestAlly;
+        protected NavMeshAgent agent;
+        protected PlayerController playerController;
+        protected bool helpFound;
 
         public virtual void OnGetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
@@ -159,7 +159,7 @@ namespace Heroicsolo.Logics
             this.playerController = playerController;
         }
 
-        private void CheckPlayer()
+        protected virtual void CheckPlayer()
         {
             if (playerController != null && !playerController.IsDead())
             {
@@ -178,7 +178,7 @@ namespace Heroicsolo.Logics
                 {
                     SwitchState(BotState.FollowPlayer);
                 }
-                else if (owner.BotState == BotState.FollowPlayer
+                else if (canEvade && owner.BotState == BotState.FollowPlayer
                     && (dist > evadeRadius || Vector3.Distance(owner.transform.position, owner.SpawnPoint) > evadeRadius))
                 {
                     SwitchState(BotState.Evade);
@@ -188,9 +188,13 @@ namespace Heroicsolo.Logics
                     owner.ResetState();
                 }
             }
-            else
+            else if (canEvade)
             {
                 SwitchState(BotState.Evade);
+            }
+            else
+            {
+                SwitchState(BotState.Idle);
             }
         }
     }

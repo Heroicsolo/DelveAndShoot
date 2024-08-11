@@ -1,5 +1,5 @@
 using Heroicsolo.DI;
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 using Heroicsolo.Utils;
 using System;
 using System.Collections;

@@ -1,12 +1,10 @@
-using Assets.FantasyInventory.Scripts.Data;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Scripts.Inventory;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Logics;
+using Heroicsolo.Heroicsolo.Player;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
-using Naxeex.Content_dev.Scripts.Utils;
 using System;
 using System.Collections;
 using UnityEngine;

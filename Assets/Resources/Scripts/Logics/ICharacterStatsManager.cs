@@ -1,7 +1,7 @@
 using Heroicsolo.DI;
 using Heroicsolo.Logics;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public interface ICharacterStatsManager : ISystem
     {

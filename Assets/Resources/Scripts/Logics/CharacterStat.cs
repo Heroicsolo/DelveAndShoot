@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     [Serializable]
     public class CharacterStat

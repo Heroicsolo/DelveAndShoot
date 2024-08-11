@@ -1,5 +1,5 @@
 ﻿using Heroicsolo.Inventory;
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 using System;
 using System.Collections.Generic;
 using System.Linq;

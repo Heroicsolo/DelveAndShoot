@@ -1,4 +1,4 @@
-﻿using Heroicsolo.Scripts.Logics;
+﻿using Heroicsolo.Logics;
 using Heroicsolo.Scripts.UI.Utils;
 using System;
 using System.Collections.Generic;

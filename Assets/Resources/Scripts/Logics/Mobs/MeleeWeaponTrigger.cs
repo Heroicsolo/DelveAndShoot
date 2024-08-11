@@ -1,11 +1,7 @@
-using Heroicsolo.Logics;
-using Heroicsolo.Scripts.Logics;
-using Heroicsolo.Scripts.Player;
-using System.Collections;
-using System.Collections.Generic;
+using Heroicsolo.Heroicsolo.Player;
 using UnityEngine;
 
-namespace Assets.Resources.Scripts.Logics
+namespace Heroicsolo.Logics.Mobs
 {
     public class MeleeWeaponTrigger : MonoBehaviour
     {

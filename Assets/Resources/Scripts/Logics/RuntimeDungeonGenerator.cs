@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public class RuntimeDungeonGenerator : MonoBehaviour, ISystem
     {
