@@ -5757,6 +5757,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &6801942371313188726 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3803223221632979436, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
+  m_PrefabInstance: {fileID: 7683873044929949338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7343376560599193640 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
@@ -5782,6 +5787,7 @@ MonoBehaviour:
   typeName: Stone Golem
   creatureType: 20
   defaultTeam: 10
+  defaultMobStrategy: {fileID: 11400000, guid: c4f0f40083a1c9242959891d1ccc9b0a, type: 2}
   stats:
   - statType: 0
     baseValue: 50
@@ -5795,17 +5801,16 @@ MonoBehaviour:
     regenDelay: 0
     bonusPerLevel: 25
     isRegenEnabled: 0
-  patrolPoints: []
   attackDistance: 2
-  aggroRadius: 10
-  evadeRadius: 20
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70
+  patrolPoints: []
   expReward: 100
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 2375010101096603086}
   mobCircle: {fileID: 409908550629403389}
+  hitPivot: {fileID: 6801942371313188726}
   dialogAvatar: {fileID: 21300000, guid: 1a486deced5e90f479e4e4913502c755, type: 3}
   aggroReplics:
   - Me... CRUSH!

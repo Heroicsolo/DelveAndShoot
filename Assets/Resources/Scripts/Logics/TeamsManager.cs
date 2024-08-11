@@ -93,6 +93,42 @@ namespace Heroicsolo.Logics
             }
         }
 
+        public IHittable GetNearestTeamMember(TeamType team, IHittable fromHittable, bool withTheSameType = false)
+        {
+            List<IHittable> members = GetTeamMembers(team);
+
+            Vector3 from = fromHittable.GetTransform().position;
+
+            if (members.Count > 0)
+            {
+                List<IHittable> selectedMembers = new List<IHittable>();
+
+                if (!withTheSameType)
+                {
+                    members.Where(m => !m.IsDead() && m != fromHittable).ToList().ForEach(m => selectedMembers.Add(m));
+                }
+                else
+                {
+                    members.Where(m => !m.IsDead() && m != fromHittable && m.GetHittableType() == fromHittable.GetHittableType()).ToList().ForEach(m => selectedMembers.Add(m));
+                }
+
+                if (selectedMembers.Count > 0)
+                {
+                    selectedMembers.Sort((a, b) => from.DistanceXZ(a.GetTransform().position).CompareTo(from.DistanceXZ(b.GetTransform().position)));
+
+                    return selectedMembers[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public IHittable GetNearestTeamMember(TeamType team, Vector3 from)
         {
             List<IHittable> members = GetTeamMembers(team);
@@ -151,6 +187,33 @@ namespace Heroicsolo.Logics
         {
             return oppositeTeams[teamToCheck].Contains(hittable.GetTeamType());
         }
+
+        public List<IHittable> GetEnemiesInRadius(IHittable fromHittable, float searchRadius = 20f)
+        {
+            TeamType myTeam = fromHittable.GetTeamType();
+            Vector3 from = fromHittable.GetTransform().position;
+
+            return GetEnemiesInRadius(from, myTeam, searchRadius);
+        }
+
+        public List<IHittable> GetEnemiesInRadius(Vector3 from, TeamType shooterTeam, float searchRadius = 20f)
+        {
+            List<IHittable> selectedMembers = new List<IHittable>();
+
+            foreach (TeamType team in oppositeTeams[shooterTeam])
+            {
+                List<IHittable> members = GetTeamMembers(team);
+
+                if (members.Count > 0)
+                {
+                    members.Where(m => !m.IsDead()
+                        && from.DistanceXZ(m.GetTransform().position) < searchRadius).ToList().ForEach(m => selectedMembers.Add(m));
+                }
+            }
+
+            return selectedMembers;
+        }
+
 
         public IHittable GetNearestMemberOfOppositeTeams(IHittable fromHittable, float searchDistance = 0f)
         {

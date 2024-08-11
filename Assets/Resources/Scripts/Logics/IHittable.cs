@@ -1,4 +1,4 @@
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +14,7 @@ namespace Heroicsolo.Logics
         bool IsDead();
         GameObject GetGameObject();
         Transform GetTransform();
+        Transform GetHitPivot();
         HittableType GetHittableType();
         void SetTeam(TeamType team);
         TeamType GetTeamType();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Resources.Scripts.Utils
+namespace Assets.Resources.Utils
 {
     public interface IHideable
     {

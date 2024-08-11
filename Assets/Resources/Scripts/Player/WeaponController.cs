@@ -8,8 +8,9 @@ using Heroicsolo.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VolumetricLines;
 
-namespace Heroicsolo.Scripts.Player
+namespace Heroicsolo.Heroicsolo.Player
 {
     public class WeaponController : MonoBehaviour
     {
@@ -23,7 +24,7 @@ namespace Heroicsolo.Scripts.Player
         [SerializeField][Min(0f)] private float reloadTime = 3f;
         [SerializeField][Min(0)] private int ammo = 6;
         [SerializeField][Min(0f)] private float hitChance = 0.9f;
-        [SerializeField] private LineRenderer rayRenderer;
+        [SerializeField] private VolumetricLineBehavior rayRenderer;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IShootHelper shootHelper;
@@ -37,6 +38,7 @@ namespace Heroicsolo.Scripts.Player
 
         public ItemId WeaponID => weaponId;
         public bool IsReloading => isReloading;
+        public Transform MuzzleTransform => muzzleFlash.transform;
 
         public void SetShooting(bool shooting, Vector3 targetPoint)
         {
@@ -68,7 +70,8 @@ namespace Heroicsolo.Scripts.Player
 
             if (rayRenderer != null)
             {
-                rayRenderer.SetPosition(0, muzzleFlash.transform.localPosition);
+                rayRenderer.SetStartAndEndPoints(muzzleFlash.transform.localPosition, muzzleFlash.transform.localPosition);
+                rayRenderer.gameObject.SetActive(false);
             }
 
             itemParams = ItemsCollection.ItemsParams[weaponId];
@@ -115,7 +118,7 @@ namespace Heroicsolo.Scripts.Player
         {
             if (rayRenderer != null)
             {
-                rayRenderer.enabled = false;
+                rayRenderer.gameObject.SetActive(false);
             }
         }
 

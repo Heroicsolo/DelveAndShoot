@@ -1,6 +1,6 @@
 using System;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     [Serializable]
     public class CharacterStatInt : CharacterStat

@@ -727,6 +727,15 @@ MonoBehaviour:
     offsetFix: 0
     gameObject: {fileID: 3590027052458200376, guid: b603d53be26f0f648af89373e623022a, type: 3}
     spawnRoom: 0
+  - minSpawnCount: 1
+    maxSpawnCount: 2
+    spawnByWall: 0
+    spawmInTheMiddle: 0
+    spawnRotated: 0
+    heightFix: 0.2
+    offsetFix: 0
+    gameObject: {fileID: 3590027052458200376, guid: faddc7f05bc12514289938ee12342bbe, type: 3}
+    spawnRoom: 0
   customRooms: []
   makeIt3d: 1
 --- !u!4 &1984618011
@@ -1903,7 +1912,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[5].Properties.Array.data[0].Value
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8424475258549918282, guid: f822e8ae4ebd31544bd714d24b999680, type: 3}
       propertyPath: AvailableItems.Array.data[6].Properties.Array.data[0].Value

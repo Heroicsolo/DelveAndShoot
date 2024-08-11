@@ -2,23 +2,27 @@ using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Heroicsolo.Logics.ActionManager;
 
-namespace Heroicsolo.Scripts.Player
+namespace Heroicsolo.Heroicsolo.Player
 {
     public class PlayerController : ManagedActor, ICharacter
     {
         private readonly int JumpAnimHash = Animator.StringToHash("Jump");
         private readonly int ShootingAnimHash = Animator.StringToHash("Shooting");
         private readonly int DieAnimHash = Animator.StringToHash("Die");
+        private const int AimRotateIterations = 10;
+        private const float AimRotateAngleLimit = 90f;
+        private const float AimRotateDistanceLimit = 1.5f;
 
         [Header("Movement Params")]
         [SerializeField] private float runSpeedFatiguedCoef = 0.6f;
@@ -26,8 +30,8 @@ namespace Heroicsolo.Scripts.Player
         [SerializeField] private float cameraMoveSpeed = 10f;
         [SerializeField] private float directionChangeSpeed = 10f;
         [SerializeField] private float jumpPower = 2f;
-        [SerializeField] [Range(0f, 1f)] private float fatigueEndThreshold = 0.7f;
-        [SerializeField] [Min(0f)] private float staminaSpendingForRun = 2f;
+        [SerializeField][Range(0f, 1f)] private float fatigueEndThreshold = 0.7f;
+        [SerializeField][Min(0f)] private float staminaSpendingForRun = 2f;
         [SerializeField] private LayerMask floorMask;
 
         [Header("Weapons")]
@@ -40,6 +44,7 @@ namespace Heroicsolo.Scripts.Player
         [SerializeField] private HidingObjectsManager hidingObjectsManager;
         [SerializeField] private FloatingText combatTextPrefab;
         [SerializeField] private Transform playerCanvasTransform;
+        [SerializeField] private List<AimingBoneInfo> aimingBones = new List<AimingBoneInfo>();
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
@@ -62,6 +67,7 @@ namespace Heroicsolo.Scripts.Player
         private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
         private RaycastHit[] raycastHits;
         private WeaponController weaponController;
+        private Dictionary<Transform, float> aimingBonesTransforms = new Dictionary<Transform, float>();
 
         public List<CharacterStat> GetCharacterStats()
         {
@@ -128,6 +134,11 @@ namespace Heroicsolo.Scripts.Player
             return transform;
         }
 
+        public Transform GetHitPivot()
+        {
+            return transform;
+        }
+
         public HittableType GetHittableType()
         {
             return HittableType.Humanoid;
@@ -152,7 +163,7 @@ namespace Heroicsolo.Scripts.Player
 
         public void EquipWeapon(ItemId weaponId)
         {
-            weapons.ForEach(weapon => 
+            weapons.ForEach(weapon =>
             {
                 weapon.gameObject.SetActive(weapon.WeaponID == weaponId);
                 weaponController = weapon;
@@ -180,6 +191,8 @@ namespace Heroicsolo.Scripts.Player
 
             raycastHits = new RaycastHit[2];
 
+            aimingBones.ForEach(b => aimingBonesTransforms.Add(animator.GetBoneTransform(b.BoneType), b.Weight));
+
             InitState();
         }
 
@@ -192,7 +205,7 @@ namespace Heroicsolo.Scripts.Player
                 statsDict.Add(characterStat.StatType, characterStat);
             }
 
-            statsDict[CharacterStatType.MoveSpeed].Init((_,_,_) => { });
+            statsDict[CharacterStatType.MoveSpeed].Init((_, _, _) => { });
             statsDict[CharacterStatType.Health].Init(gameUIController.OnHealthChanged);
             statsDict[CharacterStatType.Health].SetRegenState(true);
             statsDict[CharacterStatType.Stamina].Init(gameUIController.OnStaminaChanged);
@@ -215,7 +228,7 @@ namespace Heroicsolo.Scripts.Player
             if (shootHelper.FindClosestTargetOnLine(ray.origin, ray.direction, 100f, TeamType.Player, out var hittable))
             {
                 gameUIController.SetCursorState(CursorState.Targeted);
-                shootPos = hittable.GetTransform().position;
+                shootPos = hittable.GetHitPivot().position;
             }
             else if (Physics.RaycastNonAlloc(ray, raycastHits, 100f, shootHelper.GetObstaclesMask().value) > 0)
             {
@@ -231,6 +244,54 @@ namespace Heroicsolo.Scripts.Player
             lookPos = shootPos;
             lookPos.y = transform.position.y;
             transform.LookAt(lookPos);
+            RotateBones();
+        }
+
+        private Vector3 GetCorrectedTargetPosition(Vector3 targetPos)
+        {
+            Vector3 targetDirection = targetPos - weaponController.MuzzleTransform.position;
+            Vector3 aimDirection = weaponController.MuzzleTransform.forward;
+            float targetDistance = targetDirection.magnitude;
+            float blendOut = 0f;
+
+            float targetAngle = Vector3.Angle(targetDirection, aimDirection);
+
+            if (targetAngle > AimRotateAngleLimit)
+            {
+                blendOut += (targetAngle - AimRotateAngleLimit) / 50f;
+            }
+
+            if (targetDistance < AimRotateDistanceLimit)
+            {
+                blendOut += AimRotateDistanceLimit - targetDistance;
+            }
+
+            Vector3 direction = Vector3.Slerp(targetDirection, aimDirection, blendOut);
+
+            return weaponController.MuzzleTransform.position + direction;
+        }
+
+        private void RotateBones()
+        {
+            Vector3 targetPos = GetCorrectedTargetPosition(shootPos);
+
+            for (int i = 0; i < AimRotateIterations; i++)
+            {
+                foreach (var bone in aimingBonesTransforms)
+                {
+                    AimBoneAtTarget(bone.Key, targetPos, bone.Value);
+                }
+            }
+        }
+
+        private void AimBoneAtTarget(Transform bone, Vector3 targetPos, float weight)
+        {
+            Vector3 aimDirection = weaponController.MuzzleTransform.forward;
+            Vector3 targetDirection = targetPos - weaponController.MuzzleTransform.position;
+            Quaternion aimTowards = Quaternion.FromToRotation(aimDirection, targetDirection);
+            Quaternion blendedRotation = Quaternion.Slerp(Quaternion.identity, aimTowards, weight);
+
+            bone.rotation = blendedRotation * bone.rotation;
         }
 
         private void ProccessInputs()
@@ -294,8 +355,8 @@ namespace Heroicsolo.Scripts.Player
                 jumpSpeed -= 9.8f * Time.deltaTime;
             }
 
-            characterController.Move((runDirection * 
-                (isFatigued ? runSpeedFatiguedCoef * statsDict[CharacterStatType.MoveSpeed].Value : statsDict[CharacterStatType.MoveSpeed].Value) 
+            characterController.Move((runDirection *
+                (isFatigued ? runSpeedFatiguedCoef * statsDict[CharacterStatType.MoveSpeed].Value : statsDict[CharacterStatType.MoveSpeed].Value)
                 + Vector3.up * jumpSpeed) * Time.deltaTime);
         }
 
@@ -336,5 +397,12 @@ namespace Heroicsolo.Scripts.Player
 
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position + camOffset, cameraMoveSpeed * Time.deltaTime);
         }
+    }
+
+    [Serializable]
+    public class AimingBoneInfo
+    {
+        public HumanBodyBones BoneType;
+        public float Weight = 1f;
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.Inventory;
-using Heroicsolo.Scripts.Logics;
+using Heroicsolo.Logics;
 
 namespace Assets.FantasyInventory.Scripts.Data
 {

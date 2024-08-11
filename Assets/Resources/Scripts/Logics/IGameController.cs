@@ -1,7 +1,7 @@
 using Heroicsolo.DI;
-using Heroicsolo.Scripts.Player;
+using Heroicsolo.Heroicsolo.Player;
 
-namespace Heroicsolo.Scripts.Logics
+namespace Heroicsolo.Logics
 {
     public interface IGameController : ISystem
     {

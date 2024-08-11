@@ -5061,6 +5061,7 @@ MonoBehaviour:
   typeName: Ice Golem
   creatureType: 20
   defaultTeam: 10
+  defaultMobStrategy: {fileID: 11400000, guid: c4f0f40083a1c9242959891d1ccc9b0a, type: 2}
   stats:
   - statType: 0
     baseValue: 50
@@ -5074,17 +5075,16 @@ MonoBehaviour:
     regenDelay: 0
     bonusPerLevel: 5
     isRegenEnabled: 0
-  patrolPoints: []
   attackDistance: 2
-  aggroRadius: 10
-  evadeRadius: 20
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70
+  patrolPoints: []
   expReward: 100
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 1414838523926981639}
   mobCircle: {fileID: 5666413336414592480}
+  hitPivot: {fileID: 8379948605730056000}
   dialogAvatar: {fileID: 21300000, guid: be9fa4fbd8acf2346ac55bef34a93931, type: 3}
   aggroReplics:
   - You will be frozen!
@@ -5164,5 +5164,10 @@ Rigidbody:
 --- !u!4 &5748350440226734110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
+  m_PrefabInstance: {fileID: 5432896423456220511}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8379948605730056000 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4552585449600238111, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
   m_PrefabInstance: {fileID: 5432896423456220511}
   m_PrefabAsset: {fileID: 0}

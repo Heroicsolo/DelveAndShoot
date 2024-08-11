@@ -13,8 +13,11 @@ namespace Heroicsolo.Logics
         void ChangeMemberTeam(IHittable member, TeamType newTeam);
         List<IHittable> GetTeamMembers(TeamType team);
         IHittable GetNearestTeamMember(TeamType team, Vector3 from);
+        IHittable GetNearestTeamMember(TeamType team, IHittable fromHittable, bool withTheSameType = false);
         IHittable GetNearestTeamMemberOfType(TeamType team, Vector3 from, HittableType unitType);
         IHittable GetNearestMemberOfOppositeTeams(IHittable fromHittable, float searchDistance = 0f);
+        List<IHittable> GetEnemiesInRadius(IHittable fromHittable, float searchRadius = 20f);
+        List<IHittable> GetEnemiesInRadius(Vector3 from, TeamType shooterTeam, float searchRadius = 20f);
         bool IsOppositeTeam(IHittable hittable, TeamType teamToCheck);
         void ActivateUnits();
         void DeactivateUnits();
