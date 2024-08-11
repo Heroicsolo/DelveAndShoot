@@ -71,7 +71,11 @@ namespace Assets.Resources.Scripts.Logics
         public float AggroRadius => aggroRadius;
         public float EvadeRadius => evadeRadius;
         public float RunAwayHPPercent => runAwayHpPercent;
-        public BotState BotState => botState;
+        public BotState BotState
+        {
+            get { return botState; }
+            set { botState = value; }
+        }
         public List<Transform> PatrolPoints => patrolPoints;
         public Vector3 SpawnPoint => spawnPoint;
         public Dictionary<CharacterStatType, CharacterStat> StatsDict => statsDict;
@@ -135,10 +139,10 @@ namespace Assets.Resources.Scripts.Logics
             mobCircle.gameObject.SetActive(true);
             mobCanvas.gameObject.SetActive(true);
 
-            ResetState();
-
             mobStrategy = new BasicMobStrategy();
             mobStrategy.Init(this, agent, playerController);
+
+            ResetState();
         }
 
         public void ResetHealth()
@@ -174,14 +178,24 @@ namespace Assets.Resources.Scripts.Logics
         {
             if (patrolPoints.Count > 0)
             {
-                SwitchState(BotState.Patrolling);
+                mobStrategy.SwitchState(BotState.Patrolling);
             }
             else
             {
-                SwitchState(BotState.Idle);
+                mobStrategy.SwitchState(BotState.Idle);
             }
 
             helpFound = false;
+        }
+
+        public void HideMobCanvasAndCircle()
+        {
+            if (mobCanvas != null)
+            {
+                mobCanvas.gameObject.SetActive(false);
+            }
+
+            mobCircle.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -192,7 +206,7 @@ namespace Assets.Resources.Scripts.Logics
             }
         }
 
-        private void SpawnLoot()
+        public void SpawnLoot()
         {
             lootManager.GenerateRandomDrop(lootId, transform.position);
         }
@@ -274,7 +288,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public void FollowPlayer()
         {
-            SwitchState(BotState.FollowPlayer);
+            mobStrategy.SwitchState(BotState.FollowPlayer);
         }
 
         public bool IsAttacking()
@@ -294,13 +308,32 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void Deactivate()
         {
-            SwitchState(BotState.Sleeping);
+            mobStrategy.SwitchState(BotState.Sleeping);
         }
 
         public override void Die()
         {
+            mobStrategy.SwitchState(BotState.Death);
+
+            if (deathReplics.Count > 0)
+            {
+                dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
+            }
+
+            StopMovement();
+            HideMobCanvasAndCircle();
+            SpawnLoot();
+            Invoke(nameof(ReturnToPool), dissapearTime);
             playerProgressionManager.AddExperience(expReward);
-            SwitchState(BotState.Death);
+        }
+
+        public void OnAggro()
+        {
+            if (!aggroDialogPlayed && aggroReplics.Count > 0)
+            {
+                dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
+                aggroDialogPlayed = true;
+            }
         }
 
         public override List<CharacterStat> GetCharacterStats()
@@ -390,73 +423,6 @@ namespace Assets.Resources.Scripts.Logics
         public void OnMeleeAttackPerformed()
         {
             playerController.GetDamage(AttackDamage, DamageType.Physical);
-        }
-
-        public void SwitchState(BotState state)
-        {
-            if (botState == state)
-            {
-                return;
-            }
-
-            botState = state;
-
-            switch (state)
-            {
-                case BotState.Idle:
-                    StopMovement();
-                    break;
-                case BotState.Patrolling:
-                    if (patrolPoints.Count > 0)
-                    {
-                        SelectNextPatrolPoint();
-                    }
-                    else
-                    {
-                        StopMovement();
-                        botState = BotState.Idle;
-                    }
-                    break;
-                case BotState.FollowPlayer:
-                    StartMovement(playerController.transform.position);
-                    break;
-                case BotState.Attacking:
-                    if (!aggroDialogPlayed && aggroReplics.Count > 0)
-                    {
-                        dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
-                        aggroDialogPlayed = true;
-                    }
-                    StopMovement();
-                    animator.SetBool(AttackAnimHash, true);
-                    break;
-                case BotState.Death:
-                    if (deathReplics.Count > 0)
-                    {
-                        dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
-                    }
-                    StopMovement();
-                    animator.SetBool(AttackAnimHash, false);
-                    animator.SetTrigger(DieAnimHash);
-                    mobCircle.gameObject.SetActive(false);
-                    mobCanvas.gameObject.SetActive(false);
-                    SpawnLoot();
-                    Invoke(nameof(ReturnToPool), dissapearTime);
-                    break;
-                case BotState.Evade:
-                    StartMovement(spawnPoint);
-                    break;
-                case BotState.FindHelp:
-                    nearestAlly = (GenericMob)teamsManager.GetNearestTeamMember(currentTeam, this, true);
-                    if (nearestAlly != null)
-                    {
-                        StartMovement(nearestAlly.GetTransform().position);
-                    }
-                    else
-                    {
-                        SwitchState(BotState.Idle);
-                    }
-                    break;
-            }
         }
     }
 

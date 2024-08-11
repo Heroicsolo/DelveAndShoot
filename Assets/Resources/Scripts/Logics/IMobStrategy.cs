@@ -8,7 +8,8 @@ namespace Heroicsolo.Logics
     public interface IMobStrategy
     {
         internal void Init(GenericMob mob, NavMeshAgent mobAgent, PlayerController playerController);
-        public void UpdateCurrentState(float deltaTime);
-        public void OnGetDamage(float damage, DamageType damageType = DamageType.Physical);
+        void UpdateCurrentState(float deltaTime);
+        void SwitchState(BotState state);
+        void OnGetDamage(float damage, DamageType damageType = DamageType.Physical);
     }
 }

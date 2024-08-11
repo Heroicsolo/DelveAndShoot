@@ -18,16 +18,69 @@ namespace Heroicsolo.Logics
         {
             if (damage > 0f && (owner.BotState == BotState.Idle || owner.BotState == BotState.Sleeping))
             {
-                owner.SwitchState(BotState.FollowPlayer);
+                SwitchState(BotState.FollowPlayer);
             }
 
             if (owner.StatsDict[CharacterStatType.Health].Value <= 0f)
             {
-                owner.Die();
+                SwitchState(BotState.Death);
             }
             else if (!helpFound && owner.StatsDict[CharacterStatType.Health].Percent < owner.RunAwayHPPercent)
             {
-                owner.SwitchState(BotState.FindHelp);
+                SwitchState(BotState.FindHelp);
+            }
+        }
+
+        public virtual void SwitchState(BotState state)
+        {
+            if (owner.BotState == state)
+            {
+                return;
+            }
+
+            owner.BotState = state;
+
+            switch (state)
+            {
+                case BotState.Idle:
+                    owner.StopMovement();
+                    break;
+                case BotState.Patrolling:
+                    if (owner.PatrolPoints.Count > 0)
+                    {
+                        owner.SelectNextPatrolPoint();
+                    }
+                    else
+                    {
+                        owner.StopMovement();
+                        owner.BotState = BotState.Idle;
+                    }
+                    break;
+                case BotState.FollowPlayer:
+                    owner.StartMovement(playerController.transform.position);
+                    break;
+                case BotState.Attacking:
+                    owner.OnAggro();
+                    owner.StopMovement();
+                    owner.SetAnimatorState(BotAnimatorState.Attack);
+                    break;
+                case BotState.Death:
+                    owner.Die();
+                    break;
+                case BotState.Evade:
+                    owner.StartMovement(owner.SpawnPoint);
+                    break;
+                case BotState.FindHelp:
+                    nearestAlly = owner.GetNearestTeamMember();
+                    if (nearestAlly != null)
+                    {
+                        owner.StartMovement(nearestAlly.GetTransform().position);
+                    }
+                    else
+                    {
+                        SwitchState(BotState.Idle);
+                    }
+                    break;
             }
         }
 
@@ -81,7 +134,7 @@ namespace Heroicsolo.Logics
 
                         if (nearestAlly == null)
                         {
-                            owner.SwitchState(BotState.Idle);
+                            SwitchState(BotState.Idle);
                         }
                         else
                         {
@@ -110,19 +163,19 @@ namespace Heroicsolo.Logics
 
                 if (dist < owner.AttackDistance)
                 {
-                    owner.SwitchState(BotState.Attacking);
+                    SwitchState(BotState.Attacking);
                     Vector3 lookPos = playerController.transform.position;
                     lookPos.y = owner.transform.position.y;
                     owner.transform.LookAt(lookPos);
                 }
                 else if (dist < owner.AggroRadius && inCone)
                 {
-                    owner.SwitchState(BotState.FollowPlayer);
+                    SwitchState(BotState.FollowPlayer);
                 }
                 else if (owner.BotState == BotState.FollowPlayer
                     && (dist > owner.EvadeRadius || Vector3.Distance(owner.transform.position, owner.SpawnPoint) > owner.EvadeRadius))
                 {
-                    owner.SwitchState(BotState.Evade);
+                    SwitchState(BotState.Evade);
                 }
                 else if (owner.BotState != BotState.FollowPlayer)
                 {
@@ -131,7 +184,7 @@ namespace Heroicsolo.Logics
             }
             else
             {
-                owner.SwitchState(BotState.Evade);
+                SwitchState(BotState.Evade);
             }
         }
     }
