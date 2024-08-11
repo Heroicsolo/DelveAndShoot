@@ -61,14 +61,12 @@ namespace Heroicsolo.Logics
             {
                 var actionAttr = am.GetCustomAttribute<ActorActionAttribute>();
                 string name = actionAttr.name ?? am.Name;
-                return new ManagedAction(name, am);
+                var action = new ManagedAction(name, am);
+                return action;
             });
 
-            _actionsCollection[actorType].AddRange(
-                actions.Select(i =>
-                    new KeyValuePair<string, ManagedAction>(i.Name, i)
-                    )
-                );
+            foreach (var action in actions)
+                _actionsCollection[actorType].Add(action.Name, action);
         }
 
         public IEnumerable<IAction> GetActions(Type actorType)

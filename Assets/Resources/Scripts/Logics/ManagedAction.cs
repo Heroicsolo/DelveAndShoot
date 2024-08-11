@@ -12,17 +12,17 @@ namespace Heroicsolo.Logics
         public event IAction.ActionModule OnAction;
         public string Name { get; private set; }
 
-        internal List<IAction.ActionModule> PreActions { get; }
-        internal List<IAction.ActionModule> PostActions { get; }
-        internal MethodInfo ActionBase { get; }
+        internal List<IAction.ActionModule> PreActions => preActions;
+        internal List<IAction.ActionModule> PostActions => postActions;
+        internal MethodInfo ActionBase => actionBase;
 
-        public ManagedAction(string name, IAction.ActionBase action = null) //TODO: cant be null?
+        public ManagedAction(string name, IAction.ActionBase action)
         {
             Name = name;
             this.actionBase = action.GetMethodInfo();
             postActions.Add((a, b) => { OnAction?.Invoke(a, b); return true; });
         }
-        public ManagedAction(string name, MethodInfo action = null) //TODO: cant be null? Add methodInfo validation
+        public ManagedAction(string name, MethodInfo action) //TODO: Add methodInfo validation
         {
             Name = name;
             this.actionBase = action;

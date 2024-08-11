@@ -22,14 +22,14 @@ namespace Heroicsolo.Logics
         {
             string name = method.GetMethodInfo().GetCustomAttribute<ActionManager.ActorActionAttribute>()?.name;
             if(name != null)
-                GetAction(name).Invoke(this, bag);
+                Do(GetAction(name), bag);
         }
         public void Do(IAction action, Dictionary<string, object> bag = null)
         {
             var manAction = action as ManagedAction;
-            bool success = manAction.PreActions.All(pa => pa.Invoke(this, bag));
+            bool success = manAction.PreActions?.All(pa => pa.Invoke(this, bag)) ?? true;
             if (success) success = InvokeActionBase(manAction);
-            if (success) manAction.PostActions.ForEach(pa => pa.Invoke(this, bag));
+            if (success) manAction.PostActions?.ForEach(pa => pa.Invoke(this, bag));
         }
 
         Dictionary<ManagedAction, IAction.ActionBase> instancedDelegates = new();

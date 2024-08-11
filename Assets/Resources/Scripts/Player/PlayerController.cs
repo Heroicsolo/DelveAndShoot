@@ -201,7 +201,7 @@ namespace Heroicsolo.Scripts.Player
         }
 
         [ActorAction]
-        bool Jump(IActor actor, Dictionary<string, object> bag = null)
+        bool Jump(Dictionary<string, object> bag = null)
         {
             animator.SetTrigger(JumpAnimHash);
             jumpSpeed = jumpPower;
@@ -257,7 +257,7 @@ namespace Heroicsolo.Scripts.Player
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
                 //Jump();
-                Do(Jump);
+                Do("Jump");
             }
 
             if (Input.GetMouseButton(0))
