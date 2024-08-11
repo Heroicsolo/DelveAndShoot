@@ -24,16 +24,26 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] private HittableType creatureType;
         [SerializeField] private TeamType defaultTeam;
         [SerializeField] private BasicMobStrategy defaultMobStrategy;
+
+        [Header("Mob Balance")]
         [SerializeField] private List<CharacterStat> stats = new();
+        [SerializeField][Min(0f)] private float attackDistance = 3f;
+        [SerializeField][Min(0f)] private float dissapearTime = 5f;
+        [SerializeField][Min(0f)] private float attackPowerMin = 1f;
+        [SerializeField][Min(0f)] private float attackPowerMax = 1f;
+
+        [Header("Patrol Points")]
         [SerializeField] private List<Transform> patrolPoints = new();
-        [SerializeField] [Min(0f)] private float attackDistance = 3f;
-        [SerializeField] [Min(0f)] private float dissapearTime = 5f;
-        [SerializeField] [Min(0f)] private float attackPowerMin = 1f;
-        [SerializeField] [Min(0f)] private float attackPowerMax = 1f;
+
+        [Header("Mob Rewards")]
         [SerializeField] [Min(0)] private int expReward = 100;
         [SerializeField] private string lootId;
+
+        [Header("Visuals")]
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
+
+        [Header("Dialogs")]
         [SerializeField] private Sprite dialogAvatar;
         [SerializeField] private List<string> aggroReplics = new();
         [SerializeField] private List<string> deathReplics = new();
@@ -44,11 +54,11 @@ namespace Assets.Resources.Scripts.Logics
         [Inject] private ITeamsManager teamsManager;
         [Inject] private IDialogPopup dialogPopup;
 
-        private string _typeName;
+        private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
+
         private NavMeshAgent agent;
         private Animator animator;
         private BotState botState;
-        private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
         private PlayerController playerController;
         private Transform lastPatrolPoint;
         private TeamType currentTeam;
@@ -84,8 +94,6 @@ namespace Assets.Resources.Scripts.Logics
                 UnityEditor.EditorApplication.isPlaying = false;
             }
 #endif
-            _typeName = typeName;
-
             weaponActive = false;
         }
 
@@ -380,7 +388,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public override string GetName()
         {
-            return _typeName;
+            return gameObject.name;
         }
 
         public override TeamType GetTeamType()
@@ -405,7 +413,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void SetName(string name)
         {
-            _typeName = name;
+            gameObject.name = name;
         }
 
         public override void SetTeam(TeamType team)
