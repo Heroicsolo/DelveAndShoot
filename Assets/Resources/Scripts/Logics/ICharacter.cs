@@ -9,6 +9,6 @@ namespace Heroicsolo.Logics
         CharacterStat GetCharacterStat(CharacterStatType characterStatType);
         List<CharacterStat> GetCharacterStats();
         void SubscribeToDamageGot(Action<float> onDamageGot);
-        void SubscribeToDamageDodged(ManagedAction onDamageDodged);
+        void SubscribeToDamageDodged(Action onDamageDodged);
     }
 }
