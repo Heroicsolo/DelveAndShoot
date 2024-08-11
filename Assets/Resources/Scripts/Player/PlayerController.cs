@@ -201,11 +201,10 @@ namespace Heroicsolo.Scripts.Player
         }
 
         [ActorAction]
-        static bool Jump(IActor actor, Dictionary<string, object> bag = null)
+        bool Jump(IActor actor, Dictionary<string, object> bag = null)
         {
-            var pc = actor.GetComponent<PlayerController>();
-            pc.animator.SetTrigger(pc.JumpAnimHash);
-            pc.jumpSpeed = pc.jumpPower;
+            animator.SetTrigger(JumpAnimHash);
+            jumpSpeed = jumpPower;
             return true;
         }
 

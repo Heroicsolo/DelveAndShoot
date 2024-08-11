@@ -29,14 +29,14 @@ namespace Heroicsolo.Logics
             }
         }
 
-        private Dictionary<Type, Dictionary<string, IActor.Action>> _actionsCollection = new();
+        private Dictionary<Type, Dictionary<string, ManagedAction>> _actionsCollection = new(); //TODO: try to store as HashSet
 
-        public IActor.Action GetAction<T>(string name) where T : ManagedActor
+        public IAction GetAction<T>(string name) where T : ManagedActor
         {
             return GetAction(typeof(T), name);
         }
 
-        public IActor.Action GetAction(Type actorType, string name)
+        public IAction GetAction(Type actorType, string name)
         {
             return _actionsCollection[actorType][name];
         }
@@ -50,26 +50,28 @@ namespace Heroicsolo.Logics
         {
             if (!_actionsCollection.ContainsKey(actorType) || _actionsCollection[actorType] == null)
                 _actionsCollection[actorType] = new();
-            if (_actionsCollection[actorType].Count > 0)
+            else if (_actionsCollection[actorType].Count > 0)
                 _actionsCollection[actorType].Clear();
+
             var actionMethods = actorType
-                                    .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                                    .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                                     .Where(m => m.GetCustomAttribute<ActorActionAttribute>() != null);
+
             var actions = actionMethods.Select(am =>
             {
-                var actDelegate = am.CreateDelegate(typeof(IActor.Act)) as IActor.Act;
                 var actionAttr = am.GetCustomAttribute<ActorActionAttribute>();
                 string name = actionAttr.name ?? am.Name;
-                return new IActor.Action(name, actDelegate);
+                return new ManagedAction(name, am);
             });
+
             _actionsCollection[actorType].AddRange(
                 actions.Select(i =>
-                    new KeyValuePair<string, IActor.Action>(i.Name, i)
+                    new KeyValuePair<string, ManagedAction>(i.Name, i)
                     )
                 );
         }
 
-        public IEnumerable<IActor.Action> GetActions(Type actorType)
+        public IEnumerable<IAction> GetActions(Type actorType)
         {
             return _actionsCollection[actorType].Values;
         }
