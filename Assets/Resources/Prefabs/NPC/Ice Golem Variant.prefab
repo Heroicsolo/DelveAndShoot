@@ -5061,6 +5061,7 @@ MonoBehaviour:
   typeName: Ice Golem
   creatureType: 20
   defaultTeam: 10
+  defaultMobStrategy: {fileID: 11400000, guid: c4f0f40083a1c9242959891d1ccc9b0a, type: 2}
   stats:
   - statType: 0
     baseValue: 50
@@ -5076,8 +5077,6 @@ MonoBehaviour:
     isRegenEnabled: 0
   patrolPoints: []
   attackDistance: 2
-  aggroRadius: 10
-  evadeRadius: 20
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70

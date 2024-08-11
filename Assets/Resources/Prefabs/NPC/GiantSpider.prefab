@@ -5594,6 +5594,7 @@ MonoBehaviour:
   typeName: Giant Spider
   creatureType: 10
   defaultTeam: 10
+  defaultMobStrategy: {fileID: 11400000, guid: 0bc19dae13dc46f4f93ee9380e0f6451, type: 2}
   stats:
   - statType: 0
     baseValue: 35
@@ -5609,12 +5610,9 @@ MonoBehaviour:
     isRegenEnabled: 0
   patrolPoints: []
   attackDistance: 2
-  aggroRadius: 10
-  evadeRadius: 20
   dissapearTime: 5
   attackPowerMin: 15
   attackPowerMax: 20
-  runAwayHpPercent: 0.3
   expReward: 65
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 8436259099402997529}

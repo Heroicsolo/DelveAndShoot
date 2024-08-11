@@ -23,16 +23,13 @@ namespace Assets.Resources.Scripts.Logics
         [SerializeField] private string typeName;
         [SerializeField] private HittableType creatureType;
         [SerializeField] private TeamType defaultTeam;
+        [SerializeField] private BasicMobStrategy defaultMobStrategy;
         [SerializeField] private List<CharacterStat> stats = new();
         [SerializeField] private List<Transform> patrolPoints = new();
         [SerializeField] [Min(0f)] private float attackDistance = 3f;
-        [SerializeField] [Min(0f)] private float aggroConeAngle = 180f;
-        [SerializeField] [Min(0f)] private float aggroRadius = 10f;
-        [SerializeField] [Min(0f)] private float evadeRadius = 20f;
         [SerializeField] [Min(0f)] private float dissapearTime = 5f;
         [SerializeField] [Min(0f)] private float attackPowerMin = 1f;
         [SerializeField] [Min(0f)] private float attackPowerMax = 1f;
-        [SerializeField] private float runAwayHpPercent = 0f;
         [SerializeField] [Min(0)] private int expReward = 100;
         [SerializeField] private string lootId;
         [SerializeField] private MobCanvas mobCanvas;
@@ -62,15 +59,11 @@ namespace Assets.Resources.Scripts.Logics
         private bool aggroDialogPlayed;
         private GenericMob nearestAlly;
         private bool helpFound;
-
-        private IMobStrategy mobStrategy;
+        private IMobStrategy mobStrategyInstance;
 
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
         public float AttackDistance => attackDistance;
-        public float AggroConeAngle => aggroConeAngle;
-        public float AggroRadius => aggroRadius;
-        public float EvadeRadius => evadeRadius;
-        public float RunAwayHPPercent => runAwayHpPercent;
+        
         public BotState BotState
         {
             get { return botState; }
@@ -139,8 +132,8 @@ namespace Assets.Resources.Scripts.Logics
             mobCircle.gameObject.SetActive(true);
             mobCanvas.gameObject.SetActive(true);
 
-            mobStrategy = new BasicMobStrategy();
-            mobStrategy.Init(this, agent, playerController);
+            mobStrategyInstance = ScriptableObject.CreateInstance(defaultMobStrategy.GetType()) as IMobStrategy;
+            mobStrategyInstance.Init(this, agent, playerController);
 
             ResetState();
         }
@@ -178,11 +171,11 @@ namespace Assets.Resources.Scripts.Logics
         {
             if (patrolPoints.Count > 0)
             {
-                mobStrategy.SwitchState(BotState.Patrolling);
+                mobStrategyInstance.SwitchState(BotState.Patrolling);
             }
             else
             {
-                mobStrategy.SwitchState(BotState.Idle);
+                mobStrategyInstance.SwitchState(BotState.Idle);
             }
 
             helpFound = false;
@@ -202,7 +195,7 @@ namespace Assets.Resources.Scripts.Logics
         {
             if (botState != BotState.Death)
             {
-                mobStrategy.UpdateCurrentState(Time.deltaTime);
+                mobStrategyInstance.UpdateCurrentState(Time.deltaTime);
             }
         }
 
@@ -288,7 +281,7 @@ namespace Assets.Resources.Scripts.Logics
 
         public void FollowPlayer()
         {
-            mobStrategy.SwitchState(BotState.FollowPlayer);
+            mobStrategyInstance.SwitchState(BotState.FollowPlayer);
         }
 
         public bool IsAttacking()
@@ -308,12 +301,12 @@ namespace Assets.Resources.Scripts.Logics
 
         public override void Deactivate()
         {
-            mobStrategy.SwitchState(BotState.Sleeping);
+            mobStrategyInstance.SwitchState(BotState.Sleeping);
         }
 
         public override void Die()
         {
-            mobStrategy.SwitchState(BotState.Death);
+            mobStrategyInstance.SwitchState(BotState.Death);
 
             if (deathReplics.Count > 0)
             {
@@ -372,7 +365,7 @@ namespace Assets.Resources.Scripts.Logics
 
             statsDict[CharacterStatType.Health].Change(-damage);
 
-            mobStrategy.OnGetDamage(damage, damageType);
+            mobStrategyInstance.OnGetDamage(damage, damageType);
         }
 
         public override GameObject GetGameObject()

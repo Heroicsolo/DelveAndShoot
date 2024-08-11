@@ -6,8 +6,14 @@ using UnityEngine.AI;
 
 namespace Heroicsolo.Logics
 {
-    public class BasicMobStrategy : IMobStrategy
+    [CreateAssetMenu(fileName = "New BasicMobStrategy", menuName = "Basic Mob Strategy", order = 51)]
+    public class BasicMobStrategy : ScriptableObject, IMobStrategy
     {
+        [SerializeField] [Min(0f)] private float aggroConeAngle = 180f;
+        [SerializeField] [Min(0f)] private float aggroRadius = 10f;
+        [SerializeField] [Min(0f)] private float evadeRadius = 20f;
+        [SerializeField] [Min(0f)] private float runAwayHpPercent = 0f;
+
         private GenericMob owner;
         private NavMeshAgent agent;
         private PlayerController playerController;
@@ -25,7 +31,7 @@ namespace Heroicsolo.Logics
             {
                 SwitchState(BotState.Death);
             }
-            else if (!helpFound && owner.StatsDict[CharacterStatType.Health].Percent < owner.RunAwayHPPercent)
+            else if (!helpFound && owner.StatsDict[CharacterStatType.Health].Percent < runAwayHpPercent)
             {
                 SwitchState(BotState.FindHelp);
             }
@@ -159,7 +165,7 @@ namespace Heroicsolo.Logics
             {
                 float dist = Vector3.Distance(owner.transform.position, playerController.transform.position);
 
-                bool inCone = VectorUtils.IsObjectInCone(playerController.transform, owner.transform, owner.AggroConeAngle);
+                bool inCone = VectorUtils.IsObjectInCone(playerController.transform, owner.transform, aggroConeAngle);
 
                 if (dist < owner.AttackDistance)
                 {
@@ -168,12 +174,12 @@ namespace Heroicsolo.Logics
                     lookPos.y = owner.transform.position.y;
                     owner.transform.LookAt(lookPos);
                 }
-                else if (dist < owner.AggroRadius && inCone)
+                else if (dist < aggroRadius && inCone)
                 {
                     SwitchState(BotState.FollowPlayer);
                 }
                 else if (owner.BotState == BotState.FollowPlayer
-                    && (dist > owner.EvadeRadius || Vector3.Distance(owner.transform.position, owner.SpawnPoint) > owner.EvadeRadius))
+                    && (dist > evadeRadius || Vector3.Distance(owner.transform.position, owner.SpawnPoint) > evadeRadius))
                 {
                     SwitchState(BotState.Evade);
                 }
