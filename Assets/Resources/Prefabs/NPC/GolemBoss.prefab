@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 5222640722071104544}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
   m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5092,7 +5092,7 @@ MonoBehaviour:
     regenDelay: 0
     bonusPerLevel: 20
     isRegenEnabled: 0
-  attackDistance: 2
+  attackDistance: 4.5
   dissapearTime: 5
   attackPowerMin: 70
   attackPowerMax: 80
@@ -5101,6 +5101,7 @@ MonoBehaviour:
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 7884784904725195610}
   mobCircle: {fileID: 5222640722071376952}
+  hitPivot: {fileID: 9102962922706752282}
   dialogAvatar: {fileID: 21300000, guid: 0a411e9898d06594888017e55da7e53f, type: 3}
   aggroReplics:
   - BURN!
@@ -5178,3 +5179,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &9102962922706752282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 280842437724803509, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
+  m_PrefabInstance: {fileID: 9057293253494031023}
+  m_PrefabAsset: {fileID: 0}

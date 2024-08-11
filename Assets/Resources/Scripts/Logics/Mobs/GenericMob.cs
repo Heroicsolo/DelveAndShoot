@@ -39,6 +39,7 @@ namespace Heroicsolo.Logics.Mobs
         [Header("Visuals")]
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
+        [SerializeField] private Transform hitPivot;
 
         [Header("Dialogs")]
         [SerializeField] private Sprite dialogAvatar;
@@ -103,6 +104,16 @@ namespace Heroicsolo.Logics.Mobs
 
         public override Transform GetTransform()
         {
+            return transform;
+        }
+
+        public override Transform GetHitPivot()
+        {
+            if (hitPivot != null)
+            {
+                return hitPivot;
+            }
+
             return transform;
         }
 
@@ -193,6 +204,7 @@ namespace Heroicsolo.Logics.Mobs
                 dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
             }
 
+            SetAnimatorState(BotAnimatorState.Death);
             StopMovement();
             HideMobCanvasAndCircle();
             SpawnLoot();

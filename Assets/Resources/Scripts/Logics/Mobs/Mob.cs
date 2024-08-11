@@ -19,6 +19,7 @@ namespace Heroicsolo.Logics.Mobs
         public abstract string GetName();
         public abstract TeamType GetTeamType();
         public abstract Transform GetTransform();
+        public abstract Transform GetHitPivot();
         public abstract void Heal(float amount);
         public abstract bool IsDead();
         public abstract void SetName(string name);

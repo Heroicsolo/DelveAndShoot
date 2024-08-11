@@ -14,6 +14,7 @@ namespace Heroicsolo.Logics
         [SerializeField] [Min(0f)] private float durability = 1f;
         [SerializeField] private List<DamageType> damageResists = new List<DamageType>();
         [SerializeField] private string lootId;
+        [SerializeField] private Transform hitPivot;
 
         [Inject] private ILootManager lootManager;
 
@@ -90,6 +91,16 @@ namespace Heroicsolo.Logics
 
         public Transform GetTransform()
         {
+            return transform;
+        }
+
+        public Transform GetHitPivot()
+        {
+            if (hitPivot != null)
+            {
+                return hitPivot;
+            }
+
             return transform;
         }
 

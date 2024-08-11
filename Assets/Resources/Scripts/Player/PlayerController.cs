@@ -131,6 +131,11 @@ namespace Heroicsolo.Heroicsolo.Player
             return transform;
         }
 
+        public Transform GetHitPivot()
+        {
+            return transform;
+        }
+
         public HittableType GetHittableType()
         {
             return HittableType.Humanoid;
@@ -218,7 +223,7 @@ namespace Heroicsolo.Heroicsolo.Player
             if (shootHelper.FindClosestTargetOnLine(ray.origin, ray.direction, 100f, TeamType.Player, out var hittable))
             {
                 gameUIController.SetCursorState(CursorState.Targeted);
-                shootPos = hittable.GetTransform().position;
+                shootPos = hittable.GetHitPivot().position;
             }
             else if (Physics.RaycastNonAlloc(ray, raycastHits, 100f, shootHelper.GetObstaclesMask().value) > 0)
             {

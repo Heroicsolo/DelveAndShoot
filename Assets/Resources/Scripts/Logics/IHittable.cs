@@ -14,6 +14,7 @@ namespace Heroicsolo.Logics
         bool IsDead();
         GameObject GetGameObject();
         Transform GetTransform();
+        Transform GetHitPivot();
         HittableType GetHittableType();
         void SetTeam(TeamType team);
         TeamType GetTeamType();
