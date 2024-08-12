@@ -18,11 +18,12 @@ namespace Heroicsolo.Logics
             GetAction(action).Invoke(this, bag);
         }
 
-        public void Do(IAction.ActionModule method, Dictionary<string, object> bag = null)
+        public void Do(IAction.ActionBase method, Dictionary<string, object> bag = null)
         {
-            string name = method.GetMethodInfo().GetCustomAttribute<ActionManager.ActorActionAttribute>()?.name;
-            if(name != null)
-                Do(GetAction(name), bag);
+            var methInfo = method.GetMethodInfo();
+            var attr = methInfo.GetCustomAttribute<ActionManager.ActorActionAttribute>();
+            string name = attr?.name ?? methInfo.Name;
+            Do(GetAction(name), bag);
         }
         public void Do(IAction action, Dictionary<string, object> bag = null)
         {

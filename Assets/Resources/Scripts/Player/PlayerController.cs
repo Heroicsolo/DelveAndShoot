@@ -2,14 +2,11 @@ using Assets.FantasyInventory.Scripts.Enums;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
-using Heroicsolo.Logics;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using static Heroicsolo.Logics.ActionManager;
 
@@ -318,7 +315,7 @@ namespace Heroicsolo.Heroicsolo.Player
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
                 //Jump();
-                Do("Jump");
+                Do(Jump);
             }
 
             if (Input.GetMouseButton(0))

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
-using static Heroicsolo.Logics.ManagedActor;
 
 namespace Heroicsolo.Logics
 {
