@@ -3,19 +3,17 @@ using DG.Tweening;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
-using Heroicsolo.Logics;
 using Heroicsolo.Scripts.UI;
 using Heroicsolo.Utils;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using static Heroicsolo.Logics.ActionManager;
 
 namespace Heroicsolo.Heroicsolo.Player
 {
-    public class PlayerController : MonoBehaviour, ICharacter
+    public class PlayerController : ManagedActor, ICharacter
     {
         private readonly int JumpAnimHash = Animator.StringToHash("Jump");
         private readonly int ShootingAnimHash = Animator.StringToHash("Shooting");
@@ -56,6 +54,8 @@ namespace Heroicsolo.Heroicsolo.Player
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private IShootHelper shootHelper;
         [Inject] private IInventoryManager inventoryManager;
+        [Inject] private IActionManager actionManager;
+        internal override IActionManager ActionManager => actionManager;
 
         private CharacterController characterController;
         private Animator animator;
@@ -187,7 +187,7 @@ namespace Heroicsolo.Heroicsolo.Player
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
-
+            actionManager.RegisterManagedActor(typeof(PlayerController));
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
             cameraTransform = Camera.main.transform;
@@ -222,11 +222,13 @@ namespace Heroicsolo.Heroicsolo.Player
             playerProgressionManager.SubscribeToLevelUpEvent(OnLevelUp);
         }
 
-        private void Jump()
+        [ActorAction]
+        bool Jump(Dictionary<string, object> bag = null)
         {
             animator.SetTrigger(JumpAnimHash);
             jumpSpeed = jumpPower;
             isJumping = true;
+            return true;
         }
 
         private void ProccessAim()
@@ -325,7 +327,8 @@ namespace Heroicsolo.Heroicsolo.Player
 
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
-                Jump();
+                //Jump();
+                Do(Jump);
             }
 
             if (Input.GetMouseButton(0))
