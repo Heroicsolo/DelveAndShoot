@@ -1,4 +1,5 @@
 using Assets.FantasyInventory.Scripts.Enums;
+using DG.Tweening;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
@@ -45,6 +46,11 @@ namespace Heroicsolo.Heroicsolo.Player
         [SerializeField] private Transform playerCanvasTransform;
         [SerializeField] private List<AimingBoneInfo> aimingBones = new List<AimingBoneInfo>();
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioSource foostepsAudioSource;
+        [SerializeField] private AudioClip fallSound;
+
         [Inject] private IGameUIController gameUIController;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ICharacterStatsManager characterStatsManager;
@@ -59,6 +65,7 @@ namespace Heroicsolo.Heroicsolo.Player
         private Transform cameraTransform;
         private float jumpSpeed;
         private bool isFatigued;
+        private bool isJumping;
         private Vector3 lookPos;
         private Vector3 shootPos;
         private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
@@ -109,6 +116,11 @@ namespace Heroicsolo.Heroicsolo.Player
             }
 
             statsDict[CharacterStatType.Health].Change(-damage);
+        }
+
+        public void PlaySound(AudioClip clip)
+        {
+            audioSource.PlayOneShot(clip);
         }
 
         public void Die()
@@ -214,6 +226,7 @@ namespace Heroicsolo.Heroicsolo.Player
         {
             animator.SetTrigger(JumpAnimHash);
             jumpSpeed = jumpPower;
+            isJumping = true;
         }
 
         private void ProccessAim()
@@ -338,15 +351,29 @@ namespace Heroicsolo.Heroicsolo.Player
             {
                 statsDict[CharacterStatType.Stamina].Change(-staminaSpendingForRun * Time.deltaTime);
                 statsDict[CharacterStatType.Stamina].SetRegenState(false);
+
+                if (!foostepsAudioSource.isPlaying)
+                {
+                    foostepsAudioSource.Play();
+                }
+
+                foostepsAudioSource.DOFade(1f, 0.2f);
             }
             else
             {
                 statsDict[CharacterStatType.Stamina].SetRegenState(true);
+
+                foostepsAudioSource.DOFade(0f, 0.5f);
             }
 
             if (!characterController.isGrounded)
             {
                 jumpSpeed -= 9.8f * Time.deltaTime;
+            }
+            else if (isJumping)
+            {
+                isJumping = false;
+                audioSource.PlayOneShot(fallSound);
             }
 
             characterController.Move((runDirection *

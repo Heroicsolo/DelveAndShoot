@@ -25,6 +25,8 @@ namespace Heroicsolo.Heroicsolo.Player
         [SerializeField][Min(0)] private int ammo = 6;
         [SerializeField][Min(0f)] private float hitChance = 0.9f;
         [SerializeField] private VolumetricLineBehavior rayRenderer;
+        [SerializeField] private AudioClip reloadingSound;
+        [SerializeField] private AudioClip shootSound;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IShootHelper shootHelper;
@@ -35,6 +37,7 @@ namespace Heroicsolo.Heroicsolo.Player
         private float delayToShoot;
         private int currentAmmo;
         private Vector3 targetPoint;
+        private PlayerController playerController;
 
         public ItemId WeaponID => weaponId;
         public bool IsReloading => isReloading;
@@ -74,6 +77,8 @@ namespace Heroicsolo.Heroicsolo.Player
                 rayRenderer.gameObject.SetActive(false);
             }
 
+            playerController = transform.GetComponentInParent<PlayerController>();
+
             itemParams = ItemsCollection.ItemsParams[weaponId];
             currentAmmo = ammo;
         }
@@ -91,6 +96,11 @@ namespace Heroicsolo.Heroicsolo.Player
             currentAmmo--;
 
             gameUIController.RemoveAmmo();
+
+            if (shootSound != null)
+            {
+                playerController.PlaySound(shootSound);
+            }
 
             if (currentAmmo == 0)
             {
@@ -135,6 +145,11 @@ namespace Heroicsolo.Heroicsolo.Player
                         isReloading = false;
                         currentAmmo = ammo;
                         gameUIController.SetAmmo(ammo);
+
+                        if (reloadingSound != null)
+                        {
+                            playerController.PlaySound(reloadingSound);
+                        }
                     }
 
                     if (isShooting)
