@@ -16,6 +16,11 @@ namespace Heroicsolo.Inventory
         [SerializeField] private List<Item> defaultInventoryItems = new();
         [SerializeField] private List<Item> defaultEquippedItems = new();
 
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip addItemSound;
+        [SerializeField] private AudioClip equipItemSound;
+        [SerializeField] private AudioClip removeItemSound;
+
         private InventoryState inventoryState;
 
         public GameObject GetGameObject()
@@ -35,12 +40,20 @@ namespace Heroicsolo.Inventory
 
         public void AddItem(ItemId itemId, int amount)
         {
+            if (addItemSound != null)
+            {
+                audioSource.PlayOneShot(addItemSound);
+            }
             inventoryState.AddItem(itemId, amount);
             SaveState();
         }
 
         public void EquipItem(ItemId itemId)
         {
+            if (equipItemSound != null)
+            {
+                audioSource.PlayOneShot(equipItemSound);
+            }
             inventoryState.EquipItem(itemId);
             SaveState();
         }
@@ -53,6 +66,10 @@ namespace Heroicsolo.Inventory
 
         public void RemoveItem(ItemId itemId, int amount)
         {
+            if (removeItemSound != null)
+            {
+                audioSource.PlayOneShot(removeItemSound);
+            }
             inventoryState.RemoveItem(itemId, amount);
             SaveState();
         }

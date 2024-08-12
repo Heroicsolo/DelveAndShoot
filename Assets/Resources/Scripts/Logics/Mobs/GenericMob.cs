@@ -46,6 +46,14 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField] private List<string> aggroReplics = new();
         [SerializeField] private List<string> deathReplics = new();
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioSource footstepsAudioSource;
+        [SerializeField] private AudioClip aggroSound;
+        [SerializeField] private List<AudioClip> attackSounds;
+        [SerializeField] private AudioClip deathSound;
+        [SerializeField] private AudioClip footstepsSound;
+
         [Inject] private ICharacterStatsManager characterStatsManager;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
         [Inject] private ILootManager lootManager;
@@ -153,6 +161,8 @@ namespace Heroicsolo.Logics.Mobs
                 agent.isStopped = true;
             }
 
+            footstepsAudioSource.Stop();
+
             animator.SetBool(WalkAnimHash, false);
         }
         public void StartMovement(Vector3 destination)
@@ -163,6 +173,11 @@ namespace Heroicsolo.Logics.Mobs
                 agent.SetDestination(destination);
                 animator.SetBool(WalkAnimHash, true);
                 animator.SetBool(AttackAnimHash, false);
+
+                if (!footstepsAudioSource.isPlaying && footstepsAudioSource.clip != null)
+                {
+                    footstepsAudioSource.Play();
+                }
             }
         }
         public void FollowPlayer()
@@ -202,6 +217,11 @@ namespace Heroicsolo.Logics.Mobs
             if (deathReplics.Count > 0)
             {
                 dialogPopup.ShowMessage(deathReplics.GetRandomElement(), dialogAvatar);
+            }
+
+            if (deathSound != null)
+            {
+                audioSource.PlayOneShot(deathSound);
             }
 
             SetAnimatorState(BotAnimatorState.Death);
@@ -253,6 +273,11 @@ namespace Heroicsolo.Logics.Mobs
                 dialogPopup.ShowMessage(aggroReplics.GetRandomElement(), dialogAvatar);
                 aggroDialogPlayed = true;
             }
+
+            if (aggroSound != null)
+            {
+                audioSource.PlayOneShot(aggroSound);
+            }
         }
         public override void DodgeDamage()
         {
@@ -284,6 +309,13 @@ namespace Heroicsolo.Logics.Mobs
         public override void Heal(float amount)
         {
             statsDict[CharacterStatType.Health].Change(amount);
+        }
+        public void OnMeleeAttackStarted()
+        {
+            if (attackSounds != null)
+            {
+                audioSource.PlayOneShot(attackSounds.GetRandomElement());
+            }
         }
         public void OnMeleeAttackPerformed()
         {
@@ -374,6 +406,12 @@ namespace Heroicsolo.Logics.Mobs
             }
 #endif
             weaponActive = false;
+
+            if (footstepsSound != null)
+            {
+                footstepsAudioSource.clip = footstepsSound;
+                footstepsAudioSource.loop = true;
+            }
         }
 
         private void Update()

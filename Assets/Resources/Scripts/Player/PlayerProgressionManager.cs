@@ -18,6 +18,10 @@ namespace Heroicsolo.Logics
         [Header("Currencies")]
         [SerializeField][Min(0)] private int startCurrencyAmount = 0;
 
+        [Header("Other")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip levelUpSound;
+
         private Action<int> OnLevelUp;
         private Action<int, int, int> OnExperienceChanged;
         private PlayerSaves playerSaves;
@@ -72,7 +76,14 @@ namespace Heroicsolo.Logics
             playerSaves.currentExp = expTotal;
 
             if (lvlChanged)
+            {
                 OnLevelUp?.Invoke(playerSaves.currentLevel);
+
+                if (levelUpSound != null)
+                {
+                    audioSource.PlayOneShot(levelUpSound);
+                }
+            }
 
             OnExperienceChanged?.Invoke(playerSaves.currentLevel, playerSaves.currentExp, GetNeededExpForLevelUp());
 
