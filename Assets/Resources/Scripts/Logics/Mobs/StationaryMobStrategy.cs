@@ -18,9 +18,9 @@ namespace Heroicsolo.Logics.Mobs
             {
                 case BotState.Idle:
                 case BotState.Patrolling:
-                case BotState.FollowPlayer:
                     owner.StopMovement();
                     break;
+                case BotState.FollowPlayer:
                 case BotState.Attacking:
                     owner.OnAggro();
                     owner.StopMovement();
@@ -55,10 +55,10 @@ namespace Heroicsolo.Logics.Mobs
             {
                 case BotState.Idle:
                 case BotState.Patrolling:
-                case BotState.FollowPlayer:
                     owner.StopMovement();
                     CheckPlayer();
                     break;
+                case BotState.FollowPlayer:
                 case BotState.Attacking:
                     owner.StopMovement();
                     owner.SetAnimatorState(BotAnimatorState.Attack);

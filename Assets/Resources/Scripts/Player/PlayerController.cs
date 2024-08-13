@@ -55,6 +55,8 @@ namespace Heroicsolo.Heroicsolo.Player
         [Inject] private IShootHelper shootHelper;
         [Inject] private IInventoryManager inventoryManager;
         [Inject] private IActionManager actionManager;
+        [Inject] private ITeamsManager teamsManager;
+
         internal override IActionManager ActionManager => actionManager;
 
         private CharacterController characterController;
@@ -195,6 +197,7 @@ namespace Heroicsolo.Heroicsolo.Player
             cameraTransform.parent = null;
             cameraTransform.rotation = Quaternion.Euler(45f, 0f, 0f);
             hidingObjectsManager.SetPlayerTransform(transform);
+            teamsManager.RegisterTeamMember(this);
 
             EquipWeapon(inventoryManager.GetEquippedItems().Single(x => x.Params.Type == ItemType.Weapon).Id);
 

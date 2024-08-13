@@ -44,6 +44,7 @@ namespace Heroicsolo.Logics.Mobs
         [Header("Visuals")]
         [SerializeField] private MobCanvas mobCanvas;
         [SerializeField] private Transform mobCircle;
+        [SerializeField] private Transform specialAttackCircle;
         [SerializeField] private Transform hitPivot;
 
         [Header("Dialogs")]
@@ -270,6 +271,16 @@ namespace Heroicsolo.Logics.Mobs
         {
             return botState == BotState.Attacking && weaponActive;
         }
+        public bool IsPlayerOutranged()
+        {
+            if (mobStrategyInstance is StationaryMobStrategy &&
+                Vector3.Distance(transform.position, playerController.transform.position) > attackDistance)
+            {
+                return true;
+            }
+
+            return false;
+        }
         public bool IsDamageable()
         {
             return botState != BotState.Evade && botState != BotState.Death && statsDict[CharacterStatType.Health].Value > 0f;
@@ -339,7 +350,11 @@ namespace Heroicsolo.Logics.Mobs
         public void OnSpecialAttackPerformed()
         {
             currentSpecialAttack.PerformAttack(transform.position, teamsManager);
-            currentSpecialAttack = null;
+            if (!IsPlayerOutranged())
+            {
+                currentSpecialAttack = null;
+            }
+            specialAttackCircle.gameObject.SetActive(false);
             animator.runtimeAnimatorController = defaultAnimatorController;
         }
         public override HittableType GetHittableType()
@@ -352,7 +367,7 @@ namespace Heroicsolo.Logics.Mobs
         }
         private void TrySelectSpecialAttack()
         {
-            if (specialAttacks.Count > 0 && UnityEngine.Random.value < specialAttackChance)
+            if (specialAttacks.Count > 0 && (IsPlayerOutranged() || UnityEngine.Random.value < specialAttackChance))
             {
                 List<MobSpecialAttack> selectedAttacks = new List<MobSpecialAttack>();
 
@@ -365,6 +380,9 @@ namespace Heroicsolo.Logics.Mobs
                 }
 
                 currentSpecialAttack = selectedAttacks.GetRandomElement();
+
+                specialAttackCircle.gameObject.SetActive(true);
+                specialAttackCircle.localScale = currentSpecialAttack.Radius * Vector3.one / transform.localScale.x;
 
                 if (currentSpecialAttack.AnimatorOverrideController != null)
                 {
@@ -463,9 +481,8 @@ namespace Heroicsolo.Logics.Mobs
             {
                 mobStrategyInstance.UpdateCurrentState(Time.deltaTime);
 
-                if (animator.GetCurrentAnimatorStateInfo(0).nameHash == AttackAnimHash 
-                    && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
-                    && currentSpecialAttack == null)
+                if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash == AttackAnimHash 
+                    && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
                 {
                     TrySelectSpecialAttack();
                 }
@@ -516,6 +533,8 @@ namespace Heroicsolo.Logics.Mobs
 
             mobCircle.gameObject.SetActive(true);
             mobCanvas.gameObject.SetActive(true);
+
+            mobCircle.transform.localScale = Vector3.one;
 
             mobStrategyInstance = ScriptableObject.CreateInstance(defaultMobStrategy.GetType()) as IMobStrategy;
             mobStrategyInstance.Init(this, agent, playerController);
