@@ -10,15 +10,27 @@ namespace Heroicsolo.Logics.Mobs
     public class MobsSpawner : MonoBehaviour
     {
         [SerializeField] private List<ValueWeight<Mob>> spawnList = new();
+        [SerializeField] private bool autoSpawn = true;
         [SerializeField] [Min(0)] private float spawnPeriod = 0;
         [SerializeField] private float spawnYOffset = 0f;
+        [SerializeField] private ParticleSystem spawnEffect;
 
         [Inject] private RuntimeDungeonGenerator runtimeDungeonGenerator;
 
         private WeightedChoser<Mob> spawnChoser;
         private Coroutine spawnCoroutine = null;
 
-        private void Spawn()
+        public void SpawnWithDelay(float delay = 1f)
+        {
+            if (spawnEffect != null)
+            {
+                spawnEffect.Play();
+            }
+
+            Invoke(nameof(Spawn), delay);
+        }
+
+        public void Spawn()
         {
             Mob chosenMob = spawnChoser.Chose();
             Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position + Vector3.up * spawnYOffset);
@@ -38,8 +50,6 @@ namespace Heroicsolo.Logics.Mobs
         {
             yield return new WaitUntil(() => runtimeDungeonGenerator.IsDungeonReady());
 
-            var spawnDict = new Dictionary<Mob, float>(spawnList.Select(i => new KeyValuePair<Mob, float>(i.Value, i.Weight)));
-            spawnChoser = new WeightedChoser<Mob>(spawnDict);
             if (spawnPeriod <= 0)
                 Spawn();
             else
@@ -50,7 +60,13 @@ namespace Heroicsolo.Logics.Mobs
         {
             SystemsManager.InjectSystemsTo(this);
 
-            StartCoroutine(BeginSpawningProccess());
+            var spawnDict = new Dictionary<Mob, float>(spawnList.Select(i => new KeyValuePair<Mob, float>(i.Value, i.Weight)));
+            spawnChoser = new WeightedChoser<Mob>(spawnDict);
+
+            if (autoSpawn)
+            {
+                StartCoroutine(BeginSpawningProccess());
+            }
         }
     }
 }

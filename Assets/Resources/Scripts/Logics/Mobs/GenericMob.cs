@@ -31,6 +31,11 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField][Min(0f)] private float attackPowerMin = 1f;
         [SerializeField][Min(0f)] private float attackPowerMax = 1f;
 
+        [Header("Minions Spawn")]
+        [SerializeField] private List<MobsSpawner> minionsSpawners = new();
+        [SerializeField] [Min(0f)] private float minionsSpawnPeriod = 10f;
+        [SerializeField] [Min(1)] private int minionsPerWave = 1;
+
         [SerializeField] private List<MobSpecialAttack> specialAttacks = new();
         [SerializeField] [Range(0f, 1f)] private float specialAttackChance = 0.25f;
 
@@ -84,6 +89,7 @@ namespace Heroicsolo.Logics.Mobs
         private IMobStrategy mobStrategyInstance;
         private RuntimeAnimatorController defaultAnimatorController;
         private MobSpecialAttack currentSpecialAttack;
+        private float timeToMinionsWave;
         #endregion
 
         #region Public Fields
@@ -297,6 +303,11 @@ namespace Heroicsolo.Logics.Mobs
             {
                 audioSource.PlayOneShot(aggroSound);
             }
+
+            if (minionsSpawners.Count > 0)
+            {
+                timeToMinionsWave = minionsSpawnPeriod;
+            }
         }
         public override void DodgeDamage()
         {
@@ -485,6 +496,20 @@ namespace Heroicsolo.Logics.Mobs
                     && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
                 {
                     TrySelectSpecialAttack();
+                }
+
+                if (timeToMinionsWave > 0f)
+                {
+                    timeToMinionsWave -= Time.deltaTime;
+
+                    if (timeToMinionsWave <= 0f)
+                    {
+                        for (int i = 0; i < minionsPerWave; i++)
+                        {
+                            minionsSpawners.GetRandomElement().SpawnWithDelay();
+                            timeToMinionsWave = minionsSpawnPeriod;
+                        }
+                    }
                 }
             }
         }
