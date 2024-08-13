@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor.Animations;
+using Unity.VisualScripting;
 
 namespace Heroicsolo.Logics.Mobs
 {
@@ -28,6 +30,9 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField][Min(0f)] private float dissapearTime = 5f;
         [SerializeField][Min(0f)] private float attackPowerMin = 1f;
         [SerializeField][Min(0f)] private float attackPowerMax = 1f;
+
+        [SerializeField] private List<MobSpecialAttack> specialAttacks = new();
+        [SerializeField] [Range(0f, 1f)] private float specialAttackChance = 0.25f;
 
         [Header("Patrol Points")]
         [SerializeField] private List<Transform> patrolPoints = new();
@@ -51,6 +56,7 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField] private AudioSource footstepsAudioSource;
         [SerializeField] private AudioClip aggroSound;
         [SerializeField] private List<AudioClip> attackSounds;
+        [SerializeField] private List<AudioClip> specialAttackSounds;
         [SerializeField] private AudioClip deathSound;
         [SerializeField] private AudioClip footstepsSound;
 
@@ -75,6 +81,8 @@ namespace Heroicsolo.Logics.Mobs
         private Action OnDamageDodged;
         private bool aggroDialogPlayed;
         private IMobStrategy mobStrategyInstance;
+        private RuntimeAnimatorController defaultAnimatorController;
+        private MobSpecialAttack currentSpecialAttack;
         #endregion
 
         #region Public Fields
@@ -321,6 +329,19 @@ namespace Heroicsolo.Logics.Mobs
         {
             playerController.GetDamage(AttackDamage, DamageType.Physical);
         }
+        public void OnSpecialAttackStarted()
+        {
+            if (specialAttackSounds != null)
+            {
+                audioSource.PlayOneShot(specialAttackSounds.GetRandomElement());
+            }
+        }
+        public void OnSpecialAttackPerformed()
+        {
+            currentSpecialAttack.PerformAttack(transform.position, teamsManager);
+            currentSpecialAttack = null;
+            animator.runtimeAnimatorController = defaultAnimatorController;
+        }
         public override HittableType GetHittableType()
         {
             return creatureType;
@@ -328,6 +349,28 @@ namespace Heroicsolo.Logics.Mobs
         public void SpawnLoot()
         {
             lootManager.GenerateRandomDrop(lootId, transform.position);
+        }
+        private void TrySelectSpecialAttack()
+        {
+            if (specialAttacks.Count > 0 && UnityEngine.Random.value < specialAttackChance)
+            {
+                List<MobSpecialAttack> selectedAttacks = new List<MobSpecialAttack>();
+
+                foreach (MobSpecialAttack specialAttack in specialAttacks)
+                {
+                    if (specialAttack.NeededMobHealthPercent >= statsDict[CharacterStatType.Health].Percent)
+                    {
+                        selectedAttacks.Add(specialAttack);
+                    }
+                }
+
+                currentSpecialAttack = selectedAttacks.GetRandomElement();
+
+                if (currentSpecialAttack.AnimatorOverrideController != null)
+                {
+                    animator.runtimeAnimatorController = currentSpecialAttack.AnimatorOverrideController;
+                }
+            }
         }
         #endregion
 
@@ -419,6 +462,13 @@ namespace Heroicsolo.Logics.Mobs
             if (botState != BotState.Death)
             {
                 mobStrategyInstance.UpdateCurrentState(Time.deltaTime);
+
+                if (animator.GetCurrentAnimatorStateInfo(0).nameHash == AttackAnimHash 
+                    && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
+                    && currentSpecialAttack == null)
+                {
+                    TrySelectSpecialAttack();
+                }
             }
         }
 
@@ -442,6 +492,8 @@ namespace Heroicsolo.Logics.Mobs
             animator = GetComponent<Animator>();
 
             animator.ResetTrigger(DieAnimHash);
+
+            defaultAnimatorController = animator.runtimeAnimatorController;
 
             if ((!agent.isOnNavMesh || !agent.isActiveAndEnabled) && !(defaultMobStrategy is StationaryMobStrategy))
             {

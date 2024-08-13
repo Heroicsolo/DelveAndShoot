@@ -5358,6 +5358,9 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 70
   attackPowerMax: 80
+  specialAttacks:
+  - {fileID: 11400000, guid: 6ebe04b7143363545a264fbae31e5c5d, type: 2}
+  specialAttackChance: 0.25
   patrolPoints: []
   expReward: 1000
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
@@ -5374,6 +5377,7 @@ MonoBehaviour:
   aggroSound: {fileID: 8300000, guid: 4b2410c200d28a34b932cbdafda37a61, type: 3}
   attackSounds:
   - {fileID: 8300000, guid: 766240d466c78fa4eb7b36c99c9a70f1, type: 3}
+  specialAttackSounds: []
   deathSound: {fileID: 8300000, guid: 4b2410c200d28a34b932cbdafda37a61, type: 3}
   footstepsSound: {fileID: 0}
 --- !u!195 &3471320406476443588
