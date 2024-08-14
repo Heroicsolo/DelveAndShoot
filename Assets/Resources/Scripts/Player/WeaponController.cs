@@ -62,6 +62,12 @@ namespace Heroicsolo.Heroicsolo.Player
             this.targetPoint = targetPoint;
         }
 
+        public void ForceReload()
+        {
+            isReloading = true;
+            delayToShoot = reloadTime;
+        }
+
         private float GetHitChanceByDist(float dist)
         {
             return Mathf.Lerp(1f, hitChance, dist / shootDistance);
@@ -140,7 +146,7 @@ namespace Heroicsolo.Heroicsolo.Player
 
                 if (delayToShoot <= 0f)
                 {
-                    if (currentAmmo == 0)
+                    if (isReloading)
                     {
                         isReloading = false;
                         currentAmmo = ammo;

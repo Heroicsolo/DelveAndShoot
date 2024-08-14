@@ -342,6 +342,11 @@ namespace Heroicsolo.Heroicsolo.Player
             {
                 SetShooting(false);
             }
+
+            if (Input.GetKeyDown(KeyCode.R) && !weaponController.IsReloading)
+            {
+                weaponController.ForceReload();
+            }
         }
 
         private void ProccessMovement()
