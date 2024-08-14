@@ -28,7 +28,7 @@ namespace Heroicsolo.Logics
             }
         }
 
-        private Dictionary<Type, Dictionary<string, ManagedAction>> _actionsCollection = new(); //TODO: try to store as HashSet
+        private Dictionary<Type, Dictionary<string, ManagedAction>> _actionsCollection = new();
 
         public IAction GetAction<T>(string name) where T : ManagedActor
         {
