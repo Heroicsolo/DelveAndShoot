@@ -15,6 +15,7 @@ MonoBehaviour:
   AnimatorOverrideController: {fileID: 22100000, guid: 8cc2bc3245f9de248a1cb50283a5a5f6, type: 2}
   HitSound: {fileID: 8300000, guid: 766240d466c78fa4eb7b36c99c9a70f1, type: 3}
   hitEffect: {fileID: 426218084873508007, guid: 07bf9ced87963e24299c2c2a22bfeeb6, type: 3}
+  hitEffectYOffset: 1.55
   Radius: 8
   Damage: 100
   DamageType: 20

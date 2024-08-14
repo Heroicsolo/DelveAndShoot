@@ -5040,7 +5040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2720776265303462597, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.63
       objectReference: {fileID: 0}
     - target: {fileID: 2720776265303462597, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5082,6 +5082,14 @@ PrefabInstance:
       propertyPath: spawnEffect
       value: 
       objectReference: {fileID: 8279501566823897123}
+    - target: {fileID: 7982784491113306377, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
+      propertyPath: isMinionsSpawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982784491113306377, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
+      propertyPath: followPlayerInstantly
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -5120,7 +5128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2720776265303462597, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.63
       objectReference: {fileID: 0}
     - target: {fileID: 2720776265303462597, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5162,6 +5170,14 @@ PrefabInstance:
       propertyPath: spawnEffect
       value: 
       objectReference: {fileID: 7301033352363161036}
+    - target: {fileID: 7982784491113306377, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
+      propertyPath: isMinionsSpawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982784491113306377, guid: 8ff3513e1c8d2b54a9327edcd18c9b6f, type: 3}
+      propertyPath: followPlayerInstantly
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

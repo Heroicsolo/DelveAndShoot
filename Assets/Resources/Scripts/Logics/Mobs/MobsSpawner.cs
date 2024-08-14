@@ -14,6 +14,8 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField] [Min(0)] private float spawnPeriod = 0;
         [SerializeField] private float spawnYOffset = 0f;
         [SerializeField] private ParticleSystem spawnEffect;
+        [SerializeField] private bool followPlayerInstantly = false;
+        [SerializeField] private bool isMinionsSpawn = false;
 
         [Inject] private RuntimeDungeonGenerator runtimeDungeonGenerator;
 
@@ -35,6 +37,10 @@ namespace Heroicsolo.Logics.Mobs
             Mob chosenMob = spawnChoser.Chose();
             Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position + Vector3.up * spawnYOffset);
             mobInstance.Activate();
+            if (followPlayerInstantly && mobInstance is GenericMob genericMob)
+            {
+                genericMob.FollowPlayer();
+            }
         }
 
         private IEnumerator SpawnCoroutine()

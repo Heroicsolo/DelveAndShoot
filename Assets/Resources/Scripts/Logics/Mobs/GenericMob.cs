@@ -90,6 +90,8 @@ namespace Heroicsolo.Logics.Mobs
         private RuntimeAnimatorController defaultAnimatorController;
         private MobSpecialAttack currentSpecialAttack;
         private float timeToMinionsWave;
+        private bool isMinion;
+        private bool followPlayerInstantly;
         #endregion
 
         #region Public Fields
@@ -197,7 +199,14 @@ namespace Heroicsolo.Logics.Mobs
         }
         public void FollowPlayer()
         {
-            mobStrategyInstance.SwitchState(BotState.FollowPlayer);
+            if (mobStrategyInstance != null)
+            {
+                mobStrategyInstance.SwitchState(BotState.FollowPlayer);
+            }
+            else
+            {
+                followPlayerInstantly = true;
+            }
         }
         #endregion
 
@@ -205,6 +214,10 @@ namespace Heroicsolo.Logics.Mobs
         public void ResetHealth()
         {
             statsDict[CharacterStatType.Health].Reset();
+        }
+        public void SetIsMinion(bool isMinion)
+        {
+            this.isMinion = isMinion;
         }
         public void ResetState()
         {
@@ -242,9 +255,12 @@ namespace Heroicsolo.Logics.Mobs
             SetAnimatorState(BotAnimatorState.Death);
             StopMovement();
             HideMobCanvasAndCircle();
-            SpawnLoot();
+            if (!isMinion)
+            {
+                SpawnLoot();
+                playerProgressionManager.AddExperience(expReward);
+            }
             Invoke(nameof(ReturnToPool), dissapearTime);
-            playerProgressionManager.AddExperience(expReward);
         }
         public override bool IsDead()
         {
@@ -565,10 +581,19 @@ namespace Heroicsolo.Logics.Mobs
             mobStrategyInstance.Init(this, agent, playerController);
 
             ResetState();
+
+            if (followPlayerInstantly)
+            {
+                FollowPlayer();
+                followPlayerInstantly = false;
+            }
         }
 
         private void ReturnToPool()
         {
+            isMinion = false;
+            followPlayerInstantly = false;
+            timeToMinionsWave = 0f;
             PoolSystem.ReturnToPool(this);
         }
         #endregion

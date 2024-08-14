@@ -13,6 +13,7 @@ namespace Heroicsolo.Logics.Mobs
         public AnimatorOverrideController AnimatorOverrideController;
         public AudioClip HitSound;
         [SerializeField] private PooledParticleSystem hitEffect;
+        [SerializeField] private float hitEffectYOffset = 0f;
         [Min(0f)] public float Radius;
         [Min(0f)] public float Damage;
         public DamageType DamageType;
@@ -26,7 +27,7 @@ namespace Heroicsolo.Logics.Mobs
 
             if (hitEffect != null)
             {
-                PoolSystem.GetInstanceAtPosition(hitEffect, hitEffect.GetName(), hitPosition);
+                PoolSystem.GetInstanceAtPosition(hitEffect, hitEffect.GetName(), hitPosition + Vector3.up * hitEffectYOffset);
             }
 
             teamsManager.GetEnemiesInRadius(hitPosition, TeamType.Enemies, Radius)
