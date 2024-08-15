@@ -5157,15 +5157,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 81.94705
+      value: 7.071068
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0000038146973
+      value: 0.0015385766
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 33.29184
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5346,11 +5346,17 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70
+  minionsSpawners: []
+  minionsSpawnPeriod: 10
+  minionsPerWave: 1
+  specialAttacks: []
+  specialAttackChance: 0.25
   patrolPoints: []
   expReward: 100
   lootId: 1ee05883-1e67-4978-b6bc-88a74241f6b0
   mobCanvas: {fileID: 7884784904725195610}
   mobCircle: {fileID: 5222640722071376952}
+  specialAttackCircle: {fileID: 0}
   hitPivot: {fileID: 9102962922706752282}
   dialogAvatar: {fileID: 21300000, guid: 0a411e9898d06594888017e55da7e53f, type: 3}
   aggroReplics:
@@ -5362,6 +5368,7 @@ MonoBehaviour:
   aggroSound: {fileID: 8300000, guid: 4b2410c200d28a34b932cbdafda37a61, type: 3}
   attackSounds:
   - {fileID: 8300000, guid: 766240d466c78fa4eb7b36c99c9a70f1, type: 3}
+  specialAttackSounds: []
   deathSound: {fileID: 8300000, guid: 4b2410c200d28a34b932cbdafda37a61, type: 3}
   footstepsSound: {fileID: 8300000, guid: 848500aa47727084b831b1ba5dd0eb56, type: 3}
 --- !u!195 &3471320406476443588
