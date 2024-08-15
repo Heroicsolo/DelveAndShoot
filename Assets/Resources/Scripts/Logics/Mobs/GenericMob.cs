@@ -97,6 +97,10 @@ namespace Heroicsolo.Logics.Mobs
         #region Public Fields
         public float AttackDamage => UnityEngine.Random.Range(attackPowerMin, attackPowerMax);
         public float AttackDistance => attackDistance;
+        public override IMobStrategy GetDefaultStrategy()
+        {
+            return defaultMobStrategy;
+        }
         
         public BotState BotState
         {
@@ -552,13 +556,6 @@ namespace Heroicsolo.Logics.Mobs
             animator.ResetTrigger(DieAnimHash);
 
             defaultAnimatorController = animator.runtimeAnimatorController;
-
-            if ((!agent.isOnNavMesh || !agent.isActiveAndEnabled) && !(defaultMobStrategy is StationaryMobStrategy))
-            {
-                //Mob is spawned on bad position, return it to pool
-                ReturnToPool();
-                return;
-            }
 
             lastPatrolPoint = null;
 

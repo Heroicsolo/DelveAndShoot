@@ -16,6 +16,8 @@ namespace Heroicsolo.Logics
 
         private bool dungeonReady;
 
+        public NavMeshSurface NavMeshSurface => navMeshSurface;
+
         public bool IsDungeonReady()
         {
             return dungeonReady;
