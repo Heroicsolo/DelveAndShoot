@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using Assets.Resources.Scripts.Logics;
 
 namespace Heroicsolo.Logics
 {
-    public class LootContainer : MonoBehaviour
+    public class LootContainer : MonoBehaviour, IInteractable
     {
         [SerializeField] private string lootId;
         [SerializeField] private string title;
@@ -27,6 +28,8 @@ namespace Heroicsolo.Logics
         private bool readyToOpen;
         private bool isEmpty;
         private PlayerController playerController;
+
+        public bool IsInteractable => readyToOpen;
 
         private void OnPlayerEnteredToOpenArea()
         {
@@ -99,10 +102,23 @@ namespace Heroicsolo.Logics
                 OnPlayerLeftOpenArea();
             }
 
-            if (Input.GetMouseButtonUp(1) && readyToOpen && !isEmpty)
+            //if (Input.GetMouseButtonUp(1) && readyToOpen && !isEmpty)
+            //{
+            //    Open();
+            //}
+        }
+
+        public void Interact()
+        {
+            if (readyToOpen && !isEmpty)
             {
                 Open();
             }
+        }
+
+        IInteractable.InteractionType IInteractable.GetInteractionType()
+        {
+            return IInteractable.InteractionType.Container;
         }
     }
 }

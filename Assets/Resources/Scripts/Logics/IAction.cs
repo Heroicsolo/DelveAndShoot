@@ -5,7 +5,7 @@ namespace Heroicsolo.Logics
     public interface IAction
     {
         public delegate bool ActionModule(IActor actor, Dictionary<string, object> bag = null);
-        public delegate bool ActionBase(Dictionary<string, object> bag = null);
+        public delegate bool ActionBase(Dictionary<string, object> bag = null); //TODO: Change signature to preserve changes in bag after exiting delegate
 
         public string Name { get; }
         public void Invoke(IActor actor, Dictionary<string, object> bag = null);

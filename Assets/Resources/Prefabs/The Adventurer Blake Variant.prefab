@@ -2015,6 +2015,7 @@ MonoBehaviour:
   audioSource: {fileID: 6641886480740673131}
   foostepsAudioSource: {fileID: 2804823051030052135}
   fallSound: {fileID: 8300000, guid: 115a5b843e5fcb24a811ebe2c57e549c, type: 3}
+  interactionDistance: 10
 --- !u!114 &1577313303300086267
 MonoBehaviour:
   m_ObjectHideFlags: 0

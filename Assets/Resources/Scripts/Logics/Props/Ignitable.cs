@@ -1,18 +1,22 @@
 ﻿using Assets.Resources.Scripts.Logics;
+using Heroicsolo.DI;
 using Heroicsolo.Logics.Props;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using static Heroicsolo.Logics.ActionManager;
 
 namespace Heroicsolo.Logics
 {
-    public class Ignatable : HittableProp, IInteractable
+    public class Ignatable : ManagedActor, IInteractable //TODO: Add IsExtinguishable
     {
         [SerializeField] GameObject fire;
         [SerializeField] float minDamageToIgnite = 1;
         [SerializeField] float minDamageToExtinguish = 1;
         [SerializeField] bool isInteractable = true;
         [SerializeField] bool isIgnited = false;
+        [Inject] private IActionManager actionManager;
 
         public bool IsIgnited
         {
@@ -20,19 +24,17 @@ namespace Heroicsolo.Logics
             set
             {
                 if (isIgnited && !value)
-                    Extinguish();
+                    Do("Extinguish");
                 else if (!isIgnited && value)
-                    Ignite();
+                    Do("Ignite");
             }
         }
 
         public bool IsInteractable => isInteractable;
 
-        public override void Die()
-        {
-        }
+        internal override IActionManager ActionManager => actionManager;
 
-        public override void GetDamage(float damage, DamageType damageType = DamageType.Physical)
+        public new void GetDamage(float damage, DamageType damageType = DamageType.Physical)
         {
             switch (damageType)
             {
@@ -49,25 +51,20 @@ namespace Heroicsolo.Logics
             }
         }
 
-        private void Extinguish()
+        [ActorAction]
+        private bool Extinguish(Dictionary<string, object> bag = null)
         {
             isIgnited = false;
             fire.SetActive(false);
+            return true;
         }
 
-        private void Ignite()
+        [ActorAction]
+        private bool Ignite(Dictionary<string, object> bag = null)
         {
             isIgnited = true;
             fire.SetActive(true);
-        }
-
-        public override void Heal(float amount)
-        {
-        }
-
-        public override bool IsDead()
-        {
-            return false;
+            return true;
         }
 
         public void Interact()
@@ -79,6 +76,12 @@ namespace Heroicsolo.Logics
         IInteractable.InteractionType IInteractable.GetInteractionType()
         {
             return IInteractable.InteractionType.Torch;
+        }
+
+        private void Start()
+        {
+            SystemsManager.InjectSystemsTo(this);
+            actionManager.RegisterManagedActor(typeof(Ignatable));
         }
     }
 }

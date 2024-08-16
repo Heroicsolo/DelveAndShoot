@@ -1,4 +1,5 @@
 using Assets.FantasyInventory.Scripts.Enums;
+using Assets.Resources.Scripts.Logics;
 using DG.Tweening;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
@@ -8,6 +9,7 @@ using Heroicsolo.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Heroicsolo.Logics.ActionManager;
 
@@ -48,6 +50,7 @@ namespace Heroicsolo.Heroicsolo.Player
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioSource foostepsAudioSource;
         [SerializeField] private AudioClip fallSound;
+        [SerializeField] private float interactionDistance;
 
         [Inject] private IGameUIController gameUIController;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
@@ -73,7 +76,7 @@ namespace Heroicsolo.Heroicsolo.Player
         private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
         private RaycastHit[] raycastHits;
         private WeaponController weaponController;
-        private Dictionary<Transform, float> aimingBonesTransforms = new Dictionary<Transform, float>();
+        private Dictionary<Transform, float> aimingBonesTransforms = new Dictionary<Transform, float>();        
 
         public List<CharacterStat> GetCharacterStats()
         {
@@ -135,11 +138,6 @@ namespace Heroicsolo.Heroicsolo.Player
             return statsDict[CharacterStatType.Health].Value == 0;
         }
 
-        public GameObject GetGameObject()
-        {
-            return gameObject;
-        }
-
         public Transform GetTransform()
         {
             return transform;
@@ -198,6 +196,7 @@ namespace Heroicsolo.Heroicsolo.Player
             cameraTransform.rotation = Quaternion.Euler(45f, 0f, 0f);
             hidingObjectsManager.SetPlayerTransform(transform);
             teamsManager.RegisterTeamMember(this);
+            interactionLayers = LayerMask.GetMask("Loot", "Interactable");
 
             EquipWeapon(inventoryManager.GetEquippedItems().Single(x => x.Params.Type == ItemType.Weapon).Id);
 
@@ -347,6 +346,9 @@ namespace Heroicsolo.Heroicsolo.Player
             {
                 weaponController.ForceReload();
             }
+
+            if (Input.GetKeyDown(KeyCode.F))
+                Interact();
         }
 
         private void ProccessMovement()
@@ -408,6 +410,19 @@ namespace Heroicsolo.Heroicsolo.Player
 
             statsDict[CharacterStatType.Health].Update(Time.deltaTime);
             statsDict[CharacterStatType.Stamina].Update(Time.deltaTime);
+        }
+
+        private int interactionLayers;
+        private void Interact()
+        {
+            var objectsInRadius = Physics.OverlapSphere(transform.position, interactionDistance, interactionLayers);
+            IInteractable interactable =
+                objectsInRadius
+                .OrderBy(c => c.transform.Distance(transform))
+                .First()
+                .GetComponent<IInteractable>();
+            var interactableType = interactable.GetInteractionType();
+                interactable.Interact();
         }
 
         private void SetShooting(bool shooting)

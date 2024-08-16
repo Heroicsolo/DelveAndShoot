@@ -10,7 +10,8 @@ namespace Assets.Resources.Scripts.Logics
     {
         enum InteractionType
         {
-            Torch
+            Torch,
+            Container
         }
         void Interact();
         InteractionType GetInteractionType();

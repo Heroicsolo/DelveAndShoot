@@ -22,7 +22,7 @@ namespace Heroicsolo.Logics
             this.actionBase = action.GetMethodInfo();
             postActions.Add((a, b) => { OnAction?.Invoke(a, b); return true; });
         }
-        public ManagedAction(string name, MethodInfo action) //TODO: Add methodInfo validation
+        public ManagedAction(string name, MethodInfo action) //TODO: Add methodInfo validation and conversion for bag-less methods
         {
             Name = name;
             this.actionBase = action;
