@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Heroicsolo.Logics.Mobs
 {
@@ -21,6 +22,8 @@ namespace Heroicsolo.Logics.Mobs
 
         private WeightedChoser<Mob> spawnChoser;
         private Coroutine spawnCoroutine = null;
+        private NavMeshPath testPath = null;
+        private NavMeshHit navMeshHit;
 
         public void SpawnWithDelay(float delay = 1f)
         {
@@ -34,9 +37,28 @@ namespace Heroicsolo.Logics.Mobs
 
         public void Spawn()
         {
+            Vector3 spawnPos = transform.position + Vector3.up * spawnYOffset;
+
             Mob chosenMob = spawnChoser.Chose();
-            Mob mobInstance = PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), transform.position + Vector3.up * spawnYOffset);
+
+            bool isStationary = chosenMob.GetDefaultStrategy() is StationaryMobStrategy;
+
+            Mob mobInstance = isStationary ? 
+                PoolSystem.GetInstanceAtPosition(chosenMob, chosenMob.GetName(), spawnPos) : 
+                PoolSystem.GetInstance(chosenMob, chosenMob.GetName());
+
+            if (!isStationary)
+            {
+                if (NavMesh.SamplePosition(spawnPos, out navMeshHit, 10f, NavMesh.AllAreas))
+                {
+                    spawnPos = navMeshHit.position;
+                }
+
+                chosenMob.GetComponent<NavMeshAgent>().Warp(spawnPos);
+            }
+
             mobInstance.Activate();
+
             if (followPlayerInstantly && mobInstance is GenericMob genericMob)
             {
                 genericMob.FollowPlayer();
@@ -65,6 +87,8 @@ namespace Heroicsolo.Logics.Mobs
         void Start()
         {
             SystemsManager.InjectSystemsTo(this);
+
+            testPath = new();
 
             var spawnDict = new Dictionary<Mob, float>(spawnList.Select(i => new KeyValuePair<Mob, float>(i.Value, i.Weight)));
             spawnChoser = new WeightedChoser<Mob>(spawnDict);

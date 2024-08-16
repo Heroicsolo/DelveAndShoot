@@ -7,6 +7,7 @@ namespace Heroicsolo.Logics.Mobs
 {
     internal abstract class Mob : MonoBehaviour, IPooledObject, ICharacter
     {
+        public abstract IMobStrategy GetDefaultStrategy();
         public abstract void Activate();
         public abstract void Deactivate();
         public abstract void Die();
