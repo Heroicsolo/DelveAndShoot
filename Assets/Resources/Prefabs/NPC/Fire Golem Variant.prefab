@@ -5157,15 +5157,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.071068
+      value: 31.57533
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032311797
+      value: 0.11131117
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.00000071525574
+      value: -70.71068
       objectReference: {fileID: 0}
     - target: {fileID: 4064621992895854315, guid: 246c242d331a08d4695fdd75eb3e8f93, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5341,6 +5341,12 @@ MonoBehaviour:
     regenRate: 0
     regenDelay: 0
     bonusPerLevel: 10
+    isRegenEnabled: 0
+  - statType: 60
+    baseValue: 1
+    regenRate: 0
+    regenDelay: 0
+    bonusPerLevel: 0
     isRegenEnabled: 0
   attackDistance: 2
   dissapearTime: 5

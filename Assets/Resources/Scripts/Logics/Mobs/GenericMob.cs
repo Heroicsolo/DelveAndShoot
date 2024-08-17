@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor.Animations;
 using Unity.VisualScripting;
+using System.Linq;
 
 namespace Heroicsolo.Logics.Mobs
 {
@@ -350,6 +351,16 @@ namespace Heroicsolo.Logics.Mobs
                 damage *= (1f - characterStatsManager.GetDamageAbsorbPercentage(statsDict[CharacterStatType.Armor].Value));
             }
 
+            if (statsDict.ContainsKey(CharacterStatType.FireResist) && damageType == DamageType.Fire)
+            {
+                damage *= (1f - statsDict[CharacterStatType.FireResist].Value);
+            }
+
+            if (statsDict.ContainsKey(CharacterStatType.FrostResist) && damageType == DamageType.Frost)
+            {
+                damage *= (1f - statsDict[CharacterStatType.FrostResist].Value);
+            }
+
             OnDamageGot?.Invoke(damage);
 
             statsDict[CharacterStatType.Health].Change(-damage);
@@ -546,7 +557,8 @@ namespace Heroicsolo.Logics.Mobs
             }
 
             statsDict[CharacterStatType.Health].SetRegenState(true);
-            statsDict[CharacterStatType.Health].Reset();
+
+            statsDict.Values.ToList().ForEach(x => x.Reset());
 
             playerController = FindObjectOfType<PlayerController>();
 

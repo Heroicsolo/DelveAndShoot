@@ -5923,6 +5923,12 @@ MonoBehaviour:
     regenDelay: 0
     bonusPerLevel: 20
     isRegenEnabled: 0
+  - statType: 60
+    baseValue: 1
+    regenRate: 0
+    regenDelay: 0
+    bonusPerLevel: 0
+    isRegenEnabled: 0
   attackDistance: 4.5
   dissapearTime: 5
   attackPowerMin: 70

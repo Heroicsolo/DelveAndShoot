@@ -46,10 +46,13 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
         {
             var fieldValue = sourcePropertyValue.GetPropertyValue();
 
-            var comparingValue = condHAtt.NeededFieldValue.ToString();
+            var comparingValue = "";
+
+            condHAtt.NeededFieldValues.ForEach(val => comparingValue += val.ToString() + ",");
+
             var fieldValueString = fieldValue.ToString();
 
-            enabled = comparingValue == fieldValueString;
+            enabled = comparingValue.Contains(fieldValueString);
         }
         else
         {

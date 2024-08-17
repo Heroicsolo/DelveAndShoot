@@ -5149,15 +5149,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.748741
+      value: 49.497475
       objectReference: {fileID: 0}
     - target: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.048974395
+      value: 0.05322121
       objectReference: {fileID: 0}
     - target: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 60.10408
+      value: -35.35534
       objectReference: {fileID: 0}
     - target: {fileID: 334313965946791233, guid: 317e3cc0be53ade40a1303e26fc10d2d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5336,6 +5336,12 @@ MonoBehaviour:
     regenRate: 0
     regenDelay: 0
     bonusPerLevel: 5
+    isRegenEnabled: 0
+  - statType: 70
+    baseValue: 1
+    regenRate: 0
+    regenDelay: 0
+    bonusPerLevel: 0
     isRegenEnabled: 0
   attackDistance: 2
   dissapearTime: 5

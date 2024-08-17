@@ -1,7 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections;
- 
+using System.Collections.Generic;
+
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property |
     AttributeTargets.Class | AttributeTargets.Struct, Inherited = true)]
 public class ConditionalHideAttribute : PropertyAttribute
@@ -10,19 +11,27 @@ public class ConditionalHideAttribute : PropertyAttribute
     public string ConditionalSourceField = "";
     //TRUE = Hide in inspector / FALSE = Disable in inspector 
     public bool HideInInspector = false;
-    public object NeededFieldValue = null;
+    public List<object> NeededFieldValues = null;
  
     public ConditionalHideAttribute(string conditionalSourceField, object neededFieldValue)
     {
         this.ConditionalSourceField = conditionalSourceField;
         this.HideInInspector = false;
-        this.NeededFieldValue = neededFieldValue;
+        this.NeededFieldValues = new List<object>{ neededFieldValue };
     }
  
     public ConditionalHideAttribute(string conditionalSourceField, bool hideInInspector, object neededFieldValue)
     {
         this.ConditionalSourceField = conditionalSourceField;
         this.HideInInspector = hideInInspector;
-        this.NeededFieldValue = neededFieldValue;
+        this.NeededFieldValues = new List<object> { neededFieldValue };
+    }
+
+    public ConditionalHideAttribute(string conditionalSourceField, bool hideInInspector, params object[] neededFieldValues)
+    {
+        this.ConditionalSourceField = conditionalSourceField;
+        this.HideInInspector = hideInInspector;
+        this.NeededFieldValues = new List<object>();
+        this.NeededFieldValues.AddRange(neededFieldValues);
     }
 }

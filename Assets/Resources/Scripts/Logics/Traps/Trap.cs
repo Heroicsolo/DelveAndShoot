@@ -1,5 +1,7 @@
+using DG.Tweening;
 using Heroicsolo.Heroicsolo.Player;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Heroicsolo.Logics.Traps
@@ -9,10 +11,12 @@ namespace Heroicsolo.Logics.Traps
         [Header("Balance")]
         [SerializeField] private TrapActivationType activationType;
         [SerializeField] private TrapWorkMode workMode;
-        [ConditionalHide("workMode", false, TrapWorkMode.Endless)]
+        [ConditionalHide("workMode", true, TrapWorkMode.Temporary, TrapWorkMode.Periodical)]
         [SerializeField] [Min(0f)] private float lifeTime = 3f;
         [ConditionalHide("workMode", true, TrapWorkMode.Periodical)]
         [SerializeField] [Min(0f)] private float activationPeriod = 10f;
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip activeStateSound;
 
         [Header("Trap Parts")]
         [SerializeField] private GameObject objectToActivate;
@@ -22,6 +26,7 @@ namespace Heroicsolo.Logics.Traps
 
         private float timeToActivate;
         private float timeToDeactivate;
+        private float audioDefaultVolume;
 
         private void Activate()
         {
@@ -38,6 +43,12 @@ namespace Heroicsolo.Logics.Traps
             if (activeStateEffect != null)
             {
                 activeStateEffect.Play();
+            }
+
+            if (audioSource != null && activeStateSound != null)
+            {
+                audioSource.PlayOneShot(activeStateSound);
+                audioSource.DOFade(audioDefaultVolume, 0.25f);
             }
 
             if (workMode == TrapWorkMode.Temporary 
@@ -64,6 +75,11 @@ namespace Heroicsolo.Logics.Traps
                 inactiveStateEffect.Play();
             }
 
+            if (audioSource != null)
+            {
+                audioSource.DOFade(0f, 0.25f);
+            }
+
             if (workMode == TrapWorkMode.Periodical)
             {
                 timeToActivate = activationPeriod;
@@ -72,6 +88,11 @@ namespace Heroicsolo.Logics.Traps
 
         private void Start()
         {
+            if (audioSource != null)
+            {
+                audioDefaultVolume = audioSource.volume;
+            }
+
             if (activationType == TrapActivationType.ActivateAtStart)
             {
                 Activate();

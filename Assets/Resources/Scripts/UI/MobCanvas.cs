@@ -33,6 +33,12 @@ namespace Heroicsolo.Scripts.UI
                 ft.SetText($"-{Mathf.CeilToInt(amount)}");
                 ft.SetCurved(true);
             }
+            else
+            {
+                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+                ft.SetText("ABSORB");
+                ft.SetCurved(true);
+            }
         }
 
         private void OnDamageDodged()
