@@ -19,6 +19,7 @@ namespace Heroicsolo.Logics
         [Inject] private ILootManager lootManager;
 
         private float currDurability;
+        private bool isDied;
 
         public void Activate()
         {
@@ -33,6 +34,13 @@ namespace Heroicsolo.Logics
 
         public void Die()
         {
+            if (isDied)
+            {
+                return;
+            }
+
+            isDied = true;
+
             currDurability = 0f;
 
             if (destructionEffect != null)
