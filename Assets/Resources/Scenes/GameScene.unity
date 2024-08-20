@@ -876,6 +876,15 @@ MonoBehaviour:
   - minSpawnCount: 1
     maxSpawnCount: 2
     spawnByWall: 0
+    spawmInTheMiddle: 1
+    spawnRotated: 1
+    heightFix: 0
+    offsetFix: 0
+    gameObject: {fileID: 5945082784251194117, guid: ae1c7d05bb87a24429fa41b063c0ac0e, type: 3}
+    spawnRoom: 0
+  - minSpawnCount: 1
+    maxSpawnCount: 2
+    spawnByWall: 0
     spawmInTheMiddle: 0
     spawnRotated: 0
     heightFix: 0

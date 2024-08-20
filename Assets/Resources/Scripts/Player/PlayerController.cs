@@ -33,6 +33,7 @@ namespace Heroicsolo.Heroicsolo.Player
         [SerializeField][Range(0f, 1f)] private float fatigueEndThreshold = 0.7f;
         [SerializeField][Min(0f)] private float staminaSpendingForRun = 2f;
         [SerializeField] private LayerMask floorMask;
+        [SerializeField] private float footstepsSoundPitchCoef = 0.2f;
 
         [Header("Weapons")]
         [SerializeField] private List<WeaponController> weapons = new List<WeaponController>();
@@ -389,9 +390,14 @@ namespace Heroicsolo.Heroicsolo.Player
                 audioSource.PlayOneShot(fallSound);
             }
 
-            characterController.Move((runDirection *
-                (isFatigued ? runSpeedFatiguedCoef * statsDict[CharacterStatType.MoveSpeed].Value : statsDict[CharacterStatType.MoveSpeed].Value)
-                + Vector3.up * jumpSpeed) * Time.deltaTime);
+            float speed = isFatigued ? runSpeedFatiguedCoef * statsDict[CharacterStatType.MoveSpeed].Value : statsDict[CharacterStatType.MoveSpeed].Value;
+
+            if (speed > 0f)
+            {
+                foostepsAudioSource.pitch = footstepsSoundPitchCoef * speed;
+            }
+
+            characterController.Move((runDirection * speed + Vector3.up * jumpSpeed) * Time.deltaTime);
         }
 
         private void ProccessStats()

@@ -3,6 +3,7 @@ using Heroicsolo.Heroicsolo.Player;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Heroicsolo.Logics.Traps
 {
@@ -15,14 +16,18 @@ namespace Heroicsolo.Logics.Traps
         [SerializeField] [Min(0f)] private float lifeTime = 3f;
         [ConditionalHide("workMode", true, TrapWorkMode.Periodical)]
         [SerializeField] [Min(0f)] private float activationPeriod = 10f;
+
+        [Header("Sounds")]
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip activeStateSound;
+        [SerializeField] private bool loopSound;
 
         [Header("Trap Parts")]
         [SerializeField] private GameObject objectToActivate;
         [SerializeField] private GameObject objectToDeactivate;
         [SerializeField] private ParticleSystem inactiveStateEffect;
         [SerializeField] private ParticleSystem activeStateEffect;
+        [SerializeField] private PlayableDirector directorToPlay;
 
         private float timeToActivate;
         private float timeToDeactivate;
@@ -33,6 +38,11 @@ namespace Heroicsolo.Logics.Traps
             if (objectToActivate != null)
             {
                 objectToActivate.SetActive(true);
+            }
+
+            if (directorToPlay != null)
+            {
+                directorToPlay.Play();
             }
 
             if (objectToDeactivate != null)
@@ -47,7 +57,17 @@ namespace Heroicsolo.Logics.Traps
 
             if (audioSource != null && activeStateSound != null)
             {
-                audioSource.PlayOneShot(activeStateSound);
+                if (!loopSound)
+                {
+                    audioSource.PlayOneShot(activeStateSound);
+                }
+                else
+                {
+                    audioSource.clip = activeStateSound;
+                    audioSource.loop = loopSound;
+                    audioSource.Play();
+                }
+
                 audioSource.DOFade(audioDefaultVolume, 0.25f);
             }
 
@@ -63,6 +83,11 @@ namespace Heroicsolo.Logics.Traps
             if (objectToActivate != null)
             {
                 objectToActivate.SetActive(false);
+            }
+
+            if (directorToPlay != null)
+            {
+                directorToPlay.Stop();
             }
 
             if (objectToDeactivate != null)
