@@ -9,12 +9,14 @@ using static Heroicsolo.Logics.ActionManager;
 
 namespace Heroicsolo.Logics
 {
-    public class Ignatable : ManagedActor, IInteractable //TODO: Add IsExtinguishable
+    public class Ignitable : ManagedActor, IInteractable
     {
         [SerializeField] GameObject fire;
+        [SerializeField] ParticleSystem ignitionEffect;
         [SerializeField] float minDamageToIgnite = 1;
         [SerializeField] float minDamageToExtinguish = 1;
         [SerializeField] bool isInteractable = true;
+        [SerializeField][ConditionalHide("isInteractable", true)] bool isExtinguishable = true;
         [SerializeField] bool isIgnited = false;
         [Inject] private IActionManager actionManager;
 
@@ -64,12 +66,17 @@ namespace Heroicsolo.Logics
         {
             isIgnited = true;
             fire.SetActive(true);
+            if (ignitionEffect)
+            {
+                ignitionEffect.transform.parent = null;
+                ignitionEffect.Play();
+            }
             return true;
         }
 
         public void Interact()
         {
-            if (isInteractable)
+            if (isInteractable && (!isIgnited || isExtinguishable))
                 IsIgnited = !IsIgnited;
         }
 
@@ -81,7 +88,11 @@ namespace Heroicsolo.Logics
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
-            actionManager.RegisterManagedActor(typeof(Ignatable));
+            actionManager.RegisterManagedActor(typeof(Ignitable));
+            if (isIgnited)
+                Ignite();
+            else
+                Extinguish();
         }
     }
 }

@@ -105,9 +105,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fire: {fileID: 8154819529601286945}
+  ignitionEffect: {fileID: 0}
   minDamageToIgnite: 1
   minDamageToExtinguish: 1
   isInteractable: 1
+  isExtinguishable: 1
   isIgnited: 0
 --- !u!65 &6793195083118577491
 BoxCollider:
