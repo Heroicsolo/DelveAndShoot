@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace Heroicsolo.Scripts.UI
 {
-    public class MainMenuController : MonoBehaviour, ISystem
+    public class MainMenuController : MonoBehaviour
     {
-        [Inject] private MainMenuView menuView;
+        [SerializeField] private MainMenuView menuView;
+
+        [Inject] private ScenesLoader scenesLoader;
 
         public GameObject GetGameObject()
         {
@@ -22,12 +24,17 @@ namespace Heroicsolo.Scripts.UI
 
         public void ProccessNewGameStart()
         {
-
+            scenesLoader.LoadSceneAsync("GameScene", null);
         }
 
         public void ProccessGameContinue()
         {
+            scenesLoader.LoadSceneAsync("GameScene", null);
+        }
 
+        private void Start()
+        {
+            SystemsManager.InjectSystemsTo(this);
         }
     }
 }

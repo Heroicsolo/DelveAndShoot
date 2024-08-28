@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace Heroicsolo.Scripts.UI
 {
-    public class MainMenuView : MonoBehaviour, ISystem
+    public class MainMenuView : MonoBehaviour
     {
-        [SerializeField] GameObject continueButton;
-
-        [Inject] private MainMenuController menuController;
+        [SerializeField] private GameObject continueButton;
+        [SerializeField] private MainMenuController menuController;
 
         public GameObject GetGameObject()
         {
