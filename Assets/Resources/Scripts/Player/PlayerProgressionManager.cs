@@ -26,6 +26,8 @@ namespace Heroicsolo.Logics
         private Action<int, int, int> OnExperienceChanged;
         private PlayerSaves playerSaves;
 
+        private int expPerCurrentLevel;
+
         public (int, int, int) GetPlayerLevelState()
         {
             return (playerSaves.currentLevel, playerSaves.currentExp, GetNeededExpForLevelUp());
@@ -34,6 +36,11 @@ namespace Heroicsolo.Logics
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public int GetExpPerCurrentLevel()
+        {
+            return expPerCurrentLevel;
         }
 
         public void SubscribeToLevelUpEvent(Action<int> onLevelUpCallback)
@@ -56,9 +63,16 @@ namespace Heroicsolo.Logics
             OnExperienceChanged -= onExperienceChanged;
         }
 
+        public void OnLevelWasLoaded(int level)
+        {
+            expPerCurrentLevel = 0;
+        }
+
         public void AddExperience(int amount)
         {
             playerSaves.currentExp += amount;
+
+            expPerCurrentLevel += amount;
 
             int neededExp = GetCurrentLevelMaxExp();
 

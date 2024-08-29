@@ -6,5 +6,6 @@ namespace Heroicsolo.Logics
     public interface IGameController : ISystem
     {
         PlayerController GetPlayerController();
+        void LevelCompleted();
     }
 }

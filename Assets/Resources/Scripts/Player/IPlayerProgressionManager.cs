@@ -13,5 +13,6 @@ namespace Heroicsolo.Logics
         void UnsubscribeFromLevelUpEvent(Action<int> onLevelUpCallback);
         void SubscribeToExpChangeEvent(Action<int, int, int> onExperienceChanged);
         void UnsubscribeFromExpChangeEvent(Action<int, int, int> onExperienceChanged);
+        int GetExpPerCurrentLevel();
     }
 }

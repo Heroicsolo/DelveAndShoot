@@ -8,6 +8,7 @@ namespace Heroicsolo.Logics
     {
         [Inject] private RuntimeDungeonGenerator dungeonGenerator;
         [Inject] private IPlayerProgressionManager playerProgressionManager;
+        [Inject] private ScenesLoader scenesLoader;
         
         private PlayerController playerController;
 
@@ -23,7 +24,12 @@ namespace Heroicsolo.Logics
             return playerController;
         }
 
-        private void Start()
+        public void LevelCompleted()
+        {
+            scenesLoader.LoadSceneAsync("LevelComplete", null);
+        }
+
+        public void OnLevelWasLoaded(int level)
         {
             dungeonGenerator.GenerateDungeon(4, 3, 5, 2);
 

@@ -605,6 +605,13 @@ namespace Heroicsolo.Logics.Mobs
             timeToMinionsWave = 0f;
             PoolSystem.ReturnToPool(this);
         }
+
+        private void OnDisable()
+        {
+            SystemsManager.InjectSystemsTo(this);
+
+            teamsManager.UnregisterTeamMember(this);
+        }
         #endregion
     }
 

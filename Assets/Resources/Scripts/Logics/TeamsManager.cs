@@ -1,3 +1,4 @@
+using Heroicsolo.DI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Heroicsolo.Logics
             [TeamType.Enemies] = new List<TeamType> { TeamType.Player, TeamType.Neutral },
             [TeamType.Neutral] = new List<TeamType> { TeamType.Enemies, TeamType.Player },
         };
+
+        [Inject] private IGameController gameController;
 
         private Dictionary<TeamType, List<IHittable>> teamsMembers = new Dictionary<TeamType, List<IHittable>>();
         private List<IHittable> allUnits = new List<IHittable>();
@@ -64,14 +67,19 @@ namespace Heroicsolo.Logics
         {
             TeamType team = member.GetTeamType();
 
-            if (teamsMembers.ContainsKey(team) && teamsMembers[team].Contains(member))
-            {
-                teamsMembers[team].Remove(member);
-            }
-
             if (allUnits.Contains(member))
             {
                 allUnits.Remove(member);
+            }
+
+            if (teamsMembers.ContainsKey(team) && teamsMembers[team].Contains(member))
+            {
+                teamsMembers[team].Remove(member);
+
+                if (team == TeamType.Enemies && teamsMembers[TeamType.Enemies].Count == 0)
+                {
+                    gameController.LevelCompleted();
+                }
             }
         }
 
