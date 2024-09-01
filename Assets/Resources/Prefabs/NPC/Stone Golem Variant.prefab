@@ -5229,15 +5229,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.606602
+      value: 7.071068
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.014938428
+      value: -0.009964116
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.5355334
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6067,6 +6067,7 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 50
   attackPowerMax: 70
+  openExitDoorAtDeath: 0
   minionsSpawners: []
   minionsSpawnPeriod: 10
   minionsPerWave: 1

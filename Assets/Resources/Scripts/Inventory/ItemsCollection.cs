@@ -36,7 +36,10 @@ namespace Heroicsolo.Scripts.Inventory
             if (instance == null)
             {
                 instance = this;
-                AvailableItems.ForEach(item => ItemsParams.Add(item.ID, item));
+                AvailableItems.ForEach(item => 
+                {
+                    ItemsParams.TryAdd(item.ID, item);
+                });
             }
         }
     }

@@ -102,6 +102,16 @@ namespace Heroicsolo.Scripts.UI
             uiView.HideWorldItemDesc(itemID);
         }
 
+        public void HideIngameUI()
+        {
+            uiView.gameObject.SetActive(false);
+        }
+
+        public void ShowIngameUI()
+        {
+            uiView.gameObject.SetActive(true);
+        }
+
         private void Start()
         {
             playerProgressionManager.SubscribeToLevelUpEvent(OnPlayerLevelUp);

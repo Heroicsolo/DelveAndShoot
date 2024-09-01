@@ -11,7 +11,8 @@ namespace Assets.Resources.Scripts.Logics
         enum InteractionType
         {
             Torch,
-            Container
+            Container,
+            ExitDoor
         }
         void Interact();
         InteractionType GetInteractionType();

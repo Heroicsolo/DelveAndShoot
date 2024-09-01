@@ -5689,7 +5689,7 @@ Transform:
   m_GameObject: {fileID: 3191933804250651644}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.677662, y: 0.018333316, z: -60.10408}
+  m_LocalPosition: {x: 74.246216, y: -0.023333311, z: -3.5355377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5742,6 +5742,7 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 15
   attackPowerMax: 20
+  openExitDoorAtDeath: 0
   minionsSpawners: []
   minionsSpawnPeriod: 10
   minionsPerWave: 1

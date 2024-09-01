@@ -5933,6 +5933,7 @@ MonoBehaviour:
   dissapearTime: 5
   attackPowerMin: 70
   attackPowerMax: 80
+  openExitDoorAtDeath: 1
   minionsSpawners:
   - {fileID: 7718823721698383569}
   - {fileID: 7163146775162476136}

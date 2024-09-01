@@ -349,7 +349,9 @@ namespace Heroicsolo.Heroicsolo.Player
             }
 
             if (Input.GetKeyDown(KeyCode.F))
+            {
                 Interact();
+            }
         }
 
         private void ProccessMovement()

@@ -15,6 +15,8 @@ namespace Heroicsolo.Scripts.UI
         void RemoveAmmo();
         void SetCursorState(CursorState cursorState, bool forced = false);
         void SetUIElementSelected(bool value);
+        void HideIngameUI();
+        void ShowIngameUI();
     }
 
     public enum CursorState

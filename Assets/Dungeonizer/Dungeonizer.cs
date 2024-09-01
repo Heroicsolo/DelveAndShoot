@@ -57,13 +57,14 @@ namespace Dungeonizer {
 		public bool spawnByWall;
 		public bool spawmInTheMiddle;
 		public bool spawnRotated;
+		public bool spawnForced;
 		//public bool byCorridor;
 		[Tooltip("This is for make spawned object will be higher than ground.")]
 		public float heightFix = 0;
 		public float offsetFix = 0;
 
 		public GameObject gameObject;
-		[Tooltip("Use 0 for random room, make sure spawn room isnt bigger than your room count")]
+		[Tooltip("Use 0 for random room, use -1 for the last room, make sure spawn room isnt bigger than your room count")]
 		public int spawnRoom = 0;
 	}
 
@@ -111,7 +112,7 @@ namespace Dungeonizer {
 		[Tooltip("This will be end of level. ")]
 		public GameObject exitPrefab;
 
-		public List<SpawnList> spawnedObjectLocations = new List<SpawnList>();
+        public List<SpawnList> spawnedObjectLocations = new List<SpawnList>();
 		public GameObject floorPrefab;
 		public GameObject wallPrefab;
 		[Range(0f, 360f)] public float wallRotationOffset = 0f;
@@ -792,14 +793,22 @@ namespace Dungeonizer {
 
 			//Now instantiating gameobjects wanted to "spawn"
 			foreach (SpawnOption objectToSpawn in spawnOptions){
-				objectCountToSpawn = UnityEngine.Random.Range(objectToSpawn.minSpawnCount,objectToSpawn.maxSpawnCount) * maximumRoomCount;
+				if (objectToSpawn.spawnRoom == 0)
+				{
+					objectCountToSpawn = UnityEngine.Random.Range(objectToSpawn.minSpawnCount,objectToSpawn.maxSpawnCount) * maximumRoomCount;
+				}
+				else
+				{
+                    objectCountToSpawn = UnityEngine.Random.Range(objectToSpawn.minSpawnCount, objectToSpawn.maxSpawnCount);
+                }
 				while (objectCountToSpawn > 0){
 					bool created = false;
 
 					for (int i = 0;i < spawnedObjectLocations.Count;i++){
 						bool createHere= false;
 					
-						if (!spawnedObjectLocations[i].spawnedObject && !spawnedObjectLocations[i].byCorridor){
+						if ((!spawnedObjectLocations[i].spawnedObject && !spawnedObjectLocations[i].byCorridor) || objectToSpawn.spawnForced || objectToSpawn.spawnRoom == -1)
+                        {
 							
 							if(objectToSpawn.spawnRoom > maximumRoomCount){
 								objectToSpawn.spawnRoom = 0;
@@ -822,7 +831,21 @@ namespace Dungeonizer {
 								}
 							}
 							else {
-								if (spawnedObjectLocations[i].room.room_id == objectToSpawn.spawnRoom){
+								if (objectToSpawn.spawnRoom == -1 && spawnedObjectLocations[i].room.room_id == maximumRoomCount - 1)
+								{
+                                    if (objectToSpawn.spawnByWall)
+                                    {
+                                        if (spawnedObjectLocations[i].byWall)
+                                        {
+                                            createHere = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        createHere = true;
+                                    }
+                                }
+								else if (spawnedObjectLocations[i].room.room_id == objectToSpawn.spawnRoom){
 									if (objectToSpawn.spawnByWall){
 										if (spawnedObjectLocations[i].byWall){
 											createHere = true;

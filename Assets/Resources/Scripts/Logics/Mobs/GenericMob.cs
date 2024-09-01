@@ -31,6 +31,7 @@ namespace Heroicsolo.Logics.Mobs
         [SerializeField][Min(0f)] private float dissapearTime = 5f;
         [SerializeField][Min(0f)] private float attackPowerMin = 1f;
         [SerializeField][Min(0f)] private float attackPowerMax = 1f;
+        [SerializeField] private bool openExitDoorAtDeath = false;
 
         [Header("Minions Spawn")]
         [SerializeField] private List<MobsSpawner> minionsSpawners = new();
@@ -264,7 +265,17 @@ namespace Heroicsolo.Logics.Mobs
             {
                 SpawnLoot();
                 playerProgressionManager.AddExperience(expReward);
+
+                if (openExitDoorAtDeath)
+                {
+                    ExitDoor exitDoor = FindObjectOfType<ExitDoor>();
+                    if (exitDoor != null)
+                    {
+                        exitDoor.SetInteractable(true);
+                    }
+                }
             }
+
             Invoke(nameof(ReturnToPool), dissapearTime);
         }
         public override bool IsDead()
