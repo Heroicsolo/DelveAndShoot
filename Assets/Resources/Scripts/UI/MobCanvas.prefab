@@ -119,6 +119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_anchorTransform: {fileID: 0}
   m_anchorDist: 0
+  m_yRotateOffset: 0
 --- !u!114 &706901749744172881
 MonoBehaviour:
   m_ObjectHideFlags: 0

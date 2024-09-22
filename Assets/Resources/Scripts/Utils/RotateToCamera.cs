@@ -12,6 +12,7 @@ public class RotateToCamera : MonoBehaviour
 	// ============== PUBLIC FIELDS ==============
     public Transform m_anchorTransform;
     public float m_anchorDist = 0f;
+    public float m_yRotateOffset = 0f;
 
 	// ============== PRIVATE FIELDS ==============
     private Transform m_Transform = null;
@@ -39,6 +40,11 @@ public class RotateToCamera : MonoBehaviour
             transform.LookAt(
                 m_Transform.position + m_MainCameraTransform.rotation * Vector3.forward,
                 m_MainCameraTransform.rotation * Vector3.up );
+
+            if (m_yRotateOffset != 0f)
+            {
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + m_yRotateOffset, transform.eulerAngles.z);
+            }
         }
     }
 }

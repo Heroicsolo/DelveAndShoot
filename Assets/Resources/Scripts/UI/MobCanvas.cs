@@ -29,13 +29,13 @@ namespace Heroicsolo.Scripts.UI
         {
             if (amount > 0f)
             {
-                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, Quaternion.identity, transform);
                 ft.SetText($"-{Mathf.CeilToInt(amount)}");
                 ft.SetCurved(true);
             }
             else
             {
-                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+                FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, Quaternion.identity, transform);
                 ft.SetText("ABSORB");
                 ft.SetCurved(true);
             }
@@ -43,7 +43,7 @@ namespace Heroicsolo.Scripts.UI
 
         private void OnDamageDodged()
         {
-            FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, transform);
+            FloatingText ft = PoolSystem.GetInstanceAtPosition(combatTextPrefab, combatTextPrefab.GetName(), transform.position, Quaternion.identity, transform);
             ft.SetText($"MISS");
             ft.SetCurved(true);
         }

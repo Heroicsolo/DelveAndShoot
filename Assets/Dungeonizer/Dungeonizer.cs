@@ -831,7 +831,7 @@ namespace Dungeonizer {
 								}
 							}
 							else {
-								if (objectToSpawn.spawnRoom == -1 && spawnedObjectLocations[i].room.room_id == maximumRoomCount - 1)
+								if (objectToSpawn.spawnRoom == -1 && spawnedObjectLocations[i].room != null && spawnedObjectLocations[i].room.room_id == maximumRoomCount - 1)
 								{
                                     if (objectToSpawn.spawnByWall)
                                     {
@@ -845,7 +845,7 @@ namespace Dungeonizer {
                                         createHere = true;
                                     }
                                 }
-								else if (spawnedObjectLocations[i].room.room_id == objectToSpawn.spawnRoom){
+								else if (spawnedObjectLocations[i].room != null && spawnedObjectLocations[i].room.room_id == objectToSpawn.spawnRoom){
 									if (objectToSpawn.spawnByWall){
 										if (spawnedObjectLocations[i].byWall){
 											createHere = true;

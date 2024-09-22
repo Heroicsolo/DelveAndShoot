@@ -5038,6 +5038,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MobCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3485257435127579885, guid: 564a45eb0b768d44693ad588a49c6ffd, type: 3}
+      propertyPath: m_yRotateOffset
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4733079999646614337, guid: 564a45eb0b768d44693ad588a49c6ffd, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5229,15 +5233,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.999996
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.08328717
+      value: -0.047358118
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 50
+      value: 9.999998
       objectReference: {fileID: 0}
     - target: {fileID: 1101820335844390578, guid: ea4324e39606b124fbc8962ece08c421, type: 3}
       propertyPath: m_LocalRotation.w
