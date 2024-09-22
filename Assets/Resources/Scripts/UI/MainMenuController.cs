@@ -1,4 +1,5 @@
 using Heroicsolo.DI;
+using Heroicsolo.Logics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Heroicsolo.Scripts.UI
         [SerializeField] private MainMenuView menuView;
 
         [Inject] private ScenesLoader scenesLoader;
+        [Inject] private IPlayerProgressionManager progressionManager;
 
         public GameObject GetGameObject()
         {
@@ -24,6 +26,7 @@ namespace Heroicsolo.Scripts.UI
 
         public void ProccessNewGameStart()
         {
+            progressionManager.ResetState();
             scenesLoader.LoadSceneAsync("GameScene", null);
         }
 

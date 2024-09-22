@@ -5,6 +5,7 @@ namespace Heroicsolo.Logics
 {
     public interface IPlayerProgressionManager : ISystem
     {
+        void ResetState();
         (int, int, int) GetPlayerLevelState();
         void AddExperience(int amount);
         int GetNeededExpForLevelUp();

@@ -27,6 +27,11 @@ namespace Heroicsolo.Logics
             return playerController;
         }
 
+        public void ShakeCamera(float strength = 1f, float timeLength = 1f)
+        {
+            playerController.ShakeCamera(strength, timeLength);
+        }
+
         public void LevelCompleted()
         {
             gameUIController.HideIngameUI();

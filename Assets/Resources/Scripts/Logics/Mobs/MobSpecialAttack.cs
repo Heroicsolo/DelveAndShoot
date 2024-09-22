@@ -1,3 +1,4 @@
+using Heroicsolo.Heroicsolo.Player;
 using Heroicsolo.Logics.Mobs;
 using Heroicsolo.Utils;
 using System;
@@ -18,12 +19,17 @@ namespace Heroicsolo.Logics.Mobs
         [Min(0f)] public float Damage;
         public DamageType DamageType;
         [Range(0f, 1f)] public float NeededMobHealthPercent = 1f;
+        [SerializeField] private bool shakeCamera;
+        [SerializeField] private float cameraShakeTime = 1f;
+        [SerializeField] private float cameraShakeStrength = 2f;
 
         private ITeamsManager teamsManager;
+        private IGameController gameController;
 
-        public void PerformAttack(Vector3 hitPosition, ITeamsManager teamsManager)
+        public void PerformAttack(Vector3 hitPosition, ITeamsManager teamsManager, IGameController gameController)
         {
             this.teamsManager ??= teamsManager;
+            this.gameController ??= gameController;
 
             if (hitEffect != null)
             {
@@ -32,6 +38,11 @@ namespace Heroicsolo.Logics.Mobs
 
             teamsManager.GetEnemiesInRadius(hitPosition, TeamType.Enemies, Radius)
                 .ForEach(x => x.GetDamage(Damage, DamageType));
+
+            if (shakeCamera)
+            {
+                gameController.ShakeCamera(cameraShakeStrength, cameraShakeTime);
+            }
         }
     }
 }

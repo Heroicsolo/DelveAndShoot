@@ -73,6 +73,7 @@ namespace Heroicsolo.Logics.Mobs
         [Inject] private ILootManager lootManager;
         [Inject] private ITeamsManager teamsManager;
         [Inject] private IDialogPopup dialogPopup;
+        [Inject] private IGameController gameController;
 
         #region Private Fields
         private Dictionary<CharacterStatType, CharacterStat> statsDict = new Dictionary<CharacterStatType, CharacterStat>();
@@ -402,7 +403,7 @@ namespace Heroicsolo.Logics.Mobs
         }
         public void OnSpecialAttackPerformed()
         {
-            currentSpecialAttack.PerformAttack(transform.position, teamsManager);
+            currentSpecialAttack.PerformAttack(transform.position, teamsManager, gameController);
             if (!IsPlayerOutranged())
             {
                 currentSpecialAttack = null;

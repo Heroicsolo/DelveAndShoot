@@ -20,3 +20,4 @@ MonoBehaviour:
   Damage: 100
   DamageType: 20
   NeededMobHealthPercent: 1
+  ShakeCamera: 1

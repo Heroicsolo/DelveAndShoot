@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Heroicsolo.Logics
 {
@@ -27,6 +28,18 @@ namespace Heroicsolo.Logics
         private PlayerSaves playerSaves;
 
         private int expPerCurrentLevel;
+
+        public void ResetState()
+        {
+            playerSaves = new PlayerSaves
+            {
+                currentLevel = 1,
+                currentExp = 0,
+                currencyAmount = startCurrencyAmount,
+            };
+
+            SaveState();
+        }
 
         public (int, int, int) GetPlayerLevelState()
         {
@@ -65,6 +78,11 @@ namespace Heroicsolo.Logics
 
         public void OnLevelWasLoaded(int level)
         {
+            if (SceneManager.GetActiveScene().name != "GameScene")
+            {
+                return;
+            }
+
             expPerCurrentLevel = 0;
         }
 

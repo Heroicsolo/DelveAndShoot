@@ -35,9 +35,9 @@ namespace Heroicsolo.Logics
             dungeonizer.minRoomSize = minRoomSize;
             dungeonizer.maxRoomSize = maxRoomSize;
 
-            dungeonizer.Generate();
-
             dungeonizer.transform.rotation = Quaternion.Euler(0f, dungeonAngle, 0f);
+
+            dungeonizer.Generate();
 
             navMeshSurface.BuildNavMesh();
 

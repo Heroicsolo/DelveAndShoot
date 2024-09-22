@@ -1,6 +1,8 @@
 using Assets.FantasyInventory.Scripts.Enums;
 using Assets.Resources.Scripts.Logics;
+using Cinemachine;
 using DG.Tweening;
+using Dungeonizer;
 using Heroicsolo.DI;
 using Heroicsolo.Inventory;
 using Heroicsolo.Logics;
@@ -11,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static Heroicsolo.Logics.ActionManager;
 
 namespace Heroicsolo.Heroicsolo.Player
@@ -23,11 +26,11 @@ namespace Heroicsolo.Heroicsolo.Player
         private const int AimRotateIterations = 10;
         private const float AimRotateAngleLimit = 90f;
         private const float AimRotateDistanceLimit = 1.5f;
+        private const float CameraShakeFrequency = 5f; 
 
         [Header("Movement Params")]
         [SerializeField] private float runSpeedFatiguedCoef = 0.6f;
         [SerializeField] private float turnSpeed = 120f;
-        [SerializeField] private float cameraMoveSpeed = 10f;
         [SerializeField] private float directionChangeSpeed = 10f;
         [SerializeField] private float jumpPower = 2f;
         [SerializeField][Range(0f, 1f)] private float fatigueEndThreshold = 0.7f;
@@ -63,12 +66,17 @@ namespace Heroicsolo.Heroicsolo.Player
 
         internal override IActionManager ActionManager => actionManager;
 
+        private CinemachineVirtualCamera virtualCamera;
+        private CinemachineBasicMultiChannelPerlin cameraNoise;
         private CharacterController characterController;
+        private Transform cameraTransform;
         private Animator animator;
         private Vector3 runDirection;
         private Vector3 targetRunDirection;
-        private Vector3 camOffset;
-        private Transform cameraTransform;
+        private float camShakeOffset;
+        private float camShakeStrength;
+        private float camShakeFullTime;
+        private float camShakeTime;
         private float jumpSpeed;
         private bool isFatigued;
         private bool isJumping;
@@ -82,6 +90,14 @@ namespace Heroicsolo.Heroicsolo.Player
         public List<CharacterStat> GetCharacterStats()
         {
             return stats;
+        }
+
+        public void ShakeCamera(float strength = 1f, float timeLength = 1f)
+        {
+            camShakeOffset = 0f;
+            camShakeTime = timeLength;
+            camShakeFullTime = camShakeTime;
+            camShakeStrength = strength;
         }
 
         public void SubscribeToDamageGot(Action<float> onDamageGot)
@@ -185,19 +201,22 @@ namespace Heroicsolo.Heroicsolo.Player
             statsDict.Values.ToList().ForEach(s => s.ScaleByLevel(level));
         }
 
+        private void Awake()
+        {
+            transform.rotation = Quaternion.Euler(0f, 45f, 0f);
+        }
+
         private void Start()
         {
             SystemsManager.InjectSystemsTo(this);
             actionManager.RegisterManagedActor(typeof(PlayerController));
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
-            cameraTransform = Camera.main.transform;
-            camOffset = cameraTransform.localPosition;
-            cameraTransform.parent = null;
-            cameraTransform.rotation = Quaternion.Euler(45f, 0f, 0f);
             hidingObjectsManager.SetPlayerTransform(transform);
             teamsManager.RegisterTeamMember(this);
             interactionLayers = LayerMask.GetMask("Loot", "Interactable");
+
+            SetupCamera();
 
             EquipWeapon(inventoryManager.GetEquippedItems().Single(x => x.Params.Type == ItemType.Weapon).Id);
 
@@ -206,6 +225,16 @@ namespace Heroicsolo.Heroicsolo.Player
             aimingBones.ForEach(b => aimingBonesTransforms.Add(animator.GetBoneTransform(b.BoneType), b.Weight));
 
             InitState();
+        }
+
+        private void SetupCamera()
+        {
+            virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+            virtualCamera.transform.parent = null;
+            cameraTransform = Camera.main.transform;
+            cameraTransform.parent = null;
+
+            cameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
 
         private void InitState()
@@ -232,6 +261,22 @@ namespace Heroicsolo.Heroicsolo.Player
             jumpSpeed = jumpPower;
             isJumping = true;
             return true;
+        }
+
+        private void ProccessCameraShake()
+        {
+            if (camShakeTime > 0f)
+            {
+                camShakeOffset = Mathf.Lerp(camShakeStrength, 0f, camShakeTime / camShakeFullTime);
+                camShakeTime -= Time.deltaTime;
+            }
+            else
+            {
+                camShakeOffset = 0f;
+            }
+
+            cameraNoise.m_AmplitudeGain = camShakeOffset;
+            cameraNoise.m_FrequencyGain = CameraShakeFrequency;
         }
 
         private void ProccessAim()
@@ -313,11 +358,11 @@ namespace Heroicsolo.Heroicsolo.Player
 
             if (Input.GetKey(KeyCode.W))
             {
-                targetRunDirection.z += 1f;
+                targetRunDirection.y += 1f;
             }
             if (Input.GetKey(KeyCode.S))
             {
-                targetRunDirection.z -= 1f;
+                targetRunDirection.y -= 1f;
             }
             if (Input.GetKey(KeyCode.A))
             {
@@ -327,6 +372,8 @@ namespace Heroicsolo.Heroicsolo.Player
             {
                 targetRunDirection.x += 1f;
             }
+
+            targetRunDirection = cameraTransform.TransformDirection(targetRunDirection).normalized;
 
             if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
             {
@@ -449,8 +496,7 @@ namespace Heroicsolo.Heroicsolo.Player
         private void LateUpdate()
         {
             ProccessAim();
-
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position + camOffset, cameraMoveSpeed * Time.deltaTime);
+            ProccessCameraShake();
         }
     }
 
